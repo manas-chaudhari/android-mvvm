@@ -1,0 +1,2 @@
+include ':sample', ':android-mvvm'
+rootProject.name = 'android-mvvm-root'
