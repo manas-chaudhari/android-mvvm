@@ -1,0 +1,20 @@
+language: android
+
+android:
+  components:
+    - tools
+    - platform-tools
+    - build-tools-23.0.3
+    - android-23
+    - extra-android-m2repository
+
+script:
+  ./gradlew test --continue
+
+branches:
+  except:
+    - gh-pages
+
+cache:
+  directories:
+    - $HOME/.gradle
