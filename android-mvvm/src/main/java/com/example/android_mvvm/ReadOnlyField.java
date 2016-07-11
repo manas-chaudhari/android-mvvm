@@ -14,7 +14,12 @@ public class ReadOnlyField<T> extends ObservableField<T> {
     final HashMap<OnPropertyChangedCallback, Subscription> subscriptions = new HashMap<>();
 
     public ReadOnlyField(@NonNull Observable<T> source) {
-        this.source = source.share();
+        this.source = source.doOnNext(new Action1<T>() {
+            @Override
+            public void call(T t) {
+                set(t);
+            }
+        }).share();
     }
 
     /**
@@ -29,12 +34,7 @@ public class ReadOnlyField<T> extends ObservableField<T> {
     @Override
     public synchronized void addOnPropertyChangedCallback(OnPropertyChangedCallback callback) {
         super.addOnPropertyChangedCallback(callback);
-        subscriptions.put(callback, source.subscribe(new Action1<T>() {
-            @Override
-            public void call(T t) {
-                set(t);
-            }
-        }));
+        subscriptions.put(callback, source.subscribe());
     }
 
     @Override
