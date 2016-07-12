@@ -1,4 +1,4 @@
-package com.example.android_mvvm;
+package com.example.android_mvvm.sample;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
