@@ -1,5 +1,9 @@
 apply plugin: 'com.android.library'
 
+def isCi() {
+    return "true".equals(System.getenv('CI'))
+}
+
 android {
     compileSdkVersion 24
     buildToolsVersion "24.0.0"
@@ -11,14 +15,32 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
     dataBinding {
         enabled = true
     }
+
+    dexOptions {
+        preDexLibraries = !isCi()
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+}
+
+if (isCi()) {
+    println 'Running on CI. Adding task to start emulator.'
+
+    task startEmulator << {
+        "$rootDir/gradle/start-emulator.sh".execute().waitFor()
+    }
+
+    android.testVariants.all { variant ->
+        variant.connectedInstrumentTest.dependsOn startEmulator
     }
 }
 
