@@ -18,9 +18,13 @@ import rx.functions.Action1;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.DataBindingViewHolder> {
     private @NonNull List<ViewModel> latestViewModels = new ArrayList<>();
     private final @NonNull ViewProvider viewProvider;
+    private final @NonNull ViewModelBinder binder;
 
-    public RecyclerViewAdapter(@NonNull Observable<List<ViewModel>> viewModels, @NonNull ViewProvider viewProvider) {
+    public RecyclerViewAdapter(@NonNull Observable<List<ViewModel>> viewModels,
+                               @NonNull ViewProvider viewProvider,
+                               @NonNull ViewModelBinder viewModelBinder) {
         this.viewProvider = viewProvider;
+        this.binder = viewModelBinder;
         viewModels.subscribe(new Action1<List<ViewModel>>() {
             @Override
             public void call(List<ViewModel> viewModels) {
@@ -43,6 +47,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(DataBindingViewHolder holder, int position) {
+        binder.bind(holder.viewBinding, latestViewModels.get(position));
+        holder.viewBinding.executePendingBindings();
     }
 
     @Override

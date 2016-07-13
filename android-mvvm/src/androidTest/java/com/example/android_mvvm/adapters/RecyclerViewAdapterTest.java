@@ -1,11 +1,13 @@
 package com.example.android_mvvm.adapters;
 
+import android.databinding.ViewDataBinding;
 import android.support.annotation.NonNull;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.annotation.UiThreadTest;
 import android.support.test.rule.UiThreadTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
@@ -23,6 +25,7 @@ import rx.subjects.BehaviorSubject;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class RecyclerViewAdapterTest {
@@ -34,15 +37,16 @@ public class RecyclerViewAdapterTest {
     private BehaviorSubject<List<ViewModel>> viewModelsSource;
     private RecyclerViewAdapter sut;
     private int notifyCallCount;
-    private ViewProvider testViewProvider;
+    private TestViewModelBinder testBinder;
 
     @Before
     public void setUp() throws Exception {
         List<ViewModel> vms = dummyViewModels(INITIAL_COUNT);
 
         viewModelsSource = BehaviorSubject.create(vms);
-        testViewProvider = new TestViewProvider();
-        sut = new RecyclerViewAdapter(viewModelsSource, testViewProvider);
+        ViewProvider testViewProvider = new TestViewProvider();
+        testBinder = new TestViewModelBinder();
+        sut = new RecyclerViewAdapter(viewModelsSource, testViewProvider, testBinder);
 
         notifyCallCount = 0;
         sut.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
@@ -95,7 +99,18 @@ public class RecyclerViewAdapterTest {
         assertEquals("com.example.android_mvvm.test.databinding.LayoutTestBinding", holder.viewBinding.getClass().getName());
     }
 
-    // TODO: Test for binding
+    @Test
+    @UiThreadTest
+    public void bindViewHolder() throws Exception {
+        ViewGroup view = new LinearLayout(InstrumentationRegistry.getContext());
+        TestViewDataBinding binding = new TestViewDataBinding(view);
+        sut.onBindViewHolder(new RecyclerViewAdapter.DataBindingViewHolder(binding), 0);
+
+        assertTrue(testBinder.lastBinding == binding);
+        assertTrue(testBinder.lastViewModel == viewModelsSource.getValue().get(0));
+        assertEquals(1, binding.executePendingBindingsCallCount);
+    }
+
     // TODO: Test no subscribers after unregistering
     // TODO: Test Errors, null
 
@@ -108,7 +123,7 @@ public class RecyclerViewAdapterTest {
         return vms;
     }
 
-    public class TestViewModel implements ViewModel {
+    public static class TestViewModel implements ViewModel {
         int id;
 
         public TestViewModel(int id) {
@@ -116,7 +131,7 @@ public class RecyclerViewAdapterTest {
         }
     }
 
-    public class TestViewProvider implements ViewProvider {
+    public static class TestViewProvider implements ViewProvider {
 
         @Override
         public int getView(ViewModel vm) {
@@ -124,6 +139,53 @@ public class RecyclerViewAdapterTest {
                 return ((TestViewModel) vm).id;
             }
             return 0;
+        }
+    }
+
+    public static class TestViewDataBinding extends ViewDataBinding {
+        int executePendingBindingsCallCount = 0;
+
+        protected TestViewDataBinding(View root) {
+            super(null, root, 1);
+        }
+
+        @Override
+        protected boolean onFieldChange(int localFieldId, Object object, int fieldId) {
+            return false;
+        }
+
+        @Override
+        public boolean setVariable(int variableId, Object value) {
+            return false;
+        }
+
+        @Override
+        protected void executeBindings() {}
+
+        @Override
+        public void executePendingBindings() {
+            executePendingBindingsCallCount++;
+        }
+
+        @Override
+        public void invalidateAll() {
+
+        }
+
+        @Override
+        public boolean hasPendingBindings() {
+            return false;
+        }
+    }
+
+    public static class TestViewModelBinder implements ViewModelBinder{
+        ViewDataBinding lastBinding;
+        ViewModel lastViewModel;
+
+        @Override
+        public void bind(ViewDataBinding viewDataBinding, ViewModel viewModel) {
+            lastBinding = viewDataBinding;
+            lastViewModel = viewModel;
         }
     }
 }
