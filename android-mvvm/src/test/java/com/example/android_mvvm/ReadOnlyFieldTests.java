@@ -64,6 +64,20 @@ public class ReadOnlyFieldTests {
         assertEquals(1, subscriptionCounter.subscriptions);
     }
 
+    @Test
+    public void errorIsHandled() throws Exception {
+        sut.addOnPropertyChangedCallback(new TestPropertyChangedCallback());
+
+        sourceSubject.onError(new Throwable());
+
+        assertEquals(INITIAL_VALUE, sut.get());
+    }
+
+    @Test
+    public void nullIsAcceptable() throws Exception {
+        sourceSubject.onNext(null);
+    }
+
     public class TestPropertyChangedCallback extends android.databinding.Observable.OnPropertyChangedCallback {
         public int callCount;
 

@@ -42,7 +42,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 .doOnError(new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
-                        Log.e("RecyclerViewAdapter", "Error in source observable", throwable);
+                        Log.e("RecyclerViewAdapter", "onError in source observable", throwable);
                     }
                 })
                 .onErrorResumeNext(Observable.<List<ViewModel>>empty())
