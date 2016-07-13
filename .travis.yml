@@ -12,7 +12,7 @@ jdk:
   - oraclejdk8
 
 script:
-  ./gradlew build test
+  ./gradlew test
 
 branches:
   except:
