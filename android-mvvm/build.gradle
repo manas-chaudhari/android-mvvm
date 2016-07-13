@@ -28,4 +28,5 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:24.0.0'
     testCompile 'junit:junit:4.12'
     androidTestCompile 'com.android.support.test:runner:0.4'
+    androidTestCompile 'com.android.support.test:rules:0.4'
 }
