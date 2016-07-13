@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.example.android_mvvm.ViewModel;
+import com.example.android_mvvm.testutils.SubscriptionCounter;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -21,6 +22,7 @@ import org.junit.runner.RunWith;
 import java.util.ArrayList;
 import java.util.List;
 
+import rx.Observable;
 import rx.subjects.BehaviorSubject;
 
 import static org.junit.Assert.assertEquals;
@@ -38,23 +40,29 @@ public class RecyclerViewAdapterTest {
     private RecyclerViewAdapter sut;
     private int notifyCallCount;
     private TestViewModelBinder testBinder;
+    private ViewProvider testViewProvider;
+    private SubscriptionCounter<List<ViewModel>> subscriptionCounter;
+    private RecyclerView.AdapterDataObserver defaultObserver;
 
     @Before
     public void setUp() throws Exception {
         List<ViewModel> vms = dummyViewModels(INITIAL_COUNT);
 
         viewModelsSource = BehaviorSubject.create(vms);
-        ViewProvider testViewProvider = new TestViewProvider();
+        testViewProvider = new TestViewProvider();
         testBinder = new TestViewModelBinder();
-        sut = new RecyclerViewAdapter(viewModelsSource, testViewProvider, testBinder);
+        subscriptionCounter = new SubscriptionCounter<>();
+        sut = new RecyclerViewAdapter(viewModelsSource.compose(subscriptionCounter),
+                testViewProvider, testBinder);
 
         notifyCallCount = 0;
-        sut.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+        defaultObserver = new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {
                 notifyCallCount++;
             }
-        });
+        };
+        sut.registerAdapterDataObserver(defaultObserver);
     }
 
     @Test
@@ -111,8 +119,40 @@ public class RecyclerViewAdapterTest {
         assertEquals(1, binding.executePendingBindingsCallCount);
     }
 
-    // TODO: Test no subscribers after unregistering
-    // TODO: Test Errors, null
+    @Test
+    public void noSubscriptionsInitially() throws Exception {
+        SubscriptionCounter<List<ViewModel>> counter = new SubscriptionCounter<>();
+        Observable<List<ViewModel>> source = viewModelsSource.compose(counter);
+
+        RecyclerViewAdapter sut = new RecyclerViewAdapter(source, testViewProvider, testBinder);
+
+        assertEquals(0, counter.subscriptions);
+    }
+
+    @Test
+    public void noSubscriptionsAfterRemovingAdapterObserver() throws Exception {
+        // defaultObserver is added in setup to measure notifyCount
+        assertEquals(1, subscriptionCounter.subscriptions);
+        assertEquals(0, subscriptionCounter.unsubscriptions);
+
+        sut.unregisterAdapterDataObserver(defaultObserver);
+
+        assertEquals(0, subscriptionCounter.subscriptions - subscriptionCounter.unsubscriptions);
+    }
+
+    @Test
+    public void nullListIsTreatedAsEmpty() throws Exception {
+        viewModelsSource.onNext(null);
+
+        assertEquals(0, sut.getItemCount());
+    }
+
+    @Test
+    public void errorIsHandled() throws Exception {
+        viewModelsSource.onError(new Throwable());
+
+        assertEquals(INITIAL_COUNT, sut.getItemCount());
+    }
 
     @NonNull
     private List<ViewModel> dummyViewModels(int n) {

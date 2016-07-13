@@ -1,10 +1,11 @@
 package com.example.android_mvvm;
 
+import com.example.android_mvvm.testutils.SubscriptionCounter;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import rx.Observable;
-import rx.functions.Action0;
 import rx.subjects.BehaviorSubject;
 
 import static org.hamcrest.core.Is.is;
@@ -16,24 +17,14 @@ import static org.junit.Assert.*;
 public class ReadOnlyFieldTests {
     private final Integer INITIAL_VALUE = 4;
     private BehaviorSubject<Integer> sourceSubject;
-    private int subscriptions = 0;
-    private int unsubscriptions = 0;
+    private SubscriptionCounter<Integer> subscriptionCounter;
     private ReadOnlyField<Integer> sut;
 
     @Before
     public void setUp() throws Exception {
         sourceSubject = BehaviorSubject.create(INITIAL_VALUE);
-        Observable<Integer> source = sourceSubject.doOnSubscribe(new Action0() {
-            @Override
-            public void call() {
-                subscriptions++;
-            }
-        }).doOnUnsubscribe(new Action0() {
-            @Override
-            public void call() {
-                unsubscriptions++;
-            }
-        });
+        subscriptionCounter = new SubscriptionCounter<>();
+        Observable<Integer> source = sourceSubject.compose(subscriptionCounter);
         sut = new ReadOnlyField<>(source);
     }
 
@@ -52,7 +43,7 @@ public class ReadOnlyFieldTests {
 
     @Test
     public void noSubscription_initially() throws Exception {
-        assertEquals(0, subscriptions);
+        assertEquals(0, subscriptionCounter.subscriptions);
     }
 
     @Test
@@ -61,7 +52,7 @@ public class ReadOnlyFieldTests {
         sut.addOnPropertyChangedCallback(callback);
         sut.removeOnPropertyChangedCallback(callback);
 
-        assertEquals(0, subscriptions - unsubscriptions);
+        assertEquals(0, subscriptionCounter.subscriptions - subscriptionCounter.unsubscriptions);
     }
 
     @Test
@@ -70,7 +61,7 @@ public class ReadOnlyFieldTests {
         sut.addOnPropertyChangedCallback(callback);
         sut.addOnPropertyChangedCallback(callback);
 
-        assertEquals(1, subscriptions);
+        assertEquals(1, subscriptionCounter.subscriptions);
     }
 
     public class TestPropertyChangedCallback extends android.databinding.Observable.OnPropertyChangedCallback {
