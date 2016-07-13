@@ -7,7 +7,7 @@ android:
     - build-tools-24.0.0
     - android-24
     - extra-android-m2repository
-    - sys-img-armeabi-v7a-android-23
+    - sys-img-armeabi-v7a-android-19
 jdk:
   - oraclejdk8
 
