@@ -12,7 +12,8 @@ jdk:
   - oraclejdk8
 
 script:
-  ./gradlew test connectedCheck
+  # sample project uses Jack. Travis kills it, probably because of limited resources
+  ./gradlew android-mvvm:build android-mvvm:test android-mvvm:connectedCheck
 
 branches:
   except:
