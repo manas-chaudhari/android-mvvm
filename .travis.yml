@@ -12,7 +12,7 @@ jdk:
   - oraclejdk8
 
 script:
-  ./gradlew test
+  ./gradlew test connectedCheck
 
 branches:
   except:
