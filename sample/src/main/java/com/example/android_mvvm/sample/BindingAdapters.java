@@ -2,6 +2,7 @@ package com.example.android_mvvm.sample;
 
 import android.databinding.BindingAdapter;
 import android.databinding.ViewDataBinding;
+import android.support.annotation.LayoutRes;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
@@ -30,6 +31,16 @@ public class BindingAdapters {
             });
         }
         recyclerView.setAdapter(adapter);
+    }
+
+    @BindingAdapter({"items", "view_provider"})
+    public static void bindRecyclerViewAdapterWithSingleView(RecyclerView recyclerView, Observable<List<ViewModel>> items, @LayoutRes final int viewRes) {
+        bindRecyclerViewAdapter(recyclerView, items, new ViewProvider() {
+            @Override
+            public int getView(ViewModel vm) {
+                return viewRes;
+            }
+        });
     }
 
     @BindingAdapter("layout_vertical")

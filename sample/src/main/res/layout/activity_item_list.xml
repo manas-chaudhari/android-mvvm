@@ -10,7 +10,6 @@
             name="vm"
             type="com.example.android_mvvm.sample.recyclerview.ItemListViewModel" />
 
-        <import type="com.example.android_mvvm.sample.ViewProviders" />
     </data>
 
     <android.support.v7.widget.RecyclerView
@@ -22,7 +21,7 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
         bind:items="@{vm.itemVms}"
-        bind:view_provider="@{ViewProviders.itemListing}"
+        bind:view_provider="@{@layout/row_item_with_image}"
         bind:layout_vertical="@{true}"
         tools:context=".recyclerview.ItemListActivity">
 
