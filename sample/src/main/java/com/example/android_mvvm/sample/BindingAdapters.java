@@ -31,4 +31,10 @@ public class BindingAdapters {
         }
         recyclerView.setAdapter(adapter);
     }
+
+    @BindingAdapter("layout_vertical")
+    public static void bindLayoutManager(RecyclerView recyclerView, boolean vertical) {
+        int orientation = vertical ? RecyclerView.VERTICAL : RecyclerView.HORIZONTAL;
+        recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext(), orientation, false));
+    }
 }

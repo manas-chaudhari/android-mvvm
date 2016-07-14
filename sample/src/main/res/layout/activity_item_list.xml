@@ -23,6 +23,7 @@
         android:paddingTop="@dimen/activity_vertical_margin"
         bind:items="@{vm.itemVms}"
         bind:view_provider="@{ViewProviders.itemListing}"
+        bind:layout_vertical="@{true}"
         tools:context=".recyclerview.ItemListActivity">
 
     </android.support.v7.widget.RecyclerView>
