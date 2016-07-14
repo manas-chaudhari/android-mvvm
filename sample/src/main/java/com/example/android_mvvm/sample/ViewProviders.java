@@ -12,7 +12,10 @@ public class ViewProviders {
         return new ViewProvider() {
             @Override
             public int getView(ViewModel vm) {
-                return R.layout.row_item_with_image;
+                if (vm instanceof ItemViewModel) {
+                    return ((ItemViewModel) vm).hasImage() ? R.layout.row_item_with_image : R.layout.row_item_without_image;
+                }
+                return 0;
             }
         };
     }
