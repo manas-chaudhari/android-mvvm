@@ -34,6 +34,11 @@ android {
         preDexLibraries = !isCi()
     }
 
+    lintOptions {
+        textOutput 'stdout'
+        textReport true
+    }
+
     buildTypes {
         release {
             minifyEnabled false
