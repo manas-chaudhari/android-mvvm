@@ -4,22 +4,18 @@ android {
     compileSdkVersion 24
     buildToolsVersion "24.0.0"
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
     defaultConfig {
         applicationId "com.example.android_mvvm.sample"
         minSdkVersion 15
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
-
-        jackOptions {
-            enabled true
-        }
     }
+
+    dataBinding {
+        enabled = true
+    }
+
     buildTypes {
         release {
             minifyEnabled false
