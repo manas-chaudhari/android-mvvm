@@ -21,7 +21,7 @@ public class BindingAdapters {
     @BindingAdapter({"items", "view_provider"})
     public static void bindRecyclerViewAdapter(RecyclerView recyclerView, Observable<List<ViewModel>> items, ViewProvider viewProvider) {
         RecyclerViewAdapter adapter = null;
-        if (items != null) {
+        if (items != null && viewProvider != null) {
             adapter = new RecyclerViewAdapter(items, viewProvider, new ViewModelBinder() {
                 @Override
                 public void bind(ViewDataBinding viewDataBinding, ViewModel viewModel) {
