@@ -23,7 +23,7 @@ This library does not make any assumption about the binding mechanism. Hence, a 
 > It is recommended to use a constant instance of `ViewModelBinder` so that this argument isn't required to be passed at all places. See [BindingAdapters.java](https://github.com/manas-chaudhari/android-mvvm/blob/master/sample/src/main/java/com/example/android_mvvm/sample/BindingAdapters.java) for example.
 
 > It is often required to reuse same mapping of ViewModel -> View. One way to provide these is using a static class like [ViewProviders.java](https://github.com/manas-chaudhari/android-mvvm/blob/master/sample/src/main/java/com/example/android_mvvm/sample/ViewProviders.java)
-> See [Composing ViewModels](#Composing ViewModels) section for examples
+> See [Composing ViewModels](#composing-viewmodels) section for examples
 
 ## Creating a View Model
 A view model is formed by fields for storing data (for input/output) and event listeners.
