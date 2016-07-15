@@ -7,12 +7,13 @@ android:
     - build-tools-24.0.0
     - android-24
     - extra-android-m2repository
-
+    - sys-img-armeabi-v7a-android-19
 jdk:
   - oraclejdk8
 
 script:
-  ./gradlew test --continue
+  # sample project uses Jack. Travis kills it, probably because of limited resources
+  ./gradlew android-mvvm:build android-mvvm:test android-mvvm:connectedCheck
 
 branches:
   except:

@@ -1,5 +1,9 @@
 apply plugin: 'com.android.library'
 
+def isCi() {
+    return "true".equals(System.getenv('CI'))
+}
+
 android {
     compileSdkVersion 24
     buildToolsVersion "24.0.0"
@@ -9,20 +13,52 @@ android {
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
+    sourceSets {
+        String sharedTestDir = 'src/sharedTest/java'
+        test {
+            java.srcDir sharedTestDir
+        }
+        androidTest {
+            java.srcDir sharedTestDir
+        }
+    }
+
+    dataBinding {
+        enabled = true
+    }
+
+    dexOptions {
+        preDexLibraries = !isCi()
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    dataBinding {
-        enabled = true
+}
+
+if (isCi()) {
+    println 'Running on CI. Adding task to start emulator.'
+
+    task startEmulator << {
+        "$rootDir/gradle/start-emulator.sh".execute().waitFor()
+    }
+
+    android.testVariants.all { variant ->
+        variant.connectedInstrumentTest.dependsOn startEmulator
     }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
     compile 'io.reactivex:rxjava:1.1.7'
+    compile 'com.android.support:recyclerview-v7:24.0.0'
+    testCompile 'junit:junit:4.12'
+    androidTestCompile 'com.android.support.test:runner:0.4'
+    androidTestCompile 'com.android.support.test:rules:0.4'
 }

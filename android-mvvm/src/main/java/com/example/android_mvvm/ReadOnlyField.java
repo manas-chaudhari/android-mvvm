@@ -2,6 +2,7 @@ package com.example.android_mvvm;
 
 import android.databinding.ObservableField;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import java.util.HashMap;
 
@@ -14,12 +15,21 @@ public class ReadOnlyField<T> extends ObservableField<T> {
     final HashMap<OnPropertyChangedCallback, Subscription> subscriptions = new HashMap<>();
 
     public ReadOnlyField(@NonNull Observable<T> source) {
-        this.source = source.doOnNext(new Action1<T>() {
-            @Override
-            public void call(T t) {
-                set(t);
-            }
-        }).share();
+        this.source = source
+                .doOnNext(new Action1<T>() {
+                    @Override
+                    public void call(T t) {
+                        set(t);
+                    }
+                })
+                .doOnError(new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        Log.e("ReadOnlyField", "onError in source observable", throwable);
+                    }
+                })
+                .onErrorResumeNext(Observable.<T>empty())
+                .share();
     }
 
     /**
