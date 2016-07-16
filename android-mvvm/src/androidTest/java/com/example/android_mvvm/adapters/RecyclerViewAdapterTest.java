@@ -85,41 +85,6 @@ public class RecyclerViewAdapterTest {
     }
 
     @Test
-    public void itemTypeIsBasedOnViewProvider() throws Exception {
-        List<ViewModel> vms = dummyViewModels(4);
-        vms.remove(1);
-        viewModelsSource.onNext(vms);
-
-        assertEquals(0, sut.getItemViewType(0));
-        assertEquals(2, sut.getItemViewType(1));
-        assertEquals(3, sut.getItemViewType(2));
-    }
-
-
-    @Test
-    @UiThreadTest
-    public void createViewHolder() throws Exception {
-        ViewGroup parent = new LinearLayout(InstrumentationRegistry.getContext());
-        RecyclerViewAdapter.DataBindingViewHolder holder = sut.onCreateViewHolder(parent, com.example.android_mvvm.test.R.layout.layout_test);
-
-        assertNotNull(holder);
-        // Class isn't available at compile time
-        assertEquals("com.example.android_mvvm.test.databinding.LayoutTestBinding", holder.viewBinding.getClass().getName());
-    }
-
-    @Test
-    @UiThreadTest
-    public void bindViewHolder() throws Exception {
-        ViewGroup view = new LinearLayout(InstrumentationRegistry.getContext());
-        TestViewDataBinding binding = new TestViewDataBinding(view);
-        sut.onBindViewHolder(new RecyclerViewAdapter.DataBindingViewHolder(binding), 0);
-
-        assertTrue(testBinder.lastBinding == binding);
-        assertTrue(testBinder.lastViewModel == viewModelsSource.getValue().get(0));
-        assertEquals(1, binding.executePendingBindingsCallCount);
-    }
-
-    @Test
     public void noSubscriptionsInitially() throws Exception {
         SubscriptionCounter<List<ViewModel>> counter = new SubscriptionCounter<>();
         Observable<List<ViewModel>> source = viewModelsSource.compose(counter);
@@ -154,8 +119,43 @@ public class RecyclerViewAdapterTest {
         assertEquals(INITIAL_COUNT, sut.getItemCount());
     }
 
+    @Test
+    public void itemTypeIsBasedOnViewProvider() throws Exception {
+        List<ViewModel> vms = dummyViewModels(4);
+        vms.remove(1);
+        viewModelsSource.onNext(vms);
+
+        assertEquals(0, sut.getItemViewType(0));
+        assertEquals(2, sut.getItemViewType(1));
+        assertEquals(3, sut.getItemViewType(2));
+    }
+
+
+    @Test
+    @UiThreadTest
+    public void createViewHolder() throws Exception {
+        ViewGroup parent = new LinearLayout(InstrumentationRegistry.getContext());
+        RecyclerViewAdapter.DataBindingViewHolder holder = sut.onCreateViewHolder(parent, com.example.android_mvvm.test.R.layout.layout_test);
+
+        assertNotNull(holder);
+        // Class isn't available at compile time
+        assertEquals("com.example.android_mvvm.test.databinding.LayoutTestBinding", holder.viewBinding.getClass().getName());
+    }
+
+    @Test
+    @UiThreadTest
+    public void bindViewHolder() throws Exception {
+        ViewGroup view = new LinearLayout(InstrumentationRegistry.getContext());
+        TestViewDataBinding binding = new TestViewDataBinding(view);
+        sut.onBindViewHolder(new RecyclerViewAdapter.DataBindingViewHolder(binding), 0);
+
+        assertTrue(testBinder.lastBinding == binding);
+        assertTrue(testBinder.lastViewModel == viewModelsSource.getValue().get(0));
+        assertEquals(1, binding.executePendingBindingsCallCount);
+    }
+
     @NonNull
-    private List<ViewModel> dummyViewModels(int n) {
+    public static List<ViewModel> dummyViewModels(int n) {
         List<ViewModel> vms = new ArrayList<>();
         for (int i = 0; i < n; i++) {
             vms.add(new TestViewModel(i));
