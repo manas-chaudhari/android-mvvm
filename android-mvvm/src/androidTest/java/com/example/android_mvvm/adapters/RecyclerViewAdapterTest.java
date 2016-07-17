@@ -25,9 +25,7 @@ import java.util.List;
 import rx.Observable;
 import rx.subjects.BehaviorSubject;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @RunWith(AndroidJUnit4.class)
 public class RecyclerViewAdapterTest {
@@ -147,11 +145,24 @@ public class RecyclerViewAdapterTest {
     public void bindViewHolder() throws Exception {
         ViewGroup view = new LinearLayout(InstrumentationRegistry.getContext());
         TestViewDataBinding binding = new TestViewDataBinding(view);
+
         sut.onBindViewHolder(new RecyclerViewAdapter.DataBindingViewHolder(binding), 0);
 
         assertTrue(testBinder.lastBinding == binding);
         assertTrue(testBinder.lastViewModel == viewModelsSource.getValue().get(0));
         assertEquals(1, binding.executePendingBindingsCallCount);
+    }
+
+    @Test
+    @UiThreadTest
+    public void recycleUnbindsViewModel() throws Exception {
+        View view = new View(InstrumentationRegistry.getContext());
+        TestViewDataBinding binding = new TestViewDataBinding(view);
+
+        sut.onViewRecycled(new RecyclerViewAdapter.DataBindingViewHolder(binding));
+
+        assertSame(binding, testBinder.lastBinding);
+        assertNull(testBinder.lastViewModel);
     }
 
     @NonNull

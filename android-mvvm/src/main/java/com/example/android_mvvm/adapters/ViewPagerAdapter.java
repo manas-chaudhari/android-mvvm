@@ -86,12 +86,14 @@ public class ViewPagerAdapter extends PagerAdapter {
                 false);
         binder.bind(binding, vm);
         container.addView(binding.getRoot());
-        return vm;
+        return binding;
     }
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        super.destroyItem(container, position, object);
+        ViewDataBinding binding = (ViewDataBinding) object;
+        binder.bind(binding, null);
+        container.removeView(binding.getRoot());
     }
 
     @Override

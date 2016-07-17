@@ -131,6 +131,21 @@ public class ViewPagerAdapterTest {
         assertTrue(testBinder.lastViewModel == viewModelsSource.getValue().get(0));
     }
 
+    @Test
+    @UiThreadTest
+    public void destroyItemUnbindsAndRemovesChildView() throws Exception {
+        ViewGroup container = new LinearLayout(InstrumentationRegistry.getContext());
+        Object pagerObject = sut.instantiateItem(container, 0);
+        View child = container.getChildAt(0);
+        ViewDataBinding binding = DataBindingUtil.bind(child);
+
+        sut.destroyItem(container, 0, pagerObject);
+
+        assertEquals(0, container.getChildCount());
+        assertTrue(testBinder.lastBinding == binding);
+        assertTrue(testBinder.lastViewModel == null);
+    }
+
     private class TestViewProvider implements ViewProvider {
 
         @Override
