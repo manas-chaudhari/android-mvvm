@@ -1,10 +1,14 @@
 package com.example.android_mvvm.adapters;
 
 import android.database.DataSetObserver;
+import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -29,6 +33,12 @@ public class ViewPagerAdapter extends PagerAdapter {
     @NonNull
     private final HashMap<DataSetObserver, Subscription> subscriptions = new HashMap<>();
 
+    @NonNull
+    private final ViewProvider viewProvider;
+
+    @NonNull
+    private final ViewModelBinder binder;
+
     public ViewPagerAdapter(Observable<List<ViewModel>> viewModels, ViewProvider viewProvider, ViewModelBinder binder) {
         source = viewModels
                 .doOnNext(new Action1<List<ViewModel>>() {
@@ -46,6 +56,8 @@ public class ViewPagerAdapter extends PagerAdapter {
                 })
                 .onErrorResumeNext(Observable.<List<ViewModel>>empty())
                 .share();
+        this.viewProvider = viewProvider;
+        this.binder = binder;
     }
 
     @Override
@@ -65,7 +77,16 @@ public class ViewPagerAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        return super.instantiateItem(container, position);
+        ViewModel vm = latestViewModels.get(position);
+        int layoutId = viewProvider.getView(vm);
+        ViewDataBinding binding = DataBindingUtil.inflate(
+                LayoutInflater.from(container.getContext()),
+                layoutId,
+                container,
+                false);
+        binder.bind(binding, vm);
+        container.addView(binding.getRoot());
+        return vm;
     }
 
     @Override

@@ -1,12 +1,22 @@
 package com.example.android_mvvm.adapters;
 
 import android.database.DataSetObserver;
+import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
+import android.support.test.InstrumentationRegistry;
+import android.support.test.annotation.UiThreadTest;
+import android.support.test.rule.UiThreadTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
+import com.example.android_mvvm.test.R;
 import com.example.android_mvvm.ViewModel;
 import com.example.android_mvvm.testutils.SubscriptionCounter;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -16,15 +26,19 @@ import rx.Observable;
 import rx.subjects.BehaviorSubject;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class ViewPagerAdapterTest {
+
+    @Rule
+    public UiThreadTestRule uiThreadTestRule = new UiThreadTestRule();
 
     public static final int INITIAL_COUNT = 3;
     private ViewPagerAdapter sut;
     private BehaviorSubject<List<ViewModel>> viewModelsSource;
     private SubscriptionCounter<List<ViewModel>> subscriptionCounter;
-    private RecyclerViewAdapterTest.TestViewProvider testViewProvider;
+    private TestViewProvider testViewProvider;
     private RecyclerViewAdapterTest.TestViewModelBinder testBinder;
     private int notifyCallCount;
     private DataSetObserver defaultObserver;
@@ -32,7 +46,7 @@ public class ViewPagerAdapterTest {
     @Before
     public void setUp() throws Exception {
         viewModelsSource = BehaviorSubject.create(RecyclerViewAdapterTest.dummyViewModels(INITIAL_COUNT));
-        testViewProvider = new RecyclerViewAdapterTest.TestViewProvider();
+        testViewProvider = new TestViewProvider();
         testBinder = new RecyclerViewAdapterTest.TestViewModelBinder();
         subscriptionCounter = new SubscriptionCounter<>();
         sut = new ViewPagerAdapter(viewModelsSource.compose(subscriptionCounter),
@@ -102,4 +116,26 @@ public class ViewPagerAdapterTest {
         assertEquals(INITIAL_COUNT, sut.getCount());
     }
 
+    @Test
+    @UiThreadTest
+    public void instantiateItemAddsBindedView() throws Exception {
+        ViewGroup container = new LinearLayout(InstrumentationRegistry.getContext());
+        sut.instantiateItem(container, 0);
+        View child = container.getChildAt(0);
+
+        ViewDataBinding binding = DataBindingUtil.bind(child);
+
+        assertEquals(1, container.getChildCount());
+        assertEquals("com.example.android_mvvm.test.databinding.LayoutTestBinding", binding.getClass().getName());
+        assertTrue(testBinder.lastBinding == binding);
+        assertTrue(testBinder.lastViewModel == viewModelsSource.getValue().get(0));
+    }
+
+    private class TestViewProvider implements ViewProvider {
+
+        @Override
+        public int getView(ViewModel vm) {
+            return R.layout.layout_test;
+        }
+    }
 }
