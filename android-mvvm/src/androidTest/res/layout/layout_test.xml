@@ -3,7 +3,7 @@
     <data>
         <variable
             name="vm"
-            type="com.example.android_mvvm.adapters.RecyclerViewAdapterTest.TestViewModel" />
+            type="com.example.android_mvvm.adapters.TestViewModel" />
     </data>
     <TextView
         android:layout_width="wrap_content"

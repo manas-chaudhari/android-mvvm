@@ -1,7 +1,6 @@
 package com.example.android_mvvm.adapters;
 
 import android.databinding.ViewDataBinding;
-import android.support.annotation.NonNull;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.annotation.UiThreadTest;
 import android.support.test.rule.UiThreadTestRule;
@@ -19,7 +18,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
@@ -44,7 +42,7 @@ public class RecyclerViewAdapterTest {
 
     @Before
     public void setUp() throws Exception {
-        List<ViewModel> vms = dummyViewModels(INITIAL_COUNT);
+        List<ViewModel> vms = TestViewModel.dummyViewModels(INITIAL_COUNT);
 
         viewModelsSource = BehaviorSubject.create(vms);
         testViewProvider = new TestViewProvider();
@@ -70,14 +68,14 @@ public class RecyclerViewAdapterTest {
 
     @Test
     public void itemCountOnUpdate() throws Exception {
-        viewModelsSource.onNext(dummyViewModels(10));
+        viewModelsSource.onNext(TestViewModel.dummyViewModels(10));
 
         assertEquals(10, sut.getItemCount());
     }
 
     @Test
     public void notifyIsCalledOnUpdate() throws Exception {
-        viewModelsSource.onNext(dummyViewModels(4));
+        viewModelsSource.onNext(TestViewModel.dummyViewModels(4));
 
         assertEquals(1, notifyCallCount);
     }
@@ -119,7 +117,7 @@ public class RecyclerViewAdapterTest {
 
     @Test
     public void itemTypeIsBasedOnViewProvider() throws Exception {
-        List<ViewModel> vms = dummyViewModels(4);
+        List<ViewModel> vms = TestViewModel.dummyViewModels(4);
         vms.remove(1);
         viewModelsSource.onNext(vms);
 
@@ -163,23 +161,6 @@ public class RecyclerViewAdapterTest {
 
         assertSame(binding, testBinder.lastBinding);
         assertNull(testBinder.lastViewModel);
-    }
-
-    @NonNull
-    public static List<ViewModel> dummyViewModels(int n) {
-        List<ViewModel> vms = new ArrayList<>();
-        for (int i = 0; i < n; i++) {
-            vms.add(new TestViewModel(i));
-        }
-        return vms;
-    }
-
-    public static class TestViewModel implements ViewModel {
-        int id;
-
-        public TestViewModel(int id) {
-            this.id = id;
-        }
     }
 
     public static class TestViewProvider implements ViewProvider {
@@ -229,14 +210,4 @@ public class RecyclerViewAdapterTest {
         }
     }
 
-    public static class TestViewModelBinder implements ViewModelBinder{
-        ViewDataBinding lastBinding;
-        ViewModel lastViewModel;
-
-        @Override
-        public void bind(ViewDataBinding viewDataBinding, ViewModel viewModel) {
-            lastBinding = viewDataBinding;
-            lastViewModel = viewModel;
-        }
-    }
 }

@@ -39,15 +39,15 @@ public class ViewPagerAdapterTest {
     private BehaviorSubject<List<ViewModel>> viewModelsSource;
     private SubscriptionCounter<List<ViewModel>> subscriptionCounter;
     private TestViewProvider testViewProvider;
-    private RecyclerViewAdapterTest.TestViewModelBinder testBinder;
+    private TestViewModelBinder testBinder;
     private int notifyCallCount;
     private DataSetObserver defaultObserver;
 
     @Before
     public void setUp() throws Exception {
-        viewModelsSource = BehaviorSubject.create(RecyclerViewAdapterTest.dummyViewModels(INITIAL_COUNT));
+        viewModelsSource = BehaviorSubject.create(TestViewModel.dummyViewModels(INITIAL_COUNT));
         testViewProvider = new TestViewProvider();
-        testBinder = new RecyclerViewAdapterTest.TestViewModelBinder();
+        testBinder = new TestViewModelBinder();
         subscriptionCounter = new SubscriptionCounter<>();
         sut = new ViewPagerAdapter(viewModelsSource.compose(subscriptionCounter),
                 testViewProvider, testBinder);
@@ -69,14 +69,14 @@ public class ViewPagerAdapterTest {
 
     @Test
     public void itemCountOnUpdate() throws Exception {
-        viewModelsSource.onNext(RecyclerViewAdapterTest.dummyViewModels(4));
+        viewModelsSource.onNext(TestViewModel.dummyViewModels(4));
 
         assertEquals(4, sut.getCount());
     }
 
     @Test
     public void notifyIsCalledOnUpdate() throws Exception {
-        viewModelsSource.onNext(RecyclerViewAdapterTest.dummyViewModels(4));
+        viewModelsSource.onNext(TestViewModel.dummyViewModels(4));
 
         assertEquals(1, notifyCallCount);
     }
@@ -86,7 +86,7 @@ public class ViewPagerAdapterTest {
         SubscriptionCounter<List<ViewModel>> counter = new SubscriptionCounter<>();
         Observable<List<ViewModel>> source = viewModelsSource.compose(counter);
 
-        RecyclerViewAdapter sut = new RecyclerViewAdapter(source, testViewProvider, testBinder);
+        ViewPagerAdapter sut = new ViewPagerAdapter(source, testViewProvider, testBinder);
 
         assertEquals(0, counter.subscriptions);
     }
