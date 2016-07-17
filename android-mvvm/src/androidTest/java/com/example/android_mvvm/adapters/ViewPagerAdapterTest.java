@@ -26,6 +26,7 @@ import rx.Observable;
 import rx.subjects.BehaviorSubject;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
@@ -144,6 +145,22 @@ public class ViewPagerAdapterTest {
         assertEquals(0, container.getChildCount());
         assertTrue(testBinder.lastBinding == binding);
         assertTrue(testBinder.lastViewModel == null);
+    }
+
+    @Test
+    @UiThreadTest
+    public void viewFromObject() throws Exception {
+        ViewGroup container1 = new LinearLayout(InstrumentationRegistry.getContext());
+        ViewGroup container2 = new LinearLayout(InstrumentationRegistry.getContext());
+        Object pagerObject1 = sut.instantiateItem(container1, 0);
+        Object pagerObject2 = sut.instantiateItem(container2, 1);
+        View child1 = container1.getChildAt(0);
+        View child2 = container2.getChildAt(0);
+
+        assertTrue(sut.isViewFromObject(child1, pagerObject1));
+        assertFalse(sut.isViewFromObject(child1, pagerObject2));
+        assertTrue(sut.isViewFromObject(child2, pagerObject2));
+        assertFalse(sut.isViewFromObject(child2, pagerObject1));
     }
 
     private class TestViewProvider implements ViewProvider {
