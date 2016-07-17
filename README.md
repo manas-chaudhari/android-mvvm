@@ -1,9 +1,12 @@
 # Android MVVM [![Build Status](https://travis-ci.org/manas-chaudhari/android-mvvm.svg?branch=master)](https://travis-ci.org/manas-chaudhari/android-mvvm)
 
-Objectives:
-1. To showcase how MVVM can be implemented on Android and to provide tools for doing so
-1. To showcase how reusability of presentation logic using MVVM architecture
+Contents:
 
+1. Sample project to demonstrate a coding pattern based on MVVM with focus on
+  1. Easy composition of views
+  1. Minimising boilerplate of setting up views
+  1. Reuse of presentation logic
+1. A library with essential tools for the pattern
 
 ## MVVM Implementation
 This pattern makes use of Data Binding, such that views contain exactly 1 variable `vm` i.e. ViewModel. Idea is that the ViewModel should have all information required to display the View. Multiple views can share a single view model. This helps in reusing functionality for a different layout.
