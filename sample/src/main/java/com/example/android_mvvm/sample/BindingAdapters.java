@@ -3,6 +3,7 @@ package com.example.android_mvvm.sample;
 import android.databinding.BindingAdapter;
 import android.databinding.ViewDataBinding;
 import android.support.annotation.LayoutRes;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -35,7 +36,12 @@ public class BindingAdapters {
         if (items != null && viewProvider != null) {
             adapter = new RecyclerViewAdapter(items, viewProvider, defaultBinder);
         }
+        RecyclerView.Adapter previousAdapter = recyclerView.getAdapter();
         recyclerView.setAdapter(adapter);
+
+        // Previous adapter should get deallocated
+        if (previousAdapter != null)
+            ExampleApplication.getRefWatcher(recyclerView.getContext()).watch(previousAdapter);
     }
 
     @BindingAdapter({"items", "view_provider"})
@@ -60,6 +66,11 @@ public class BindingAdapters {
         if (items != null && viewProvider != null) {
             adapter = new ViewPagerAdapter(items, viewProvider, defaultBinder);
         }
+        PagerAdapter previousAdapter = viewPager.getAdapter();
         BindingUtils.bindAdapter(viewPager, adapter);
+
+        // Previous adapter should get deallocated
+        if (previousAdapter != null)
+            ExampleApplication.getRefWatcher(viewPager.getContext()).watch(previousAdapter);
     }
 }
