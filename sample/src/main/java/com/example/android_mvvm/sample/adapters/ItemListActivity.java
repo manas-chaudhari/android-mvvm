@@ -9,13 +9,21 @@ import com.example.android_mvvm.sample.databinding.ActivityItemListBinding;
 
 public class ItemListActivity extends AppCompatActivity {
     ItemListViewModel viewModel;
+    private ActivityItemListBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewModel = new ItemListViewModel();
-        ActivityItemListBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_item_list);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_item_list);
         binding.setVm(viewModel);
         setTitle("Adapters Demo");
+    }
+
+    @Override
+    protected void onDestroy() {
+        binding.setVm(null);
+        binding.executePendingBindings();
+        super.onDestroy();
     }
 }
