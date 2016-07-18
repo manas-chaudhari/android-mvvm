@@ -155,6 +155,7 @@ Guidelines to prevent memory leaks:
 
 - Use `BindingUtils` for binding adapters
 - Make sure ViewModel is set to `null` when Activity is destroyed
+  
   ```java
   binding.setVm(null);
   binding.executePendingBindings();
