@@ -149,6 +149,18 @@ For example, one can write these binding adapters for a recycler view:
 ```
 This example has been implemented in sample. See [BindingAdapters.java](https://github.com/manas-chaudhari/android-mvvm/blob/master/sample/src/main/java/com/example/android_mvvm/sample/BindingAdapters.java)
 
+## Preventing Memory Leaks
+
+Guidelines to prevent memory leaks:
+
+- Use `BindingUtils` for binding adapters
+- Make sure ViewModel is set to `null` when Activity is destroyed
+  ```java
+  binding.setVm(null);
+  binding.executePendingBindings();
+  ```
+- Never subscribe to any field inside a ViewModel. Derive the action based on some other observable
+
 
 ## Reuse Scenarios
 
