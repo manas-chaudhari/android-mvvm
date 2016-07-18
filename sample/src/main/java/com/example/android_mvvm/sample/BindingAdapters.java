@@ -1,6 +1,7 @@
 package com.example.android_mvvm.sample;
 
 import android.databinding.BindingAdapter;
+import android.databinding.BindingConversion;
 import android.databinding.ViewDataBinding;
 import android.support.annotation.LayoutRes;
 import android.support.v4.view.PagerAdapter;
@@ -44,14 +45,14 @@ public class BindingAdapters {
             ExampleApplication.getRefWatcher(recyclerView.getContext()).watch(previousAdapter);
     }
 
-    @BindingAdapter({"items", "view_provider"})
-    public static void bindRecyclerViewAdapterWithSingleView(RecyclerView recyclerView, Observable<List<ViewModel>> items, @LayoutRes final int viewRes) {
-        bindRecyclerViewAdapter(recyclerView, items, new ViewProvider() {
+    @BindingConversion
+    public static ViewProvider getViewProviderForStaticLayout(@LayoutRes final int layoutId) {
+        return new ViewProvider() {
             @Override
             public int getView(ViewModel vm) {
-                return viewRes;
+                return layoutId;
             }
-        });
+        };
     }
 
     @BindingAdapter("layout_vertical")
