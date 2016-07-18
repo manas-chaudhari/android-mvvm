@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import com.example.android_mvvm.sample.recyclerview.ItemListActivity;
+import com.example.android_mvvm.sample.adapters.ItemListActivity;
 
 public class MainActivity extends AppCompatActivity {
 

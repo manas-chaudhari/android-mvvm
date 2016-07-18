@@ -8,7 +8,7 @@
 
         <variable
             name="vm"
-            type="com.example.android_mvvm.sample.recyclerview.ItemListViewModel" />
+            type="com.example.android_mvvm.sample.adapters.ItemListViewModel" />
 
         <import type="com.example.android_mvvm.sample.ViewProviders" />
     </data>
@@ -21,7 +21,13 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
-        tools:context=".recyclerview.ItemListActivity">
+        tools:context=".adapters.ItemListActivity"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="RecyclerView with dynamic views" />
 
         <!--Example with dynamic views-->
         <android.support.v7.widget.RecyclerView
@@ -32,6 +38,11 @@
             bind:layout_vertical="@{true}"
             bind:view_provider="@{ViewProviders.itemListing}" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="RecyclerView with static views" />
+
         <!--Example With Static Views-->
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
@@ -40,6 +51,11 @@
             bind:items="@{vm.itemVms}"
             bind:layout_vertical="@{true}"
             bind:view_provider="@{@layout/row_item_without_image}" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ViewPager with dynamic views" />
 
         <!--ViewPager with Dynamic views-->
         <android.support.v4.view.ViewPager

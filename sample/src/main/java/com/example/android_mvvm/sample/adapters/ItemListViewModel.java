@@ -1,4 +1,4 @@
-package com.example.android_mvvm.sample.recyclerview;
+package com.example.android_mvvm.sample.adapters;
 
 import com.example.android_mvvm.ViewModel;
 import com.example.android_mvvm.sample.Item;
