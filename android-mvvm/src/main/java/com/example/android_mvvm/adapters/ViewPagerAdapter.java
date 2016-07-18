@@ -1,6 +1,5 @@
 package com.example.android_mvvm.adapters;
 
-import android.database.DataSetObserver;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.support.annotation.NonNull;
@@ -14,13 +13,11 @@ import android.view.ViewGroup;
 import com.example.android_mvvm.ViewModel;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import rx.Observable;
 import rx.Subscription;
 import rx.functions.Action1;
-import rx.observables.ConnectableObservable;
 
 public class ViewPagerAdapter extends PagerAdapter implements Connectable {
 
@@ -28,7 +25,7 @@ public class ViewPagerAdapter extends PagerAdapter implements Connectable {
     private List<ViewModel> latestViewModels = new ArrayList<>();
 
     @NonNull
-    private final ConnectableObservable<List<ViewModel>> source;
+    private final Observable<List<ViewModel>> source;
 
     @NonNull
     private final ViewProvider viewProvider;
@@ -52,7 +49,7 @@ public class ViewPagerAdapter extends PagerAdapter implements Connectable {
                     }
                 })
                 .onErrorResumeNext(Observable.<List<ViewModel>>empty())
-                .replay(1);
+                .share();
         this.viewProvider = viewProvider;
         this.binder = binder;
     }
@@ -95,6 +92,6 @@ public class ViewPagerAdapter extends PagerAdapter implements Connectable {
 
     @Override
     public Subscription connect() {
-        return source.connect();
+        return source.subscribe();
     }
 }
