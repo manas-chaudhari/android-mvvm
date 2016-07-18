@@ -8,9 +8,9 @@ import org.junit.Test;
 import rx.Observable;
 import rx.observers.TestSubscriber;
 
-import static com.example.android_mvvm.BindingUtils.toObservable;
+import static com.example.android_mvvm.FieldUtils.toObservable;
 
-public class BindingUtilsTest {
+public class FieldUtilsTest {
 
     public static final int INITIAL_VALUE = 4;
     private Observable<Integer> sut;

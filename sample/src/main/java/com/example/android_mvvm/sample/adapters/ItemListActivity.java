@@ -1,4 +1,4 @@
-package com.example.android_mvvm.sample.recyclerview;
+package com.example.android_mvvm.sample.adapters;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -16,5 +16,6 @@ public class ItemListActivity extends AppCompatActivity {
         viewModel = new ItemListViewModel();
         ActivityItemListBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_item_list);
         binding.setVm(viewModel);
+        setTitle("Adapters Demo");
     }
 }

@@ -67,6 +67,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     @Override
+    public void onViewRecycled(DataBindingViewHolder holder) {
+        binder.bind(holder.viewBinding, null);
+    }
+
+    @Override
     public int getItemCount() {
         return latestViewModels.size();
     }
