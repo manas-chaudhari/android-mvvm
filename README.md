@@ -140,6 +140,12 @@ For example, one can write these binding adapters for a recycler view:
     bind:items="@{vm.itemVms}"
     bind:layout_vertical="@{true}"
     bind:view_provider="@{@layout/row_item_without_image}" />
+
+<!--Same arguments for ViewPager-->
+<android.support.v4.widget.ViewPager
+    bind:items="@{vm.itemVms}"
+    bind:view_provider="@{ViewProviders.itemListing}" />
+
 ```
 This example has been implemented in sample. See [BindingAdapters.java](https://github.com/manas-chaudhari/android-mvvm/blob/master/sample/src/main/java/com/example/android_mvvm/sample/BindingAdapters.java)
 
