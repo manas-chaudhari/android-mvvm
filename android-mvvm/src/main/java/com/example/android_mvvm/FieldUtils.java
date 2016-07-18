@@ -9,7 +9,7 @@ import rx.Subscriber;
 import rx.functions.Action0;
 import rx.subscriptions.Subscriptions;
 
-public class BindingUtils {
+public class FieldUtils {
     @NonNull
     public static <T> Observable<T> toObservable(@NonNull final ObservableField<T> field) {
         return Observable.create(new Observable.OnSubscribe<T>() {
