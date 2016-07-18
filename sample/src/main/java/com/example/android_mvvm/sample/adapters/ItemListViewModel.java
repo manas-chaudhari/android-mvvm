@@ -5,23 +5,29 @@ import com.example.android_mvvm.sample.Item;
 import com.example.android_mvvm.sample.ItemViewModel;
 import com.example.android_mvvm.sample.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
-import rx.functions.Func1;
+import rx.subjects.BehaviorSubject;
 
 public class ItemListViewModel {
     public final Observable<List<ViewModel>> itemVms;
 
+    /**
+     * Static non-terminating source will ensure that any non-closed subscription results in a memory leak
+     */
+    private static final Observable<List<ViewModel>> itemViewModelSource;
+    static {
+        List<ViewModel> vms = new ArrayList<>();
+
+        vms.add(new ItemViewModel(new Item("item 1"), 0));
+        vms.add(new ItemViewModel(new Item("item 2"), R.drawable.some_image));
+        vms.add(new ItemViewModel(new Item("item 1"), 0));
+        itemViewModelSource = BehaviorSubject.create(vms);
+    }
+
     public ItemListViewModel() {
-        this.itemVms = Observable.just("item 1", "item 2", "item 3")
-                .map(new Func1<String, ViewModel>() {
-                    @Override
-                    public ViewModel call(String name) {
-                        int image = name.contains("2") ? R.drawable.some_image : 0;
-                        return new ItemViewModel(new Item(name), image);
-                    }
-                })
-                .toList();
+        this.itemVms = itemViewModelSource;
     }
 }
