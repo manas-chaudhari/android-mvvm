@@ -1,6 +1,5 @@
 package com.example.android_mvvm.adapters;
 
-import android.database.DataSetObserver;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.support.test.InstrumentationRegistry;
@@ -11,8 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.example.android_mvvm.test.R;
 import com.example.android_mvvm.ViewModel;
+import com.example.android_mvvm.test.R;
 import com.example.android_mvvm.testutils.SubscriptionCounter;
 
 import org.junit.Before;
@@ -23,6 +22,7 @@ import org.junit.runner.RunWith;
 import java.util.List;
 
 import rx.Observable;
+import rx.Subscription;
 import rx.subjects.BehaviorSubject;
 
 import static org.junit.Assert.assertEquals;
@@ -36,13 +36,12 @@ public class ViewPagerAdapterTest {
     public UiThreadTestRule uiThreadTestRule = new UiThreadTestRule();
 
     public static final int INITIAL_COUNT = 3;
-    private ViewPagerAdapter sut;
+    private TestViewPagerAdapter sut;
     private BehaviorSubject<List<ViewModel>> viewModelsSource;
     private SubscriptionCounter<List<ViewModel>> subscriptionCounter;
     private TestViewProvider testViewProvider;
     private TestViewModelBinder testBinder;
-    private int notifyCallCount;
-    private DataSetObserver defaultObserver;
+    private Subscription connection;
 
     @Before
     public void setUp() throws Exception {
@@ -50,17 +49,10 @@ public class ViewPagerAdapterTest {
         testViewProvider = new TestViewProvider();
         testBinder = new TestViewModelBinder();
         subscriptionCounter = new SubscriptionCounter<>();
-        sut = new ViewPagerAdapter(viewModelsSource.compose(subscriptionCounter),
+        sut = new TestViewPagerAdapter(viewModelsSource.compose(subscriptionCounter),
                 testViewProvider, testBinder);
 
-        notifyCallCount = 0;
-        defaultObserver = new DataSetObserver() {
-            @Override
-            public void onChanged() {
-                notifyCallCount++;
-            }
-        };
-        sut.registerDataSetObserver(defaultObserver);
+        connection = sut.connect();
     }
 
     @Test
@@ -77,9 +69,11 @@ public class ViewPagerAdapterTest {
 
     @Test
     public void notifyIsCalledOnUpdate() throws Exception {
+        assertEquals(1, sut.notifyCount);
+
         viewModelsSource.onNext(TestViewModel.dummyViewModels(4));
 
-        assertEquals(1, notifyCallCount);
+        assertEquals(2, sut.notifyCount);
     }
 
     @Test
@@ -93,12 +87,12 @@ public class ViewPagerAdapterTest {
     }
 
     @Test
-    public void noSubscriptionsAfterRemovingAdapterObserver() throws Exception {
+    public void noSubscriptionsAfterDisconnect() throws Exception {
         // defaultObserver is added in setup to measure notifyCount
         assertEquals(1, subscriptionCounter.subscriptions);
         assertEquals(0, subscriptionCounter.unsubscriptions);
 
-        sut.unregisterDataSetObserver(defaultObserver);
+        connection.unsubscribe();
 
         assertEquals(0, subscriptionCounter.subscriptions - subscriptionCounter.unsubscriptions);
     }
@@ -163,11 +157,25 @@ public class ViewPagerAdapterTest {
         assertFalse(sut.isViewFromObject(child2, pagerObject1));
     }
 
-    private class TestViewProvider implements ViewProvider {
+    private static class TestViewProvider implements ViewProvider {
 
         @Override
         public int getView(ViewModel vm) {
             return R.layout.layout_test;
+        }
+    }
+
+    private static class TestViewPagerAdapter extends ViewPagerAdapter {
+        int notifyCount = 0;
+
+        public TestViewPagerAdapter(Observable<List<ViewModel>> viewModels, ViewProvider viewProvider, ViewModelBinder binder) {
+            super(viewModels, viewProvider, binder);
+        }
+
+        @Override
+        public void notifyDataSetChanged() {
+            super.notifyDataSetChanged();
+            notifyCount++;
         }
     }
 }

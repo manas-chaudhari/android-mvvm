@@ -3,7 +3,6 @@ package com.example.android_mvvm.adapters;
 import android.database.DataSetObserver;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
@@ -21,17 +20,15 @@ import java.util.List;
 import rx.Observable;
 import rx.Subscription;
 import rx.functions.Action1;
+import rx.observables.ConnectableObservable;
 
-public class ViewPagerAdapter extends PagerAdapter {
+public class ViewPagerAdapter extends PagerAdapter implements Connectable {
 
     @NonNull
     private List<ViewModel> latestViewModels = new ArrayList<>();
 
     @NonNull
-    private final Observable<List<ViewModel>> source;
-
-    @NonNull
-    private final HashMap<DataSetObserver, Subscription> subscriptions = new HashMap<>();
+    private final ConnectableObservable<List<ViewModel>> source;
 
     @NonNull
     private final ViewProvider viewProvider;
@@ -39,7 +36,7 @@ public class ViewPagerAdapter extends PagerAdapter {
     @NonNull
     private final ViewModelBinder binder;
 
-    public ViewPagerAdapter(Observable<List<ViewModel>> viewModels, ViewProvider viewProvider, ViewModelBinder binder) {
+    public ViewPagerAdapter(Observable<List<ViewModel>> viewModels, @NonNull ViewProvider viewProvider, @NonNull ViewModelBinder binder) {
         source = viewModels
                 .doOnNext(new Action1<List<ViewModel>>() {
                     @Override
@@ -55,24 +52,9 @@ public class ViewPagerAdapter extends PagerAdapter {
                     }
                 })
                 .onErrorResumeNext(Observable.<List<ViewModel>>empty())
-                .share();
+                .replay(1);
         this.viewProvider = viewProvider;
         this.binder = binder;
-    }
-
-    @Override
-    public void registerDataSetObserver(DataSetObserver observer) {
-        subscriptions.put(observer, source.subscribe());
-        super.registerDataSetObserver(observer);
-    }
-
-    @Override
-    public void unregisterDataSetObserver(DataSetObserver observer) {
-        super.unregisterDataSetObserver(observer);
-        Subscription subscription = subscriptions.remove(observer);
-        if (subscription != null && !subscription.isUnsubscribed()) {
-            subscription.unsubscribe();
-        }
     }
 
     @Override
@@ -109,5 +91,10 @@ public class ViewPagerAdapter extends PagerAdapter {
     @Override
     public boolean isViewFromObject(View view, Object object) {
         return ((ViewDataBinding)object).getRoot() == view;
+    }
+
+    @Override
+    public Subscription connect() {
+        return source.connect();
     }
 }
