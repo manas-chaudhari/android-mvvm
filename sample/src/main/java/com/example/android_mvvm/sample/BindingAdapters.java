@@ -4,6 +4,7 @@ import android.databinding.BindingAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.example.android_mvvm.ViewModel;
 import com.example.android_mvvm.adapters.ViewProvider;
@@ -12,6 +13,7 @@ import com.example.android_mvvm.utils.BindingUtils;
 import java.util.List;
 
 import rx.Observable;
+import rx.functions.Action0;
 
 @SuppressWarnings("unused")
 public class BindingAdapters {
@@ -40,5 +42,19 @@ public class BindingAdapters {
         // Previous adapter should get deallocated
         if (previousAdapter != null)
             ExampleApplication.getRefWatcher(viewPager.getContext()).watch(previousAdapter);
+    }
+
+    @BindingConversion
+    public static View.OnClickListener toOnClickListener(final Action0 listener) {
+        if (listener != null) {
+            return new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.call();
+                }
+            };
+        } else {
+            return null;
+        }
     }
 }

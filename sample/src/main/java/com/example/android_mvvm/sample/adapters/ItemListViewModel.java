@@ -1,5 +1,7 @@
 package com.example.android_mvvm.sample.adapters;
 
+import android.support.annotation.NonNull;
+
 import com.example.android_mvvm.ViewModel;
 import com.example.android_mvvm.sample.Item;
 import com.example.android_mvvm.sample.ItemViewModel;
@@ -9,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
+import rx.functions.Func1;
 import rx.subjects.BehaviorSubject;
 
 public class ItemListViewModel {
@@ -17,17 +20,28 @@ public class ItemListViewModel {
     /**
      * Static non-terminating source will ensure that any non-closed subscription results in a memory leak
      */
-    private static final Observable<List<ViewModel>> itemViewModelSource;
+    private static final Observable<List<Item>> itemsSource;
     static {
-        List<ViewModel> vms = new ArrayList<>();
+        List<Item> items = new ArrayList<>();
 
-        vms.add(new ItemViewModel(new Item("item 1"), 0));
-        vms.add(new ItemViewModel(new Item("item 2"), R.drawable.some_image));
-        vms.add(new ItemViewModel(new Item("item 1"), 0));
-        itemViewModelSource = BehaviorSubject.create(vms);
+        items.add(new Item("item 1"));
+        items.add(new Item("item 2"));
+        items.add(new Item("item 3"));
+        itemsSource = BehaviorSubject.create(items);
     }
 
-    public ItemListViewModel() {
-        this.itemVms = itemViewModelSource;
+    public ItemListViewModel(@NonNull final ShowMessage showMessage) {
+        this.itemVms = itemsSource.map(new Func1<List<Item>, List<ViewModel>>() {
+            @Override
+            public List<ViewModel> call(List<Item> items) {
+                List<ViewModel> vms = new ArrayList<>();
+                for (Item item : items) {
+                    vms.add(new ItemViewModel(item,
+                            item.name.contains("2") ? R.drawable.some_image : 0,
+                            showMessage));
+                }
+                return vms;
+            }
+        });
     }
 }
