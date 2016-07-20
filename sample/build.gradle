@@ -43,4 +43,8 @@ dependencies {
     // Temporary fix to prevent proguad errors. Should be removed when next release of leakcanary is available
     debugCompile 'com.squareup.haha:haha:2.0.3'
 
+    // Dagger
+    provided "com.google.dagger:dagger-compiler:2.5"
+    compile 'com.google.dagger:dagger:2.5'
+    provided 'javax.annotation:jsr250-api:1.0'
 }
