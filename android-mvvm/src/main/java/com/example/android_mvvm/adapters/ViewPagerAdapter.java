@@ -33,7 +33,7 @@ public class ViewPagerAdapter extends PagerAdapter implements Connectable {
     @NonNull
     private final ViewModelBinder binder;
 
-    public ViewPagerAdapter(Observable<List<ViewModel>> viewModels, @NonNull ViewProvider viewProvider, @NonNull ViewModelBinder binder) {
+    public ViewPagerAdapter(@NonNull Observable<List<ViewModel>> viewModels, @NonNull ViewProvider viewProvider, @NonNull ViewModelBinder binder) {
         source = viewModels
                 .doOnNext(new Action1<List<ViewModel>>() {
                     @Override

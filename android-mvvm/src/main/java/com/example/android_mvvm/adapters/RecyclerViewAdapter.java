@@ -92,9 +92,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     public static class DataBindingViewHolder extends RecyclerView.ViewHolder {
+        @NonNull
         final ViewDataBinding viewBinding;
 
-        public DataBindingViewHolder(ViewDataBinding viewBinding) {
+        public DataBindingViewHolder(@NonNull ViewDataBinding viewBinding) {
             super(viewBinding.getRoot());
             this.viewBinding = viewBinding;
         }
