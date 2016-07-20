@@ -10,6 +10,8 @@ import com.example.android_mvvm.sample.Navigator;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import rx.Observable;
 import rx.functions.Func1;
 import rx.subjects.BehaviorSubject;
@@ -30,6 +32,7 @@ public class ItemListViewModel {
         itemsSource = BehaviorSubject.create(items);
     }
 
+    @Inject
     public ItemListViewModel(@NonNull final MessageHelper messageHelper, @NonNull final Navigator navigator) {
         this.itemVms = itemsSource.map(new Func1<List<Item>, List<ViewModel>>() {
             @Override

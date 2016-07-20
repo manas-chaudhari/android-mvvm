@@ -4,10 +4,12 @@ import android.app.Application;
 import android.content.Context;
 import android.databinding.ViewDataBinding;
 
+import com.example.android_mvvm.sample.dagger.ApplicationComponent;
+import com.example.android_mvvm.sample.dagger.ApplicationModule;
+import com.example.android_mvvm.sample.dagger.DaggerApplicationComponent;
 import com.example.android_mvvm.ViewModel;
 import com.example.android_mvvm.adapters.ViewModelBinder;
 import com.example.android_mvvm.utils.BindingUtils;
-//import com.example.android_mvvm.sample.dagger.ApplicationComponent;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
@@ -19,7 +21,7 @@ public class ExampleApplication extends Application {
 
     private RefWatcher refWatcher;
 
-//    private ApplicationComponent applicationComponent;
+    private ApplicationComponent applicationComponent;
 
     @Override
     public void onCreate() {
@@ -31,10 +33,12 @@ public class ExampleApplication extends Application {
                 viewDataBinding.setVariable(com.example.android_mvvm.sample.BR.vm, viewModel);
             }
         });
-//        applicationComponent = DaggerApplicationComponent.builder().build();
+        applicationComponent = DaggerApplicationComponent.builder()
+                .applicationModule(new ApplicationModule(this))
+                .build();
     }
 
-//    public ApplicationComponent getApplicationComponent() {
-//        return applicationComponent;
-//    }
+    public static ApplicationComponent getApplicationComponent(Context context) {
+        return ((ExampleApplication)context.getApplicationContext()).applicationComponent;
+    }
 }
