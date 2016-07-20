@@ -147,7 +147,24 @@ For example, one can write these binding adapters for a recycler view:
     bind:view_provider="@{ViewProviders.itemListing}" />
 
 ```
-This example has been implemented in sample. See [BindingAdapters.java](https://github.com/manas-chaudhari/android-mvvm/blob/master/sample/src/main/java/com/example/android_mvvm/sample/BindingAdapters.java)
+
+### Adapters provided in library
+BindingAdapters to work with `RecyclerViewAdapter` and `ViewPagerAdapter` have been provided with the library in [BindingUtils.java](https://github.com/manas-chaudhari/android-mvvm/blob/master/android-mvvm/src/main/java/com/example/android_mvvm/utils/BindingUtils.java).
+The above examples will work out of the box provided you have set the defaultBinder. For example:
+```java
+BindingUtils.setDefaultBinder(new ViewModelBinder() {
+    @Override
+    public void bind(ViewDataBinding viewDataBinding, ViewModel viewModel) {
+        viewDataBinding.setVariable(com.example.android_mvvm.sample.BR.vm, viewModel);
+    }
+});
+```
+This library will provide BindingAdapters related to the components it provides.
+Hence, it is important to write your own adapters to reduce other boilerplate code.
+
+> Although BindingAdapters can be overriden, it hasn't been specified how databinding resolves the conflicts. Based on experiments, adapters in client project are preferred over adapters from library. However, having identical adapters in a same module will result in undeterministic results.
+
+> The sample project overrides these BindingAdapters to check memory leaks
 
 ## Preventing Memory Leaks
 
@@ -161,6 +178,8 @@ Guidelines to prevent memory leaks:
   binding.executePendingBindings();
   ```
 - Never subscribe to any field inside a ViewModel. Derive the action based on some other observable
+
+The sample project uses LeakCanary to ensure that there are no leaks. This is only for demonstration purposes as the adapters have been tested against leaks. However, they provide a good example for testing leaks in binding adapters. See [BindingAdapters.java](https://github.com/manas-chaudhari/android-mvvm/blob/master/sample/src/main/java/com/example/android_mvvm/sample/BindingAdapters.java)
 
 
 ## Reuse Scenarios
