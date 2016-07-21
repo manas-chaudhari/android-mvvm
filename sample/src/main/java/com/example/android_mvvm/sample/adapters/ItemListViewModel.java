@@ -33,13 +33,13 @@ public class ItemListViewModel {
     }
 
     @Inject
-    public ItemListViewModel(@NonNull final MessageHelper messageHelper, @NonNull final Navigator navigator) {
+    public ItemListViewModel(@NonNull final Func1<Item, ItemViewModel> itemVMGenerator) {
         this.itemVms = itemsSource.map(new Func1<List<Item>, List<ViewModel>>() {
             @Override
             public List<ViewModel> call(List<Item> items) {
                 List<ViewModel> vms = new ArrayList<>();
                 for (Item item : items) {
-                    vms.add(new ItemViewModel(item, messageHelper, navigator));
+                    vms.add(itemVMGenerator.call(item));
                 }
                 return vms;
             }

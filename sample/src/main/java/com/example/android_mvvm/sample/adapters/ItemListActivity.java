@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Toast;
 
 import com.example.android_mvvm.sample.ExampleApplication;
 import com.example.android_mvvm.sample.Item;
@@ -19,10 +18,6 @@ public class ItemListActivity extends AppCompatActivity {
     @Inject
     ItemListViewModel viewModel;
     private ActivityItemListBinding binding;
-
-    @Inject
-
-    MessageHelper messageHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

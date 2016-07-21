@@ -10,10 +10,13 @@ import com.example.android_mvvm.sample.ItemDetailsActivity;
 import com.example.android_mvvm.sample.Navigator;
 import com.example.android_mvvm.sample.adapters.MessageHelper;
 
+import javax.inject.Singleton;
+
 import dagger.Module;
 import dagger.Provides;
 
 @Module
+@Singleton
 public class ApplicationModule {
     public final Application application;
 
