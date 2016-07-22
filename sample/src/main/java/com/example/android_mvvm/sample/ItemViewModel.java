@@ -19,8 +19,8 @@ public class ItemViewModel implements ViewModel {
         return imageRes != 0;
     }
 
-    public ItemViewModel(@NonNull final Item item, @DrawableRes int imageRes, @NonNull final ShowMessage showMessage) {
-        this.imageRes = imageRes;
+    public ItemViewModel(@NonNull final Item item, @NonNull final ShowMessage showMessage) {
+        this.imageRes = item.name.contains("2") ? R.drawable.some_image : 0;
         this.name = item.name.toUpperCase();
         this.onClicked = new Action0() {
             @Override

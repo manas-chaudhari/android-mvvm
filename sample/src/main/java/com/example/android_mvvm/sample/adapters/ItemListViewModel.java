@@ -36,9 +36,7 @@ public class ItemListViewModel {
             public List<ViewModel> call(List<Item> items) {
                 List<ViewModel> vms = new ArrayList<>();
                 for (Item item : items) {
-                    vms.add(new ItemViewModel(item,
-                            item.name.contains("2") ? R.drawable.some_image : 0,
-                            showMessage));
+                    vms.add(new ItemViewModel(item, showMessage));
                 }
                 return vms;
             }
