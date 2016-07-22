@@ -35,6 +35,11 @@ public class ItemListViewModel {
         this.itemVms = itemsSource.map(new Func1<List<Item>, List<ViewModel>>() {
             @Override
             public List<ViewModel> call(List<Item> items) {
+                /*  When using lambdas, this condenses to:
+                val vms = items.map { ItemViewModel(it, showMessage, navigator) }
+                val vmClicked = vms.map { vm -> vm.onClicked.map { vm }}.merge()
+                vms.forEach { vm -> it.isSelected.sink(vmClicked.map { it == vm }) }
+                 */
                 List<ItemViewModel> vms = new ArrayList<>();
                 List<Observable<ItemViewModel>> vmClickedList = new ArrayList<>();
                 for (Item item : items) {
@@ -49,7 +54,7 @@ public class ItemListViewModel {
                 }
                 Observable<ItemViewModel> vmClicked = Observable.merge(vmClickedList);
                 for (final ItemViewModel vm : vms) {
-                    vm.setSelected(vmClicked.map(new Func1<ItemViewModel, Boolean>() {
+                    vm.isSelected.sink(vmClicked.map(new Func1<ItemViewModel, Boolean>() {
                         @Override
                         public Boolean call(ItemViewModel itemViewModel) {
                             return itemViewModel == vm;

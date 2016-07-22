@@ -4,6 +4,7 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.example.android_mvvm.LazyReadOnlyField;
 import com.example.android_mvvm.ReadOnlyField;
 import com.example.android_mvvm.ViewModel;
 import com.example.android_mvvm.sample.adapters.ShowMessage;
@@ -17,7 +18,7 @@ public class ItemViewModel implements ViewModel {
     public final String name;
 
     public final @DrawableRes int imageRes;
-    public ReadOnlyField<Boolean> isSelected;
+    public final LazyReadOnlyField<Boolean> isSelected = LazyReadOnlyField.create();
 
     public boolean hasImage() {
         return imageRes != 0;
@@ -39,8 +40,4 @@ public class ItemViewModel implements ViewModel {
 
     @Nullable
     public final Action0 onDetailsClicked;
-
-    public void setSelected(Observable<Boolean> selected) {
-        this.isSelected = new ReadOnlyField<>(selected);
-    }
 }
