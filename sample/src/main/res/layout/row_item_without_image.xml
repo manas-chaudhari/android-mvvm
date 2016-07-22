@@ -6,6 +6,8 @@
         <variable
             name="vm"
             type="com.example.android_mvvm.sample.ItemViewModel" />
+
+        <import type="android.view.View" />
     </data>
 
     <LinearLayout
@@ -16,7 +18,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{vm.name}" />
+            android:text="@{vm.name}"
+            android:visibility="@{(vm.isSelected ?? false) ? View.VISIBLE : View.GONE}" />
 
         <Button
             android:layout_width="wrap_content"

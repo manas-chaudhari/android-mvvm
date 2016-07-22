@@ -11,11 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
+import rx.functions.Action0;
+import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.subjects.BehaviorSubject;
 
 public class ItemListViewModel {
     public final Observable<List<ViewModel>> itemVms;
+    public final BehaviorSubject<ItemViewModel> selectedItem = BehaviorSubject.create((ItemViewModel)null);
 
     /**
      * Static non-terminating source will ensure that any non-closed subscription results in a memory leak
@@ -36,10 +39,15 @@ public class ItemListViewModel {
             public List<ViewModel> call(List<Item> items) {
                 List<ViewModel> vms = new ArrayList<>();
                 for (Item item : items) {
-                    vms.add(new ItemViewModel(item, showMessage, navigator));
+                    vms.add(new ItemViewModel(item, selectedItem, showMessage, navigator, new Action1<ItemViewModel>() {
+                        @Override
+                        public void call(ItemViewModel itemViewModel) {
+                            selectedItem.onNext(itemViewModel);
+                        }
+                    }));
                 }
                 return vms;
             }
-        });
+        }).cache();
     }
 }
