@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import com.example.android_mvvm.ViewModel;
 import com.example.android_mvvm.sample.Item;
 import com.example.android_mvvm.sample.ItemViewModel;
-import com.example.android_mvvm.sample.R;
+import com.example.android_mvvm.sample.Navigator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,13 +30,13 @@ public class ItemListViewModel {
         itemsSource = BehaviorSubject.create(items);
     }
 
-    public ItemListViewModel(@NonNull final ShowMessage showMessage) {
+    public ItemListViewModel(@NonNull final ShowMessage showMessage, @NonNull final Navigator navigator) {
         this.itemVms = itemsSource.map(new Func1<List<Item>, List<ViewModel>>() {
             @Override
             public List<ViewModel> call(List<Item> items) {
                 List<ViewModel> vms = new ArrayList<>();
                 for (Item item : items) {
-                    vms.add(new ItemViewModel(item, showMessage));
+                    vms.add(new ItemViewModel(item, showMessage, navigator));
                 }
                 return vms;
             }

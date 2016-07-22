@@ -19,7 +19,7 @@ public class ItemViewModel implements ViewModel {
         return imageRes != 0;
     }
 
-    public ItemViewModel(@NonNull final Item item, @NonNull final ShowMessage showMessage) {
+    public ItemViewModel(@NonNull final Item item, @NonNull final ShowMessage showMessage, final Navigator navigator) {
         this.imageRes = item.name.contains("2") ? R.drawable.some_image : 0;
         this.name = item.name.toUpperCase();
         this.onClicked = new Action0() {
@@ -28,8 +28,17 @@ public class ItemViewModel implements ViewModel {
                 showMessage.show("Selected " + item.name);
             }
         };
+        this.onDetailsClicked = new Action0() {
+            @Override
+            public void call() {
+                navigator.openDetailsPage(item);
+            }
+        };
     }
 
     @Nullable
     public final Action0 onClicked;
+
+    @Nullable
+    public final Action0 onDetailsClicked;
 }
