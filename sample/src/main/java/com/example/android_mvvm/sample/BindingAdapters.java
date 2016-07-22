@@ -15,6 +15,7 @@ import java.util.List;
 
 import rx.Observable;
 import rx.functions.Action0;
+import rx.subjects.PublishSubject;
 
 @SuppressWarnings("unused")
 public class BindingAdapters {
@@ -52,6 +53,20 @@ public class BindingAdapters {
                 @Override
                 public void onClick(View view) {
                     listener.call();
+                }
+            };
+        } else {
+            return null;
+        }
+    }
+
+    @BindingConversion
+    public static View.OnClickListener toOnClickListener(final PublishSubject<Void> listener) {
+        if (listener != null) {
+            return new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onNext(null);
                 }
             };
         } else {

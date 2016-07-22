@@ -13,6 +13,7 @@ import java.util.List;
 import rx.Observable;
 import rx.functions.Func1;
 import rx.subjects.BehaviorSubject;
+import rx.subjects.PublishSubject;
 
 public class ItemListViewModel {
     public final Observable<List<ViewModel>> itemVms;
@@ -34,12 +35,30 @@ public class ItemListViewModel {
         this.itemVms = itemsSource.map(new Func1<List<Item>, List<ViewModel>>() {
             @Override
             public List<ViewModel> call(List<Item> items) {
-                List<ViewModel> vms = new ArrayList<>();
+                List<ItemViewModel> vms = new ArrayList<>();
+                List<Observable<ItemViewModel>> vmClickedList = new ArrayList<>();
                 for (Item item : items) {
-                    vms.add(new ItemViewModel(item, showMessage, navigator));
+                    final ItemViewModel vm = new ItemViewModel(item, showMessage, navigator);
+                    vms.add(vm);
+                    vmClickedList.add(vm.onClicked.map(new Func1<Void, ItemViewModel>() {
+                        @Override
+                        public ItemViewModel call(Void aVoid) {
+                            return vm;
+                        }
+                    }));
                 }
-                return vms;
+                Observable<ItemViewModel> vmClicked = Observable.merge(vmClickedList);
+                for (final ItemViewModel vm : vms) {
+                    vm.setSelected(vmClicked.map(new Func1<ItemViewModel, Boolean>() {
+                        @Override
+                        public Boolean call(ItemViewModel itemViewModel) {
+                            return itemViewModel == vm;
+                        }
+                    }));
+                }
+
+                return new ArrayList<ViewModel>(vms);
             }
-        });
+        }).cache();
     }
 }

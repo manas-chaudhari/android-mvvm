@@ -6,6 +6,8 @@
         <variable
             name="vm"
             type="com.example.android_mvvm.sample.ItemViewModel" />
+
+        <import type="android.view.View" />
     </data>
 
     <LinearLayout
@@ -22,6 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="@{vm.onDetailsClicked}"
-            android:text="@string/details" />
+            android:text="@string/details"
+            android:visibility="@{(vm.isSelected ?? false) ? View.VISIBLE : View.GONE}" />
     </LinearLayout>
 </layout>
