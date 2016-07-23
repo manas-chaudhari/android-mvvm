@@ -198,6 +198,7 @@ Guidelines to prevent memory leaks:
   binding.executePendingBindings();
   ```
 - Never subscribe to any field inside a ViewModel. Derive the action based on some other observable
+- Stay as [Functional](#functional-viewmodels) as possible
 
 The sample project uses LeakCanary to ensure that there are no leaks. This is only for demonstration purposes as the adapters have been tested against leaks. However, they provide a good example for testing leaks in binding adapters. See [BindingAdapters.java](https://github.com/manas-chaudhari/android-mvvm/blob/master/sample/src/main/java/com/example/android_mvvm/sample/BindingAdapters.java)
 
@@ -216,7 +217,29 @@ There are many ways depending on the situation.
 - Single view model with all functionality
   - This approach is possible only because ViewModel has no dependency to a view. In architectures like MVP, this is difficult, as the Presenter has a dependency on a View
 
----
 
-## TODO
-- [ ] Functional ViewModels
+## Functional ViewModels
+
+RxJava provides several operators to compose Observables. Conversion between `rx.Observable` and `ViewModel` fields, enables the use of all these operators in ViewModels, which eliminates the need for mutable state (in most cases).
+
+Consider an example of showing ProgressBar while api is loading. Traditional example:
+```java
+void load() {
+  displayProgress();
+  service.loadData(new Callback<String>() {
+    @Override
+    void onSuccess(String data) {
+      displayData(data);
+    }
+
+    @Override
+    void onError() {
+      displayError();
+    }
+  });
+}
+```
+
+By keeping loadedData as an `Observable`, we can derive progressVisibility by making use of the [Using](http://reactivex.io/documentation/operators/using.html) operator. From `progressVisibility` and `loadedData`, `errorVisibility` can be derived. Thus, there are no mutable states, only mapping from one Observable to other. Also, note that there is no need for subscriptions inside ViewModel as View will subscribe to the data after binding.
+
+See [DataLoadingViewModel.java](https://github.com/manas-chaudhari/android-mvvm/tree/master/sample/src/main/java/com/example/android_mvvm/sample/functional/DataLoadingViewModel.java) for this example.

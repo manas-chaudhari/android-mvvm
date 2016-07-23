@@ -16,8 +16,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".adapters.ItemListActivity" />
-        <activity android:name=".ItemDetailsActivity"></activity>
+        <activity
+            android:name=".adapters.ItemListActivity"
+            android:label="@string/title_adapters" />
+        <activity
+            android:name=".functional.DataLoadingActivity"
+            android:label="@string/title_functional" />
+        <activity android:name=".ItemDetailsActivity" />
     </application>
 
 </manifest>

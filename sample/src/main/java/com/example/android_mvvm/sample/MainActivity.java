@@ -1,18 +1,19 @@
 package com.example.android_mvvm.sample;
 
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.support.annotation.NonNull;
 
-import com.example.android_mvvm.sample.adapters.ItemListActivity;
+import com.example.android_mvvm.ViewModel;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
+
+    @NonNull
+    @Override
+    public ViewModel createViewModel() {
+        return new MainViewModel(getNavigator());
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        startActivity(new Intent(this, ItemListActivity.class));
+    public int getLayoutId() {
+        return R.layout.activity_main;
     }
 }

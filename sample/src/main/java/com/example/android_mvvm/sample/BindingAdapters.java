@@ -2,12 +2,16 @@ package com.example.android_mvvm.sample;
 
 import android.databinding.BindingAdapter;
 import android.databinding.BindingConversion;
+import android.databinding.ViewDataBinding;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.example.android_mvvm.ViewModel;
+import com.example.android_mvvm.adapters.ViewModelBinder;
 import com.example.android_mvvm.adapters.ViewProvider;
 import com.example.android_mvvm.utils.BindingUtils;
 
@@ -18,6 +22,21 @@ import rx.functions.Action0;
 
 @SuppressWarnings("unused")
 public class BindingAdapters {
+
+    @NonNull
+    public static final ViewModelBinder defaultBinder = new ViewModelBinder() {
+        @Override
+        public void bind(ViewDataBinding viewDataBinding, ViewModel viewModel) {
+            viewDataBinding.setVariable(BR.vm, viewModel);
+        }
+    };
+
+    @BindingAdapter("android:visibility")
+    public static void bindVisibility(@NonNull View view, @Nullable Boolean visible) {
+        int visibility = (visible != null && visible) ? View.VISIBLE : View.GONE;
+        view.setVisibility(visibility);
+    }
+
 
     /**
      * Binding Adapter Wrapper for checking memory leak
