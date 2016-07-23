@@ -61,9 +61,10 @@ if (isCi()) {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'io.reactivex:rxjava:1.1.7'
-    compile 'com.android.support:recyclerview-v7:24.0.0'
     testCompile 'junit:junit:4.12'
     androidTestCompile 'com.android.support.test:runner:0.4'
     androidTestCompile 'com.android.support.test:rules:0.4'
+    compile 'io.reactivex:rxjava:1.1.7'
+    compile 'com.android.support:recyclerview-v7:24.0.0'
+    compile 'com.android.support:appcompat-v7:24.0.0'
 }

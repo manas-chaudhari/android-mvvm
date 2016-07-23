@@ -17,7 +17,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".adapters.ItemListActivity" />
-        <activity android:name=".ItemDetailsActivity"></activity>
+        <activity android:name=".ItemDetailsActivity" />
+        <activity android:name=".functional.DataLoadingActivity"></activity>
     </application>
 
 </manifest>
