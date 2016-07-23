@@ -1,6 +1,6 @@
 package com.example.android_mvvm.sample.dagger;
 
-import android.app.Application;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
@@ -17,16 +17,16 @@ import dagger.Provides;
 
 @Module
 @Singleton
-public class ApplicationModule {
-    public final Application application;
+public class ActivityModule {
+    public final Activity activity;
 
-    public ApplicationModule(Application application) {
-        this.application = application;
+    public ActivityModule(Activity activity) {
+        this.activity = activity;
     }
 
     @Provides
     Context provideContext() {
-        return application;
+        return activity;
     }
 
     @Provides

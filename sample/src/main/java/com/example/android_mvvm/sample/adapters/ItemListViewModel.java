@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import com.example.android_mvvm.ViewModel;
 import com.example.android_mvvm.sample.Item;
 import com.example.android_mvvm.sample.ItemViewModel;
-import com.example.android_mvvm.sample.Navigator;
 
 import java.util.ArrayList;
 import java.util.List;
