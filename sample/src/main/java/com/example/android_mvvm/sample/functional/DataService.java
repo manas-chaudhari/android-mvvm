@@ -19,4 +19,18 @@ public class DataService {
             }
         }).subscribeOn(Schedulers.computation()).observeOn(AndroidSchedulers.mainThread());
     }
+
+    public Single<String> loadData_Fail() {
+        return Single.create(new Single.OnSubscribe<String>() {
+            @Override
+            public void call(SingleSubscriber<? super String> singleSubscriber) {
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                singleSubscriber.onError(new Throwable("Fake error"));
+            }
+        }).subscribeOn(Schedulers.computation()).observeOn(AndroidSchedulers.mainThread());
+    }
 }
