@@ -1,5 +1,5 @@
 package com.example.android_mvvm.sample.adapters;
 
-public interface ShowMessage {
+public interface MessageHelper {
     void show(String message);
 }

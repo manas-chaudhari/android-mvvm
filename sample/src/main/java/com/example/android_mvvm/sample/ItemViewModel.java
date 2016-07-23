@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.example.android_mvvm.ViewModel;
-import com.example.android_mvvm.sample.adapters.ShowMessage;
+import com.example.android_mvvm.sample.adapters.MessageHelper;
 
 import rx.functions.Action0;
 
@@ -19,13 +19,13 @@ public class ItemViewModel implements ViewModel {
         return imageRes != 0;
     }
 
-    public ItemViewModel(@NonNull final Item item, @NonNull final ShowMessage showMessage, final Navigator navigator) {
+    public ItemViewModel(@NonNull final Item item, @NonNull final MessageHelper messageHelper, final Navigator navigator) {
         this.imageRes = item.name.contains("2") ? R.drawable.some_image : 0;
         this.name = item.name.toUpperCase();
         this.onClicked = new Action0() {
             @Override
             public void call() {
-                showMessage.show("Selected " + item.name);
+                messageHelper.show("Selected " + item.name);
             }
         };
         this.onDetailsClicked = new Action0() {

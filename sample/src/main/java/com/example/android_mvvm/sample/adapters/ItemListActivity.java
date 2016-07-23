@@ -19,7 +19,7 @@ public class ItemListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new ItemListViewModel(new ShowMessage() {
+        viewModel = new ItemListViewModel(new MessageHelper() {
             @Override
             public void show(String message) {
                 Toast.makeText(ItemListActivity.this, message, Toast.LENGTH_SHORT).show();
