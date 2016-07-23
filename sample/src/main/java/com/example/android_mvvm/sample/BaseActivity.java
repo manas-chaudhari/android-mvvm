@@ -1,6 +1,7 @@
 package com.example.android_mvvm.sample;
 
 import android.content.Intent;
+import android.databinding.BindingAdapter;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.os.Bundle;
@@ -20,12 +21,12 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, getLayoutId());
-        binding.setVariable(BR.vm, createViewModel());
+        BindingAdapters.defaultBinder.bind(binding, createViewModel());
     }
 
     @Override
     protected void onDestroy() {
-        binding.setVariable(BR.vm, null);
+        BindingAdapters.defaultBinder.bind(binding, null);
         binding.executePendingBindings();
         super.onDestroy();
     }
