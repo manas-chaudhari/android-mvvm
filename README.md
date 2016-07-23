@@ -63,15 +63,33 @@ public final ReadOnlyField<Boolean> errorVisible = new ReadOnlyField(toObservabl
 > `@=` syntax hasn't been documented officially. See: https://halfthought.wordpress.com/2016/03/23/2-way-data-binding-on-android/
 
 ### Binding Events
-EventListeners are methods in ViewModel
-```
-public void onSubmit() {
-  // Do your thing
+EventListeners can be implemented simply as methods in ViewModel
+```java
+MessageHelper messageHelper; // This is an external dependency
+
+public void onClick(View v) { // View argument is not meant to be used
+  messageHelper.show("Something got clicked");
 }
 ```
-> A binding adapter would be required to remove the View argument
+```xml
+<Button
+  android:onClick="@{vm.onClick}"/>
+```
 
-If there is no intention to perform any computation on click of a view, it could be useful to expose click event through a `PublishSubject`.
+It is important to keep the ViewModel unaware about concrete implementations of platform dependent functionalities (Showing a message in this case). The activity can choose to `Show a message` using `Toast` or any other mechanism. Keeping these implementations outside allows sharing them. For example, `MessageHelper` can be implemented in a BaseActivity.
+
+In a deep hierarchy, fulfilling dependencies can result in a lot of boilerplate.
+In that case, it is recommended to use dependency injection libraries to keep things clean.
+Complete dependency injection is outside the scope of this project. A minimal example using [Dagger2](http://google.github.io/dagger/) is available on [extras/dagger](https://github.com/manas-chaudhari/android-mvvm/tree/extras/dagger) branch.
+
+> This is merely for demo and not an ideal implementation.
+
+#### Removing View argument
+
+As having a `View` instance inside ViewModel violates MVVM principles, its cleaner to write custom BindingAdapter to allow event handlers without arguments. Another approach is to write handlers as instances of `Action0` with a `BindingConversion` to `OnClickListener`
+See [ItemViewModel.java](https://github.com/manas-chaudhari/android-mvvm/blob/master/sample/src/main/java/com/example/android_mvvm/sample/ItemViewModel.java) for examples
+
+If it is not required to perform any action on click of a view inside the ViewModel, it could be useful to expose click event through a `PublishSubject`.
 ```java
 class ItemViewModel {
   public final PublishSubject<ItemViewModel> onSelect;
@@ -80,6 +98,8 @@ class ItemViewModel {
 // When working with a list of view models, its easy to merge events.
 Observable<Item> onAnyItemSelect = itemViewModels.map { vm -> vm.onSubmit }.merge().map { vm -> vm.item }
 ```
+
+> There are various ways to define Event handlers. There are no compelling points to stick to a fixed way. Use the approach which suits you the best
 
 ## Composing ViewModels
 Lets say a page requires to combine 3 functionalities. There can be 1 ViewModel to represent each functionality. Similar to how layout hierarchy is created using `<include>`, a parent ViewModel can be created per combination containing child ViewModels as properties. Data Binding allows binding included layout's variables.
@@ -172,7 +192,7 @@ Guidelines to prevent memory leaks:
 
 - Use `BindingUtils` for binding adapters
 - Make sure ViewModel is set to `null` when Activity is destroyed
-  
+
   ```java
   binding.setVm(null);
   binding.executePendingBindings();
