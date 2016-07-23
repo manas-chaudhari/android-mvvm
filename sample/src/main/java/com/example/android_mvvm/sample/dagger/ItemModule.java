@@ -3,7 +3,7 @@ package com.example.android_mvvm.sample.dagger;
 import com.example.android_mvvm.sample.Item;
 import com.example.android_mvvm.sample.ItemViewModel;
 import com.example.android_mvvm.sample.Navigator;
-import com.example.android_mvvm.sample.adapters.MessageHelper;
+import com.example.android_mvvm.sample.MessageHelper;
 
 import javax.inject.Singleton;
 

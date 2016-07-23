@@ -1,4 +1,4 @@
-package com.example.android_mvvm.sample.adapters;
+package com.example.android_mvvm.sample;
 
 public interface MessageHelper {
     void show(String message);

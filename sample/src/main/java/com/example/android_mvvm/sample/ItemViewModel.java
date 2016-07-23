@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.example.android_mvvm.ViewModel;
-import com.example.android_mvvm.sample.adapters.MessageHelper;
 
 import rx.functions.Action0;
 
