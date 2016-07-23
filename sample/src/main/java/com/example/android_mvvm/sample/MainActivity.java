@@ -1,19 +1,25 @@
 package com.example.android_mvvm.sample;
 
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 
-import com.example.android_mvvm.sample.adapters.ItemListActivity;
-import com.example.android_mvvm.sample.functional.DataLoadingActivity;
+import com.example.android_mvvm.sample.databinding.ActivityMainBinding;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
+
+    private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        binding.setVm(new MainViewModel(getNavigator()));
+    }
 
-        startActivity(new Intent(this, DataLoadingActivity.class));
+    @Override
+    protected void onDestroy() {
+        binding.setVm(null);
+        binding.executePendingBindings();
+        super.onDestroy();
     }
 }
