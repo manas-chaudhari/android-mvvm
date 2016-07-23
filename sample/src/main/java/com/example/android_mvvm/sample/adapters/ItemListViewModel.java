@@ -13,7 +13,6 @@ import java.util.List;
 import rx.Observable;
 import rx.functions.Func1;
 import rx.subjects.BehaviorSubject;
-import rx.subjects.PublishSubject;
 
 public class ItemListViewModel {
     public final Observable<List<ViewModel>> itemVms;
@@ -39,6 +38,19 @@ public class ItemListViewModel {
                 val vms = items.map { ItemViewModel(it, showMessage, navigator) }
                 val vmClicked = vms.map { vm -> vm.onClicked.map { vm }}.merge()
                 vms.forEach { vm -> it.isSelected.sink(vmClicked.map { it == vm }) }
+                 */
+
+                /*  Recursive implementation. Won't be efficient though
+                static (List<VM>, Observable<VM>) iter(List<Item> items, Observable<VM> accClicked) {
+                    if (items.head == null) {
+                        return ([], accClicked)
+                    } else {
+                        vm = new VM(list.head)
+                        (nextVms, clicked) = iter(items.tail, accClicked.merge(vm.onClicked))
+                        vm.selected.sink(clicked.map { it == vm })
+                        return (vm + nextVms, clicked)
+                    }
+                }
                  */
                 List<ItemViewModel> vms = new ArrayList<>();
                 List<Observable<ItemViewModel>> vmClickedList = new ArrayList<>();
