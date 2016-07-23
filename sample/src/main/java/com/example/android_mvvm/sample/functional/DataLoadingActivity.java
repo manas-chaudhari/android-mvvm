@@ -1,28 +1,21 @@
 package com.example.android_mvvm.sample.functional;
 
-import android.databinding.DataBindingUtil;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.support.annotation.NonNull;
 
+import com.example.android_mvvm.ViewModel;
+import com.example.android_mvvm.sample.BaseActivity;
 import com.example.android_mvvm.sample.R;
-import com.example.android_mvvm.sample.databinding.ActivityDataLoadingBinding;
 
-public class DataLoadingActivity extends AppCompatActivity {
+public class DataLoadingActivity extends BaseActivity {
 
-    private ActivityDataLoadingBinding binding;
-
+    @NonNull
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_data_loading);
-        DataLoadingViewModel vm = new DataLoadingViewModel(new DataService());
-        binding.setVm(vm);
+    public ViewModel createViewModel() {
+        return new DataLoadingViewModel(new DataService());
     }
 
     @Override
-    protected void onDestroy() {
-        binding.setVm(null);
-        binding.executePendingBindings();
-        super.onDestroy();
+    public int getLayoutId() {
+        return R.layout.activity_data_loading;
     }
 }

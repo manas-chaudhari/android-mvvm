@@ -14,13 +14,14 @@ import rx.Observable;
 import rx.functions.Func1;
 import rx.subjects.BehaviorSubject;
 
-public class ItemListViewModel {
+public class ItemListViewModel implements ViewModel {
     public final Observable<List<ViewModel>> itemVms;
 
     /**
      * Static non-terminating source will ensure that any non-closed subscription results in a memory leak
      */
     private static final Observable<List<Item>> itemsSource;
+
     static {
         List<Item> items = new ArrayList<>();
 

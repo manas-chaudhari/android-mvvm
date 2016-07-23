@@ -1,13 +1,43 @@
 package com.example.android_mvvm.sample;
 
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
+import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 
+import com.example.android_mvvm.ViewModel;
 import com.example.android_mvvm.sample.adapters.ItemListActivity;
 import com.example.android_mvvm.sample.functional.DataLoadingActivity;
 
-public class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity {
+
+    private ViewDataBinding binding;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = DataBindingUtil.setContentView(this, getLayoutId());
+        binding.setVariable(BR.vm, createViewModel());
+    }
+
+    @Override
+    protected void onDestroy() {
+        binding.setVariable(BR.vm, null);
+        binding.executePendingBindings();
+        super.onDestroy();
+    }
+
+    @NonNull
+    public abstract ViewModel createViewModel();
+
+    @LayoutRes
+    public abstract int getLayoutId();
+
+
+    // Common Dependencies
 
     @NonNull
     protected Navigator getNavigator() {

@@ -1,25 +1,19 @@
 package com.example.android_mvvm.sample;
 
-import android.databinding.DataBindingUtil;
-import android.os.Bundle;
+import android.support.annotation.NonNull;
 
-import com.example.android_mvvm.sample.databinding.ActivityMainBinding;
+import com.example.android_mvvm.ViewModel;
 
 public class MainActivity extends BaseActivity {
 
-    private ActivityMainBinding binding;
-
+    @NonNull
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        binding.setVm(new MainViewModel(getNavigator()));
+    public ViewModel createViewModel() {
+        return new MainViewModel(getNavigator());
     }
 
     @Override
-    protected void onDestroy() {
-        binding.setVm(null);
-        binding.executePendingBindings();
-        super.onDestroy();
+    public int getLayoutId() {
+        return R.layout.activity_main;
     }
 }
