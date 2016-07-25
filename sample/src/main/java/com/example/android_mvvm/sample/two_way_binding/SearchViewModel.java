@@ -13,21 +13,16 @@ import com.example.android_mvvm.sample.adapters.MessageHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import rx.Observable;
+import rx.functions.Action0;
 import rx.functions.Func1;
 
 public class SearchViewModel implements ViewModel {
     public final ObservableField<String> searchQuery = new ObservableField<>("");
-
-    public final ReadOnlyField<String> result = new ReadOnlyField<>(FieldUtils.toObservable(searchQuery).map(new Func1<String, String>() {
-        @Override
-        public String call(String s) {
-            return s.toUpperCase();
-        }
-    }));
-
     public final Observable<List<ViewModel>> results;
+    public final Action0 onRandomSearch;
 
     public SearchViewModel(@NonNull final MessageHelper messageHelper, @NonNull final Navigator navigator) {
         results = FieldUtils.toObservable(searchQuery)
@@ -44,5 +39,14 @@ public class SearchViewModel implements ViewModel {
                         return results;
                     }
                 });
+
+        onRandomSearch = new Action0() {
+            @Override
+            public void call() {
+                String randomString = UUID.randomUUID().toString();
+                String randomQuery = randomString.substring(0, 3) + " " + randomString.substring(5, 8);
+                searchQuery.set(randomQuery);
+            }
+        };
     }
 }
