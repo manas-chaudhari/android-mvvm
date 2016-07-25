@@ -6,4 +6,6 @@ public interface Navigator {
     void navigateToFunctionalDemo();
 
     void navigateToAdapterDemo();
+
+    void navigateToTwoWayBindingDemo();
 }

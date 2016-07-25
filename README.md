@@ -54,13 +54,15 @@ public final ReadOnlyField<Boolean> errorVisible = new ReadOnlyField(toObservabl
 ```
 
 ```xml
-<TextView
+<EditText
   android:text="@={vm.inputText}"/>
 <ErrorView
   android:visible="@{vm.errorVisible}"/>
 ```
 > A binding adapter would be required to use boolean for visibility.
 > `@=` syntax hasn't been documented officially. See: https://halfthought.wordpress.com/2016/03/23/2-way-data-binding-on-android/
+
+See [SearchViewModel.java](https://github.com/manas-chaudhari/android-mvvm/tree/master/sample/src/main/java/com/example/android_mvvm/sample/two_way_binding/SearchViewModel.java) and the corresponding [activity_search.xml](https://github.com/manas-chaudhari/android-mvvm/tree/master/sample/src/main/res/layout/activity_search.xml) for an example. The value in ObservableField of `EditText` updates when user types and the text displayed updates if value of ObservableField is modified.
 
 ### Binding Events
 EventListeners can be implemented simply as methods in ViewModel

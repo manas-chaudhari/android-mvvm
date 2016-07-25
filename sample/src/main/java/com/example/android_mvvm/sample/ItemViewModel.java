@@ -19,7 +19,7 @@ public class ItemViewModel implements ViewModel {
         return imageRes != 0;
     }
 
-    public ItemViewModel(@NonNull final Item item, @NonNull final MessageHelper messageHelper, final Navigator navigator) {
+    public ItemViewModel(@NonNull final Item item, @NonNull final MessageHelper messageHelper, @NonNull final Navigator navigator) {
         this.imageRes = item.name.contains("2") ? R.drawable.some_image : 0;
         this.name = item.name.toUpperCase();
         this.onClicked = new Action0() {
