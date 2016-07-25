@@ -23,6 +23,9 @@
             android:name=".functional.DataLoadingActivity"
             android:label="@string/title_functional" />
         <activity android:name=".ItemDetailsActivity" />
+        <activity
+            android:name=".two_way_binding.SearchActivity"
+            android:label="@string/title_two_way_binding" />
     </application>
 
 </manifest>

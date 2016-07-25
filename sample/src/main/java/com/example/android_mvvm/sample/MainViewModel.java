@@ -28,4 +28,11 @@ public class MainViewModel implements ViewModel {
             navigator.navigateToFunctionalDemo();
         }
     };
+
+    public final Action0 onTwoWayBindingClick = new Action0() {
+        @Override
+        public void call() {
+            navigator.navigateToTwoWayBindingDemo();
+        }
+    };
 }

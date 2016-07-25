@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.example.android_mvvm.ViewModel;
 import com.example.android_mvvm.sample.adapters.ItemListActivity;
 import com.example.android_mvvm.sample.functional.DataLoadingActivity;
+import com.example.android_mvvm.sample.two_way_binding.SearchActivity;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
@@ -56,6 +57,11 @@ public abstract class BaseActivity extends AppCompatActivity {
             @Override
             public void navigateToAdapterDemo() {
                 navigate(ItemListActivity.class);
+            }
+
+            @Override
+            public void navigateToTwoWayBindingDemo() {
+                navigate(SearchActivity.class);
             }
 
             private void navigate(Class<?> destination) {
