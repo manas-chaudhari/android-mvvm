@@ -11,12 +11,7 @@ public class ItemListActivity extends BaseActivity {
     @NonNull
     @Override
     public ViewModel createViewModel() {
-        return new ItemListViewModel(new MessageHelper() {
-            @Override
-            public void show(String message) {
-                Toast.makeText(ItemListActivity.this, message, Toast.LENGTH_SHORT).show();
-            }
-        }, getNavigator());
+        return new ItemListViewModel(getMessageHelper(), getNavigator());
     }
 
     @Override

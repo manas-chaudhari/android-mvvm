@@ -8,9 +8,11 @@ import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import com.example.android_mvvm.ViewModel;
 import com.example.android_mvvm.sample.adapters.ItemListActivity;
+import com.example.android_mvvm.sample.adapters.MessageHelper;
 import com.example.android_mvvm.sample.functional.DataLoadingActivity;
 import com.example.android_mvvm.sample.two_way_binding.SearchActivity;
 
@@ -34,6 +36,16 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @NonNull
     public abstract ViewModel createViewModel();
+
+    @NonNull
+    protected MessageHelper getMessageHelper() {
+        return new MessageHelper() {
+            @Override
+            public void show(String message) {
+                Toast.makeText(BaseActivity.this, message, Toast.LENGTH_SHORT).show();
+            }
+        };
+    }
 
     @LayoutRes
     public abstract int getLayoutId();
