@@ -6,7 +6,7 @@
 
         <variable
             name="vm"
-            type="com.example.android_mvvm.sample.ItemViewModel" />
+            type="com.manaschaudhari.android_mvvm.sample.ItemViewModel" />
     </data>
 
     <LinearLayout
