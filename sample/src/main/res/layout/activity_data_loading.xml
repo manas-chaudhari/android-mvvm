@@ -6,7 +6,7 @@
 
         <variable
             name="vm"
-            type="com.example.android_mvvm.sample.functional.DataLoadingViewModel" />
+            type="com.manaschaudhari.android_mvvm.sample.functional.DataLoadingViewModel" />
     </data>
 
     <LinearLayout
@@ -17,7 +17,7 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
-        tools:context="com.example.android_mvvm.sample.functional.DataLoadingActivity">
+        tools:context="com.manaschaudhari.android_mvvm.sample.functional.DataLoadingActivity">
 
         <ProgressBar
             android:layout_width="wrap_content"

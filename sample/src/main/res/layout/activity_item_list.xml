@@ -8,9 +8,9 @@
 
         <variable
             name="vm"
-            type="com.example.android_mvvm.sample.adapters.ItemListViewModel" />
+            type="com.manaschaudhari.android_mvvm.sample.adapters.ItemListViewModel" />
 
-        <import type="com.example.android_mvvm.sample.ViewProviders" />
+        <import type="com.manaschaudhari.android_mvvm.sample.ViewProviders" />
     </data>
 
     <LinearLayout
