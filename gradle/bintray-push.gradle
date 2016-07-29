@@ -1,0 +1,27 @@
+
+ext {
+    bintrayRepo = 'maven'
+    bintrayName = 'android-mvvm'
+
+    publishedGroupId = 'com.manaschaudhari'
+    libraryName = 'Android MVVM'
+    artifact = 'android-mvvm'
+
+    libraryDescription = 'Tools for implementing MVVM on Android'
+
+    siteUrl = 'https://github.com/manas-chaudhari/android-mvvm'
+    gitUrl = 'https://github.com/manas-chaudhari/android-mvvm.git'
+
+    libraryVersion = '0.1.0'
+
+    developerId = 'manas-chaudhari'
+    developerName = 'Manas Chaudhari'
+    developerEmail = 'chaudhari.manas@gmail.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
