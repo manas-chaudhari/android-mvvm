@@ -33,8 +33,7 @@ A view model is formed by fields for storing data (for input/output) and event l
 
 ### One Way binding: ReadOnlyField
 This field is meant for only displaying data. Hence the name 'one way' (ViewModel -> View). As changing values can be easily managed using `rx.Observable`, this library provides a class `ReadOnlyField` which can be created from `rx.Observable`.
-> Although `set` method is available in `ReadOnlyField`, calling it can result in indeterminate behavior
-> Calling `set` indicates an imperative style which should be avoided when using RxJava
+> `set` method in `ReadOnlyField` does nothing. See [Observables And Setters](Documentation/ObservablesAndSetters.md).
 
 ```java
 public final ReadOnlyField<String> totalAmountString;

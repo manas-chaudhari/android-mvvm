@@ -40,7 +40,7 @@ public class ReadOnlyField<T> extends ObservableField<T> {
                 .doOnNext(new Action1<T>() {
                     @Override
                     public void call(T t) {
-                        set(t);
+                        ReadOnlyField.super.set(t);
                     }
                 })
                 .doOnError(new Action1<Throwable>() {
@@ -54,13 +54,12 @@ public class ReadOnlyField<T> extends ObservableField<T> {
     }
 
     /**
-     * Calling set method of ReadOnlyField can result in weird behaviour
-     * TODO: Document why set() shouldn't be used
+     * @deprecated Setter of ReadOnlyField does nothing. Merge with the source Observable instead.
+     * See <a href="https://github.com/manas-chaudhari/android-mvvm/tree/master/Documentation/ObservablesAndSetters.md">Documentation/ObservablesAndSetters.md</a>
      */
+    @Deprecated
     @Override
-    public void set(T value) {
-        super.set(value);
-    }
+    public void set(T value) {}
 
     @Override
     public synchronized void addOnPropertyChangedCallback(OnPropertyChangedCallback callback) {
