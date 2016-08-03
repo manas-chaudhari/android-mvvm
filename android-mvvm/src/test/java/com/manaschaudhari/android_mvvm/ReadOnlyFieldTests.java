@@ -41,7 +41,7 @@ public class ReadOnlyFieldTests {
         sourceSubject = BehaviorSubject.create(INITIAL_VALUE);
         subscriptionCounter = new SubscriptionCounter<>();
         Observable<Integer> source = sourceSubject.compose(subscriptionCounter);
-        sut = new ReadOnlyField<>(source);
+        sut = ReadOnlyField.create(source);
     }
 
     @Test

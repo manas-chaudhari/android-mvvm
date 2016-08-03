@@ -30,7 +30,12 @@ public class ReadOnlyField<T> extends ObservableField<T> {
     final Observable<T> source;
     final HashMap<OnPropertyChangedCallback, Subscription> subscriptions = new HashMap<>();
 
-    public ReadOnlyField(@NonNull Observable<T> source) {
+    public static <U> ReadOnlyField<U> create(@NonNull Observable<U> source) {
+        return new ReadOnlyField<>(source);
+    }
+
+    protected ReadOnlyField(@NonNull Observable<T> source) {
+        super();
         this.source = source
                 .doOnNext(new Action1<T>() {
                     @Override
