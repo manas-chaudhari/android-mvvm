@@ -50,9 +50,9 @@ public class DataLoadingViewModel implements ViewModel {
 
         Pair<Observable<String>, Observable<Boolean>> tracker = RxUtils.trackActivity(cachedData);
 
-        result = new ReadOnlyField<>(tracker.first);
-        this.progressVisible = new ReadOnlyField<>(tracker.second);
-        this.errorVisible = new ReadOnlyField<>(Observable.combineLatest(tracker.first, tracker.second, new Func2<String, Boolean, Boolean>() {
+        result = ReadOnlyField.create(tracker.first);
+        this.progressVisible = ReadOnlyField.create(tracker.second);
+        this.errorVisible = ReadOnlyField.create(Observable.combineLatest(tracker.first, tracker.second, new Func2<String, Boolean, Boolean>() {
             @Override
             public Boolean call(String result, Boolean inProgress) {
                 return !inProgress && result == null;
