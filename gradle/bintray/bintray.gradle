@@ -30,10 +30,15 @@ artifacts {
     archives sourcesJar
 }
 
+// Convenience method. Gradle 2.13 adds this in all projects
+String findProperty(String name) {
+    return hasProperty(name) ? property(name) : null
+}
+
 // Bintray
 bintray {
-    user = hasProperty('bintrayUser') ? bintrayUser : ""
-    key = hasProperty('bintrayKey') ? bintrayKey : ""
+    user = findProperty('bintrayUser')
+    key = findProperty('bintrayKey')
 
     configurations = ['archives']
     pkg {
@@ -49,7 +54,7 @@ bintray {
             desc = libraryDescription
             gpg {
                 sign = true //Determines whether to GPG sign the files. The default is false
-                passphrase = hasProperty('bintrayGpgPassword') ? bintrayGpgPassword : ""
+                passphrase = findProperty('bintrayGpgPassword')
                 //Optional. The passphrase for GPG signing'
             }
         }
