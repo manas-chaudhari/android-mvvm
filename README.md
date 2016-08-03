@@ -23,9 +23,9 @@ Having a common setup mechanism allows writing abstract adapters, which can be r
 This library does not make any assumption about the binding mechanism. Hence, a third argument is required:
 - `ViewModelBinder`: An interface which decides how a ViewModel should be bound to a View
 
-> It is recommended to use a constant instance of `ViewModelBinder` so that this argument isn't required to be passed at all places. See [BindingAdapters.java](https://github.com/manas-chaudhari/android-mvvm/blob/master/sample/src/main/java/com/manaschaudhari/android_mvvm/sample/BindingAdapters.java) for example.
+> It is recommended to use a constant instance of `ViewModelBinder` so that this argument isn't required to be passed at all places. See [BindingAdapters.java](sample/src/main/java/com/manaschaudhari/android_mvvm/sample/BindingAdapters.java) for example.
 
-> It is often required to reuse same mapping of ViewModel -> View. One way to provide these is using a static class like [ViewProviders.java](https://github.com/manas-chaudhari/android-mvvm/blob/master/sample/src/main/java/com/manaschaudhari/android_mvvm/sample/ViewProviders.java)
+> It is often required to reuse same mapping of ViewModel -> View. One way to provide these is using a static class like [ViewProviders.java](sample/src/main/java/com/manaschaudhari/android_mvvm/sample/ViewProviders.java)
 > See [Composing ViewModels](#composing-viewmodels) section for examples
 
 ## Creating a View Model
@@ -61,7 +61,7 @@ public final ReadOnlyField<Boolean> errorVisible = ReadOnlyField.create(toObserv
 > A binding adapter would be required to use boolean for visibility.
 > `@=` syntax hasn't been documented officially. See: https://halfthought.wordpress.com/2016/03/23/2-way-data-binding-on-android/
 
-See [SearchViewModel.java](https://github.com/manas-chaudhari/android-mvvm/tree/master/sample/src/main/java/com/manaschaudhari/android_mvvm/sample/two_way_binding/SearchViewModel.java) and the corresponding [activity_search.xml](https://github.com/manas-chaudhari/android-mvvm/tree/master/sample/src/main/res/layout/activity_search.xml) for an example. The value in ObservableField of `EditText` updates when user types and the text displayed updates if value of ObservableField is modified.
+See [SearchViewModel.java](sample/src/main/java/com/manaschaudhari/android_mvvm/sample/two_way_binding/SearchViewModel.java) and the corresponding [activity_search.xml](sample/src/main/res/layout/activity_search.xml) for an example. The value in ObservableField of `EditText` updates when user types and the text displayed updates if value of ObservableField is modified.
 
 ### Binding Events
 EventListeners can be implemented simply as methods in ViewModel
@@ -88,7 +88,7 @@ Complete dependency injection is outside the scope of this project. A minimal ex
 #### Removing View argument
 
 As having a `View` instance inside ViewModel violates MVVM principles, its cleaner to write custom BindingAdapter to allow event handlers without arguments. Another approach is to write handlers as instances of `Action0` with a `BindingConversion` to `OnClickListener`
-See [ItemViewModel.java](https://github.com/manas-chaudhari/android-mvvm/blob/master/sample/src/main/java/com/manaschaudhari/android_mvvm/sample/ItemViewModel.java) for examples
+See [ItemViewModel.java](sample/src/main/java/com/manaschaudhari/android_mvvm/sample/ItemViewModel.java) for examples
 
 If it is not required to perform any action on click of a view inside the ViewModel, it could be useful to expose click event through a `PublishSubject`.
 ```java
@@ -117,15 +117,15 @@ Android provides several widgets for displaying a dynamic list of views, for eg:
 
 | Adapters provided in this library | Lifecycle |
 | --- | --- |
-|[RecyclerViewAdapter](https://github.com/manas-chaudhari/android-mvvm/blob/master/android-mvvm/src/main/java/com/manaschaudhari/android_mvvm/adapters/RecyclerViewAdapter.java) | Auto |
-|[ViewPagerAdapter](https://github.com/manas-chaudhari/android-mvvm/blob/master/android-mvvm/src/main/java/com/manaschaudhari/android_mvvm/adapters/ViewPagerAdapter.java) | Manual |
+|[RecyclerViewAdapter](android-mvvm/src/main/java/com/manaschaudhari/android_mvvm/adapters/RecyclerViewAdapter.java) | Auto |
+|[ViewPagerAdapter](android-mvvm/src/main/java/com/manaschaudhari/android_mvvm/adapters/ViewPagerAdapter.java) | Manual |
 
 > Do raise an issue to request for more
 
 #### Manual lifecycle
 These adapters require extra setup and cleanup because Android does not provide events when attaching/removing from their view. These adapters implement `Connectable` interface. Whenever an adapter is set, it is required that `connect()` method should be invoked. When adapter is reset, the `Subscription` returned by `connect` should be unsubscribed.
 
-To prevent additional boiler plate code, a [BindingUtils.java](https://github.com/manas-chaudhari/android-mvvm/blob/master/android-mvvm/src/main/java/com/manaschaudhari/android_mvvm/utils/BindingUtils.java) provides wrappers for binding adapters which also take care of connecting and unsubscribing adapters.
+To prevent additional boiler plate code, a [BindingUtils.java](android-mvvm/src/main/java/com/manaschaudhari/android_mvvm/utils/BindingUtils.java) provides wrappers for binding adapters which also take care of connecting and unsubscribing adapters.
 
 #### Using different views
 ```java
@@ -170,7 +170,7 @@ For example, one can write these binding adapters for a recycler view:
 ```
 
 ### Adapters provided in library
-BindingAdapters to work with `RecyclerViewAdapter` and `ViewPagerAdapter` have been provided with the library in [BindingUtils.java](https://github.com/manas-chaudhari/android-mvvm/blob/master/android-mvvm/src/main/java/com/manaschaudhari/android_mvvm/utils/BindingUtils.java).
+BindingAdapters to work with `RecyclerViewAdapter` and `ViewPagerAdapter` have been provided with the library in [BindingUtils.java](android-mvvm/src/main/java/com/manaschaudhari/android_mvvm/utils/BindingUtils.java).
 The above examples will work out of the box provided you have set the defaultBinder. For example:
 ```java
 BindingUtils.setDefaultBinder(new ViewModelBinder() {
@@ -201,7 +201,7 @@ Guidelines to prevent memory leaks:
 - Never subscribe to any field inside a ViewModel. Derive the action based on some other observable
 - Stay as [Functional](#functional-viewmodels) as possible
 
-The sample project uses LeakCanary to ensure that there are no leaks. This is only for demonstration purposes as the adapters have been tested against leaks. However, they provide a good example for testing leaks in binding adapters. See [BindingAdapters.java](https://github.com/manas-chaudhari/android-mvvm/blob/master/sample/src/main/java/com/manaschaudhari/android_mvvm/sample/BindingAdapters.java)
+The sample project uses LeakCanary to ensure that there are no leaks. This is only for demonstration purposes as the adapters have been tested against leaks. However, they provide a good example for testing leaks in binding adapters. See [BindingAdapters.java](sample/src/main/java/com/manaschaudhari/android_mvvm/sample/BindingAdapters.java)
 
 
 ## Reuse Scenarios
@@ -243,4 +243,4 @@ void load() {
 
 By keeping loadedData as an `Observable`, we can derive progressVisibility by making use of the [Using](http://reactivex.io/documentation/operators/using.html) operator. From `progressVisibility` and `loadedData`, `errorVisibility` can be derived. Thus, there are no mutable states, only mapping from one Observable to other. Also, note that there is no need for subscriptions inside ViewModel as View will subscribe to the data after binding.
 
-See [DataLoadingViewModel.java](https://github.com/manas-chaudhari/android-mvvm/tree/master/sample/src/main/java/com/manaschaudhari/android_mvvm/sample/functional/DataLoadingViewModel.java) for this example.
+See [DataLoadingViewModel.java](sample/src/main/java/com/manaschaudhari/android_mvvm/sample/functional/DataLoadingViewModel.java) for this example.
