@@ -39,7 +39,7 @@ This field is meant for only displaying data. Hence the name 'one way' (ViewMode
 ```java
 public final ReadOnlyField<String> totalAmountString;
 public ViewModel(Cart cart) {
-  totalAmountString = new ReadOnlyField(cart.totalAmount.map(q -> q + " Rs"))
+  totalAmountString = ReadOnlyField.create(cart.totalAmount.map(q -> q + " Rs"))
 }
 ```
 
@@ -50,7 +50,7 @@ In order to capture inputs of user, plain `ObservableField` can be used with Two
 static import BindingUtils.*
 
 public final ObservableField<String> inputText = new ObservableField<>("");
-public final ReadOnlyField<Boolean> errorVisible = new ReadOnlyField(toObservable(inputText).map(text -> text.isEmpty()))
+public final ReadOnlyField<Boolean> errorVisible = ReadOnlyField.create(toObservable(inputText).map(text -> text.isEmpty()))
 ```
 
 ```xml
