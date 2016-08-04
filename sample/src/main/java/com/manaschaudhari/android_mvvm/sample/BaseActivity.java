@@ -17,46 +17,16 @@
 package com.manaschaudhari.android_mvvm.sample;
 
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
-import android.databinding.ViewDataBinding;
-import android.os.Bundle;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-import com.manaschaudhari.android_mvvm.ViewModel;
+import com.manaschaudhari.android_mvvm.MvvmActivity;
 import com.manaschaudhari.android_mvvm.sample.adapters.ItemListActivity;
 import com.manaschaudhari.android_mvvm.sample.adapters.MessageHelper;
 import com.manaschaudhari.android_mvvm.sample.functional.DataLoadingActivity;
 import com.manaschaudhari.android_mvvm.sample.two_way_binding.SearchActivity;
 
-public abstract class BaseActivity extends AppCompatActivity {
-
-    private ViewDataBinding binding;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, getLayoutId());
-        BindingAdapters.defaultBinder.bind(binding, createViewModel());
-    }
-
-    @Override
-    protected void onDestroy() {
-        BindingAdapters.defaultBinder.bind(binding, null);
-        binding.executePendingBindings();
-        super.onDestroy();
-    }
-
-    @NonNull
-    public abstract ViewModel createViewModel();
-
-    @LayoutRes
-    public abstract int getLayoutId();
-
-
-    // Common Dependencies
+public abstract class BaseActivity extends MvvmActivity {
 
     @NonNull
     protected Navigator getNavigator() {
