@@ -1,4 +1,5 @@
-# Android MVVM [![Build Status](https://travis-ci.org/manas-chaudhari/android-mvvm.svg?branch=master)](https://travis-ci.org/manas-chaudhari/android-mvvm)
+# Android MVVM
+[![Build Status](https://travis-ci.org/manas-chaudhari/android-mvvm.svg?branch=master)](https://travis-ci.org/manas-chaudhari/android-mvvm) [ ![Download](https://api.bintray.com/packages/manas-chaudhari/maven/android-mvvm/images/download.svg) ](https://bintray.com/manas-chaudhari/maven/android-mvvm/_latestVersion)
 
 Contents:
 
@@ -7,6 +8,10 @@ Contents:
   1. Minimising boilerplate of setting up views
   1. Reuse of presentation logic
 1. A library with essential tools for the pattern
+
+## Quick Tutorial
+
+[Getting Started](Documentation/GettingStarted.md) provides a tutorial to setup the library and gives an idea about its functionality. As the main deliverable of this library is the pattern, it is important to understand the principles behind it, so that the pattern can be applied even at places where the library APIs aren't applicable.
 
 ## MVVM Implementation
 This pattern makes use of Data Binding, such that views contain exactly 1 variable `vm` i.e. ViewModel. Idea is that the ViewModel should have all information required to display the View. Multiple views can share a single view model. This helps in reusing functionality for a different layout.
