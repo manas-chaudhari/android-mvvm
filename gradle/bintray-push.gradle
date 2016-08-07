@@ -12,7 +12,7 @@ ext {
     siteUrl = 'https://github.com/manas-chaudhari/android-mvvm'
     gitUrl = 'https://github.com/manas-chaudhari/android-mvvm.git'
 
-    libraryVersion = '0.1.0'
+    libraryVersion = '0.1.1'
 
     developerId = 'manas-chaudhari'
     developerName = 'Manas Chaudhari'
