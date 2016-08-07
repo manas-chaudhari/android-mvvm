@@ -64,6 +64,7 @@ public class BindingUtils {
             if (subscription != null && !subscription.isUnsubscribed()) {
                 subscription.unsubscribe();
             }
+            viewPager.setTag(R.integer.tag_subscription, null);
         }
 
         // Store connection (Subscription) if new adapter is Connectable
