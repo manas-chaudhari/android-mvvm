@@ -1,10 +1,10 @@
 # Getting Started
 
-This is a quick tutorial in which you display a list of items in a RecyclerView using techniques provided by this library and shows how boilerplate can be eliminated.
+This is a quick tutorial to setup this library and display a list of items in a RecyclerView using its tools.
 
 ### Enable Data Binding
 
-In app's build.gradle, insert in `android` section
+In app's build.gradle, enable dataBinding under `android` section
 ```
 android {
   ...
@@ -18,6 +18,29 @@ android {
 ### Include Gradle Dependency
 
 `compile com.manaschaudhari:android-mvvm:0.1.1`
+
+
+### Initialize Library
+
+Create a custom Application class and update the name in `AndroidManifest.xml`.
+
+```java
+public class ExampleApplication extends Application {
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        BindingUtils.setDefaultBinder(new ViewModelBinder() {
+            @Override
+            public void bind(ViewDataBinding viewDataBinding, ViewModel viewModel) {
+                viewDataBinding.setVariable(BR.vm, viewModel);
+            }
+        });
+    }
+}
+```
+Note that this won't compile until you create a layout with a data binding variable called `vm`. You can use a different name according to your convenience, however it has to be consistent across all layouts.
+
+# Example
 
 ### Create ItemViewModel
 
@@ -113,24 +136,5 @@ And now the xml
 ```
 
 Take a moment to appreciate the minimal setup for a RecyclerView.
-
-### Initialize Library
-
-Create a custom Application class and update the name in `AndroidManifest.xml`.
-
-```java
-public class ExampleApplication extends Application {
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        BindingUtils.setDefaultBinder(new ViewModelBinder() {
-            @Override
-            public void bind(ViewDataBinding viewDataBinding, ViewModel viewModel) {
-                viewDataBinding.setVariable(BR.vm, viewModel);
-            }
-        });
-    }
-}
-```
 
 That's it. Run the app, and you should see three items.
