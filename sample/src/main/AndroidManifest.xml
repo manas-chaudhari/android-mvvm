@@ -26,6 +26,9 @@
         <activity
             android:name=".two_way_binding.SearchActivity"
             android:label="@string/title_two_way_binding" />
+        <activity
+            android:name=".calculator_example.CalculatorActivity"
+            android:label="@string/title_calculator"></activity>
     </application>
 
 </manifest>

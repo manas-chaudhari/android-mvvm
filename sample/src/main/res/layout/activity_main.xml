@@ -36,5 +36,11 @@
             android:layout_height="wrap_content"
             android:onClick="@{vm.onTwoWayBindingClick}"
             android:text="@string/title_two_way_binding" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{vm.onCalculatorExampleClick}"
+            android:text="@string/title_calculator" />
     </LinearLayout>
 </layout>

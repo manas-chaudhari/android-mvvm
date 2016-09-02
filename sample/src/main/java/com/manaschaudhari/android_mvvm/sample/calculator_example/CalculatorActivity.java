@@ -14,16 +14,24 @@
  * limitations under the License.
  */
 
-package com.manaschaudhari.android_mvvm.sample;
+package com.manaschaudhari.android_mvvm.sample.calculator_example;
 
-public interface Navigator {
-    void openDetailsPage(Item item);
+import android.support.annotation.NonNull;
 
-    void navigateToFunctionalDemo();
+import com.manaschaudhari.android_mvvm.MvvmActivity;
+import com.manaschaudhari.android_mvvm.ViewModel;
+import com.manaschaudhari.android_mvvm.sample.R;
 
-    void navigateToAdapterDemo();
+public class CalculatorActivity extends MvvmActivity {
 
-    void navigateToTwoWayBindingDemo();
+    @NonNull
+    @Override
+    public ViewModel createViewModel() {
+        return new CalculatorViewModel();
+    }
 
-    void navigateToCalculatorDemo();
+    @Override
+    public int getLayoutId() {
+        return R.layout.activity_calculator;
+    }
 }

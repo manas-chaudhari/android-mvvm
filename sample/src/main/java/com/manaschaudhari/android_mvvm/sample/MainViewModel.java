@@ -51,4 +51,11 @@ public class MainViewModel implements ViewModel {
             navigator.navigateToTwoWayBindingDemo();
         }
     };
+
+    public final Action0 onCalculatorExampleClick = new Action0() {
+        @Override
+        public void call() {
+            navigator.navigateToCalculatorDemo();
+        }
+    };
 }
