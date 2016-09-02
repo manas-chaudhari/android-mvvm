@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.manaschaudhari.android_mvvm.MvvmActivity;
 import com.manaschaudhari.android_mvvm.sample.adapters.ItemListActivity;
 import com.manaschaudhari.android_mvvm.sample.adapters.MessageHelper;
+import com.manaschaudhari.android_mvvm.sample.calculator_example.CalculatorActivity;
 import com.manaschaudhari.android_mvvm.sample.functional.DataLoadingActivity;
 import com.manaschaudhari.android_mvvm.sample.two_way_binding.SearchActivity;
 
@@ -49,6 +50,11 @@ public abstract class BaseActivity extends MvvmActivity {
             @Override
             public void navigateToTwoWayBindingDemo() {
                 navigate(SearchActivity.class);
+            }
+
+            @Override
+            public void navigateToCalculatorDemo() {
+                navigate(CalculatorActivity.class);
             }
 
             private void navigate(Class<?> destination) {
