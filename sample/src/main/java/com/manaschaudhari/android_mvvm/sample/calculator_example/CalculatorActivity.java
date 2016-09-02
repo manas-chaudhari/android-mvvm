@@ -16,17 +16,24 @@
 
 package com.manaschaudhari.android_mvvm.sample.calculator_example;
 
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.manaschaudhari.android_mvvm.MvvmActivity;
+import com.manaschaudhari.android_mvvm.ViewModel;
 import com.manaschaudhari.android_mvvm.sample.R;
 
-public class CalculatorActivity extends AppCompatActivity {
+public class CalculatorActivity extends MvvmActivity {
+
+    @NonNull
+    @Override
+    public ViewModel createViewModel() {
+        return new CalculatorViewModel();
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_calculator);
-        setTitle(R.string.title_calculator);
+    public int getLayoutId() {
+        return R.layout.activity_calculator;
     }
 }
