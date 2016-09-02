@@ -31,24 +31,30 @@
 
         <RadioGroup
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:checkedButton="@={vm.operation}"
+            >
 
             <RadioButton
+                android:id="@+id/radio_add"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="+" />
 
             <RadioButton
+                android:id="@+id/radio_subtract"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="-" />
 
             <RadioButton
+                android:id="@+id/radio_multiply"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="*" />
 
             <RadioButton
+                android:id="@+id/radio_divide"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="/" />
