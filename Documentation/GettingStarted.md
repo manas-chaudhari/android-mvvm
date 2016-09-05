@@ -17,7 +17,7 @@ android {
 
 ### Include Gradle Dependency
 
-`compile com.manaschaudhari:android-mvvm:0.1.1`
+`compile 'com.manaschaudhari:android-mvvm:0.1.1'`
 
 
 ### Initialize Library
