@@ -17,6 +17,7 @@
 package com.manaschaudhari.android_mvvm;
 
 import com.manaschaudhari.android_mvvm.adapters.TestViewModel;
+import com.manaschaudhari.android_mvvm.adapters.ViewProvider;
 
 import java.util.List;
 
@@ -27,4 +28,6 @@ public class BindingTestViewModel implements ViewModel {
     public List<ViewModel> mixedList;
     public Observable<List<ViewModel>> observableMixedList;
     public Observable<List<TestViewModel>> observableSubclassMixedList;
+
+    public ViewProvider viewProvider;
 }

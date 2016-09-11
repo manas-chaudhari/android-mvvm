@@ -40,6 +40,12 @@
         <android.support.v7.widget.RecyclerView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            bind:items="@{vm.observableSubclassMixedList}"
+            bind:view_provider="@{vm.viewProvider}" />
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             bind:layout_vertical="@{true}" />
 
 
