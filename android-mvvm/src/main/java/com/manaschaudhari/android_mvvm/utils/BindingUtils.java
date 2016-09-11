@@ -125,7 +125,7 @@ public class BindingUtils {
 
     @BindingConversion
     @Nullable
-    public static <T extends ViewModel> Observable<List<ViewModel>> toObservable(@Nullable List<T> specificList) {
+    public static <T extends ViewModel> Observable<List<ViewModel>> toListObservable(@Nullable List<T> specificList) {
         return specificList == null ? null :
                 Observable.just((List<ViewModel>)new ArrayList<ViewModel>(specificList));
     }
