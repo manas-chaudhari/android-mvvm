@@ -28,6 +28,8 @@ import rx.Single;
 import rx.functions.Func1;
 import rx.functions.Func2;
 
+import static com.manaschaudhari.android_mvvm.FieldUtils.toField;
+
 public class DataLoadingViewModel implements ViewModel {
 
     @NonNull
@@ -50,9 +52,9 @@ public class DataLoadingViewModel implements ViewModel {
 
         Pair<Observable<String>, Observable<Boolean>> tracker = RxUtils.trackActivity(cachedData);
 
-        result = ReadOnlyField.create(tracker.first);
-        this.progressVisible = ReadOnlyField.create(tracker.second);
-        this.errorVisible = ReadOnlyField.create(Observable.combineLatest(tracker.first, tracker.second, new Func2<String, Boolean, Boolean>() {
+        result = toField(tracker.first);
+        this.progressVisible = toField(tracker.second);
+        this.errorVisible = toField(Observable.combineLatest(tracker.first, tracker.second, new Func2<String, Boolean, Boolean>() {
             @Override
             public Boolean call(String result, Boolean inProgress) {
                 return !inProgress && result == null;
