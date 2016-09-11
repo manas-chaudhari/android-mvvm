@@ -34,10 +34,12 @@ import com.manaschaudhari.android_mvvm.adapters.ViewModelBinder;
 import com.manaschaudhari.android_mvvm.adapters.ViewPagerAdapter;
 import com.manaschaudhari.android_mvvm.adapters.ViewProvider;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
 import rx.Subscription;
+import rx.functions.Func1;
 
 @SuppressWarnings("unused")
 public class BindingUtils {
@@ -108,6 +110,24 @@ public class BindingUtils {
                 return layoutId;
             }
         };
+    }
+
+    @BindingConversion
+    @Nullable
+    public static <T extends ViewModel> Observable<List<ViewModel>> toGenericList(@Nullable Observable<List<T>> specificList) {
+        return specificList == null ? null : specificList.map(new Func1<List<T>, List<ViewModel>>() {
+            @Override
+            public List<ViewModel> call(List<T> ts) {
+                return new ArrayList<ViewModel>(ts);
+            }
+        });
+    }
+
+    @BindingConversion
+    @Nullable
+    public static <T extends ViewModel> Observable<List<ViewModel>> toObservable(@Nullable List<T> specificList) {
+        return specificList == null ? null :
+                Observable.just((List<ViewModel>)new ArrayList<ViewModel>(specificList));
     }
 
     // Extra Utilities
