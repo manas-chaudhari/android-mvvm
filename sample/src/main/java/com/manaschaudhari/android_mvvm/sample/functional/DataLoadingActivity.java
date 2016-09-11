@@ -26,12 +26,12 @@ public class DataLoadingActivity extends BaseActivity {
 
     @NonNull
     @Override
-    public ViewModel createViewModel() {
+    protected ViewModel createViewModel() {
         return new DataLoadingViewModel(new DataService());
     }
 
     @Override
-    public int getLayoutId() {
+    protected int getLayoutId() {
         return R.layout.activity_data_loading;
     }
 }

@@ -26,12 +26,12 @@ public class CalculatorActivity extends MvvmActivity {
 
     @NonNull
     @Override
-    public ViewModel createViewModel() {
+    protected ViewModel createViewModel() {
         return new CalculatorViewModel();
     }
 
     @Override
-    public int getLayoutId() {
+    protected int getLayoutId() {
         return R.layout.activity_calculator;
     }
 }
