@@ -1,6 +1,14 @@
 Changelog
 =========
 
+v0.1.2 (2016-09-12)
+-------------------
+
+- New: toField method in FieldUtils
+- New: `bind:items` for adapters now works with `Observable<List<VM subclass>` and `List<VM subclass>`
+- Fix: visibility modifiers of methods in `MvvmActivity`
+
+
 v0.1.1 (2016-08-07)
 -------------------
 
