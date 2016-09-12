@@ -24,6 +24,7 @@ import com.manaschaudhari.android_mvvm.ViewModel;
 import rx.Observable;
 import rx.functions.Func3;
 
+import static com.manaschaudhari.android_mvvm.FieldUtils.toField;
 import static com.manaschaudhari.android_mvvm.FieldUtils.toObservable;
 
 public class CalculatorViewModel implements ViewModel {
@@ -32,7 +33,7 @@ public class CalculatorViewModel implements ViewModel {
     public final ObservableField<String> number2 = new ObservableField<>("");
     public final ObservableField<Calculator.Operation> operation = new ObservableField<>(null);
 
-    public final ObservableField<String> result;
+    public final ReadOnlyField<String> result;
 
     public CalculatorViewModel() {
         final Calculator calculator = new Calculator();
@@ -55,6 +56,6 @@ public class CalculatorViewModel implements ViewModel {
                         }
                     }
                 });
-        this.result = ReadOnlyField.create(result);
+        this.result = toField(result);
     }
 }

@@ -35,7 +35,7 @@ public abstract class MvvmActivity extends AppCompatActivity {
     private ViewDataBinding binding;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, getLayoutId());
         getDefaultBinder().bind(binding, createViewModel());
@@ -56,8 +56,8 @@ public abstract class MvvmActivity extends AppCompatActivity {
     }
 
     @NonNull
-    public abstract ViewModel createViewModel();
+    protected abstract ViewModel createViewModel();
 
     @LayoutRes
-    public abstract int getLayoutId();
+    protected abstract int getLayoutId();
 }

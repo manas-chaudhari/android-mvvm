@@ -99,12 +99,12 @@ public class ItemListActivity extends MvvmActivity {
 
     @NonNull
     @Override
-    public ViewModel createViewModel() {
+    protected ViewModel createViewModel() {
         return new ItemListViewModel();
     }
 
     @Override
-    public int getLayoutId() {
+    protected int getLayoutId() {
         return R.layout.activity_item_list;
     }
 }

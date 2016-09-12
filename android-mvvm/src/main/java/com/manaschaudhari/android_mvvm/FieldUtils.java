@@ -48,4 +48,13 @@ public class FieldUtils {
             }
         });
     }
+
+    /**
+     * A convenient wrapper for {@code ReadOnlyField#create(Observable)}
+     * @return DataBinding field created from the specified Observable
+     */
+    @NonNull
+    public static <T> ReadOnlyField<T> toField(@NonNull final Observable<T> observable) {
+        return ReadOnlyField.create(observable);
+    }
 }
