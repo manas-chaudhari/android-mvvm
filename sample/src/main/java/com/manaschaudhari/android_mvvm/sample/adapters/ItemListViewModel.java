@@ -31,7 +31,7 @@ import rx.functions.Func1;
 import rx.subjects.BehaviorSubject;
 
 public class ItemListViewModel implements ViewModel {
-    public final Observable<List<ViewModel>> itemVms;
+    public final Observable<List<ItemViewModel>> itemVms;
 
     /**
      * Static non-terminating source will ensure that any non-closed subscription results in a memory leak
@@ -48,10 +48,10 @@ public class ItemListViewModel implements ViewModel {
     }
 
     public ItemListViewModel(@NonNull final MessageHelper messageHelper, @NonNull final Navigator navigator) {
-        this.itemVms = itemsSource.map(new Func1<List<Item>, List<ViewModel>>() {
+        this.itemVms = itemsSource.map(new Func1<List<Item>, List<ItemViewModel>>() {
             @Override
-            public List<ViewModel> call(List<Item> items) {
-                List<ViewModel> vms = new ArrayList<>();
+            public List<ItemViewModel> call(List<Item> items) {
+                List<ItemViewModel> vms = new ArrayList<>();
                 for (Item item : items) {
                     vms.add(new ItemViewModel(item, messageHelper, navigator));
                 }

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="vm"
+            type="com.manaschaudhari.android_mvvm.BindingTestViewModel" />
+    </data>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- RecyclerView -->
+
+        <android.support.v7.widget.RecyclerView
+            bind:items="@{vm.mixedList}"
+            bind:view_provider="@{@layout/layout_test}" />
+
+        <android.support.v7.widget.RecyclerView
+            bind:items="@{vm.subclassList}"
+            bind:view_provider="@{@layout/layout_test}" />
+
+        <android.support.v7.widget.RecyclerView
+            bind:items="@{vm.observableMixedList}"
+            bind:view_provider="@{@layout/layout_test}" />
+
+        <android.support.v7.widget.RecyclerView
+            bind:items="@{vm.observableSubclassMixedList}"
+            bind:view_provider="@{@layout/layout_test}" />
+
+        <android.support.v7.widget.RecyclerView
+            bind:items="@{vm.observableSubclassMixedList}"
+            bind:view_provider="@{vm.viewProvider}" />
+
+        <android.support.v7.widget.RecyclerView
+            bind:layout_vertical="@{true}" />
+
+
+        <!-- View Pager -->
+
+        <android.support.v4.view.ViewPager
+            bind:items="@{vm.mixedList}"
+            bind:view_provider="@{@layout/layout_test}" />
+
+        <android.support.v4.view.ViewPager
+            bind:items="@{vm.subclassList}"
+            bind:view_provider="@{@layout/layout_test}" />
+
+        <android.support.v4.view.ViewPager
+            bind:items="@{vm.observableMixedList}"
+            bind:view_provider="@{@layout/layout_test}" />
+
+        <android.support.v4.view.ViewPager
+            bind:items="@{vm.observableSubclassMixedList}"
+            bind:view_provider="@{@layout/layout_test}" />
+    </LinearLayout>
+</layout>
