@@ -249,3 +249,6 @@ void load() {
 By keeping loadedData as an `Observable`, we can derive progressVisibility by making use of the [Using](http://reactivex.io/documentation/operators/using.html) operator. From `progressVisibility` and `loadedData`, `errorVisibility` can be derived. Thus, there are no mutable states, only mapping from one Observable to other. Also, note that there is no need for subscriptions inside ViewModel as View will subscribe to the data after binding.
 
 See [DataLoadingViewModel.java](sample/src/main/java/com/manaschaudhari/android_mvvm/sample/functional/DataLoadingViewModel.java) for this example.
+
+## More Information
+[Wiki](https://github.com/manas-chaudhari/android-mvvm/wiki) contains links to more content around this topic.
