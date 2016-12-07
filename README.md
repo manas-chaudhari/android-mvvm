@@ -9,11 +9,22 @@ Contents:
   1. Reuse of presentation logic
 1. A library with essential tools for the pattern
 
+## Prerequisites
+
+1. [Android Data Binding](https://developer.android.com/topic/libraries/data-binding/index.html)
+1. [RxJava](https://github.com/ReactiveX/RxJava)
+  - [2-minute intro to Rx](https://medium.com/@andrestaltz/2-minute-introduction-to-rx-24c8ca793877#.dh92eypp8)
+  - [Grokking RxJava](http://blog.danlew.net/2014/09/15/grokking-rxjava-part-1/)
+  - [Intro to Reactive Programming by André Staltz](https://gist.github.com/staltz/868e7e9bc2a7b8c1f754)
+  - [Comprehensive list](http://reactivex.io/tutorials.html)
+1. [Introduction to this pattern @DroidconIN](https://www.youtube.com/watch?v=JaB8SXCSbgg&t=1s)
+
 ## Quick Tutorial
 
-[Getting Started](Documentation/GettingStarted.md) provides a tutorial to setup the library and gives an idea about its functionality. As the main deliverable of this library is the pattern, it is important to understand the principles behind it, so that the pattern can be applied even at places where the library APIs aren't applicable.
+[Getting Started](Documentation/GettingStarted.md) provides a tutorial to setup the library and gives an idea about its functionality. As the main deliverable of this library is the pattern, it is important to understand the principles behind it, so that the pattern can be applied even at places where the library APIs aren't available.
 
 ## MVVM Implementation
+
 This pattern makes use of Data Binding, such that views contain exactly 1 variable `vm` i.e. ViewModel. Idea is that the ViewModel should have all information required to display the View. Multiple views can share a single view model. This helps in reusing functionality for a different layout.
 
 Using a single variable `vm` provides a consistent mechanism to configure any View:
@@ -21,7 +32,7 @@ Using a single variable `vm` provides a consistent mechanism to configure any Vi
 viewBinding.setVariable(BR.vm, viewModel)
 ```
 
-Having a common setup mechanism allows writing abstract adapters, which can be reused for displaying any types of views. This reduces a lot of boiler plate. For example, displaying items in a recycler view should require only two inputs:
+Having a common setup mechanism allows writing abstract adapters, which can be reused for displaying any types of views. This reduces a lot of boiler plate. For example, displaying items in a RecyclerView should require only two inputs:
 - `Observable<List<ViewModel>>`: Observable List of ViewModels. The adapter notifies itself when the list updates
 - `ViewProvider`: An interface which decides which View should be used for a ViewModel
 
@@ -51,10 +62,10 @@ public ViewModel(Cart cart) {
 ### Two Way binding
 In order to capture inputs of user, plain `ObservableField` can be used with Two Way Binding syntax. An `ObservableField` can be converted to an `Observable` using `BindingUtils` provided.
 ```java
-static import BindingUtils.*
+static import BindingUtils.*;
 
 public final ObservableField<String> inputText = new ObservableField<>("");
-public final ReadOnlyField<Boolean> errorVisible = ReadOnlyField.create(toObservable(inputText).map(text -> text.isEmpty()))
+public final ReadOnlyField<Boolean> errorVisible = ReadOnlyField.create(toObservable(inputText).map(text -> text.isEmpty()));
 ```
 
 ```xml
@@ -64,7 +75,7 @@ public final ReadOnlyField<Boolean> errorVisible = ReadOnlyField.create(toObserv
   android:visible="@{vm.errorVisible}"/>
 ```
 > A binding adapter would be required to use boolean for visibility.
-> `@=` syntax hasn't been documented officially. See: https://halfthought.wordpress.com/2016/03/23/2-way-data-binding-on-android/
+> `@=` syntax: https://medium.com/google-developers/android-data-binding-lets-flip-this-thing-dc17792d6c24#.eee8cuo08
 
 See [SearchViewModel.java](sample/src/main/java/com/manaschaudhari/android_mvvm/sample/two_way_binding/SearchViewModel.java) and the corresponding [activity_search.xml](sample/src/main/res/layout/activity_search.xml) for an example. The value in ObservableField of `EditText` updates when user types and the text displayed updates if value of ObservableField is modified.
 
