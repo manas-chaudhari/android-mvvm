@@ -32,93 +32,222 @@ Using a single variable `vm` provides a consistent mechanism to configure any Vi
 viewBinding.setVariable(BR.vm, viewModel)
 ```
 
-Having a common setup mechanism allows writing abstract adapters, which can be reused for displaying any types of views. This reduces a lot of boiler plate. For example, displaying items in a RecyclerView should require only two inputs:
-- `Observable<List<ViewModel>>`: Observable List of ViewModels. The adapter notifies itself when the list updates
-- `ViewProvider`: An interface which decides which View should be used for a ViewModel
+Note that this mechanism needs to be configured by providing an instance of `ViewModelBinder` interface. This interface describes how a ViewModel is bound to a View. The variable name to be used in xmls (`vm` in this example) should be specified here.
 
-This library does not make any assumption about the binding mechanism. Hence, a third argument is required:
-- `ViewModelBinder`: An interface which decides how a ViewModel should be bound to a View
+```java
+BindingUtils.setDefaultBinder(new ViewModelBinder() {
+    @Override
+    public void bind(ViewDataBinding viewDataBinding, ViewModel viewModel) {
+        viewDataBinding.setVariable(BR.vm, viewModel);
+    }
+});
+```
+This code can be placed in your `onCreate` method of Application/Activity.
 
-> It is recommended to use a constant instance of `ViewModelBinder` so that this argument isn't required to be passed at all places. See [BindingAdapters.java](sample/src/main/java/com/manaschaudhari/android_mvvm/sample/BindingAdapters.java) for example.
-
-> It is often required to reuse same mapping of ViewModel -> View. One way to provide these is using a static class like [ViewProviders.java](sample/src/main/java/com/manaschaudhari/android_mvvm/sample/ViewProviders.java)
-> See [Composing ViewModels](#composing-viewmodels) section for examples
 
 ## Creating a View Model
-A view model is formed by fields for storing data (for input/output) and event listeners.
+A view model is a POJO formed by fields for storing data (for input/output) and event listeners. In MVVM, interaction between ViewModel and View happens via changes in data OR method calls. These interactions can be categorized based on direction of data flow:
 
-### One Way binding: ReadOnlyField
-This field is meant for only displaying data. Hence the name 'one way' (ViewModel -> View). As changing values can be easily managed using `rx.Observable`, this library provides a class `ReadOnlyField` which can be created from `rx.Observable`.
-> `set` method in `ReadOnlyField` does nothing. See [Observables And Setters](Documentation/ObservablesAndSetters.md).
+1. **Output Data (ViewModel -> View)** ViewModel changes its data, View listens for changes & updates itself
+    Example: ViewModel is running a timer, and updating its `timeText` variable. View is listening for changes and updating itself whenever it gets a callback.
+
+1. **Input Data (View -> ViewModel)** View requests ViewModel to update its data (such as capturing text input)
+    Example: Form containing various inputs like `text` for `EditText`, `isChecked` for `Checkbox`.
+
+1. **Input Events (View -> ViewModel)** View invokes functions on ViewModel when certain events occur (such as onSwipe/onClick/onFocused)
+    Note the difference between `Data` and `Event`. Any input can be represented as an `Event`. However, wherever there is persistence in input, representing them as `Data` is convenient.
+    For example, if a user has typed `Googl` in EditText, this input is represented as a String variable with value `Googl`. When user types `e`, the text changed "event" causes the data to change to `Google`. Working with data is better in this example.
+    Consider an example of a Button click. There is no data change that's implicitly happening on click. Hence, this input is represented as an `Event`.
+
+Now, we'll see how these three interactions are implemented in this pattern.
+
+### Output Data
+This is stored as a field in the ViewModel class. If the value is constant, it can be simply declared as a `final TYPE`. If its changing, it is declared as an `ObservableField<TYPE>`, provided by data binding. Example for displaying text (String)
 
 ```java
-public final ReadOnlyField<String> totalAmountString;
-public ViewModel(Cart cart) {
-  totalAmountString = ReadOnlyField.create(cart.totalAmount.map(q -> q + " Rs"))
+public class OutputDataViewModel {
+  public final String constantOutput = "";
+  public final ObservableField<String> changingOutput = new ObservableField<String>("");
 }
 ```
+> Note that everything is `final`. To modify the `changingOutput`, its `set` function is used. Example: `this.changingOutput.set("new value");`. Data binding takes care of adding listeners and updating the view.
 
-
-### Two Way binding
-In order to capture inputs of user, plain `ObservableField` can be used with Two Way Binding syntax. An `ObservableField` can be converted to an `Observable` using `BindingUtils` provided.
-```java
-static import BindingUtils.*;
-
-public final ObservableField<String> inputText = new ObservableField<>("");
-public final ReadOnlyField<Boolean> errorVisible = ReadOnlyField.create(toObservable(inputText).map(text -> text.isEmpty()));
-```
+In XML, this data is displayed by referring to these fields.
 
 ```xml
-<EditText
-  android:text="@={vm.inputText}"/>
-<ErrorView
-  android:visible="@{vm.errorVisible}"/>
+<TextView ...
+  android:text="@{vm.constantOutput}" />
+
+<TextView ...
+  android:text="@{vm.changingOutput}" />
 ```
-> A binding adapter would be required to use boolean for visibility.
-> `@=` syntax: https://medium.com/google-developers/android-data-binding-lets-flip-this-thing-dc17792d6c24#.eee8cuo08
 
-See [SearchViewModel.java](sample/src/main/java/com/manaschaudhari/android_mvvm/sample/two_way_binding/SearchViewModel.java) and the corresponding [activity_search.xml](sample/src/main/res/layout/activity_search.xml) for an example. The value in ObservableField of `EditText` updates when user types and the text displayed updates if value of ObservableField is modified.
 
-### Binding Events
-EventListeners can be implemented simply as methods in ViewModel
+### Input Data
+As input data implies that it cannot be constant, it is always stored as an `ObservableField<TYPE>`.
+
 ```java
-MessageHelper messageHelper; // This is an external dependency
-
-public void onClick(View v) { // View argument is not meant to be used
-  messageHelper.show("Something got clicked");
+public class InputDataViewModel {
+  public final ObservableField<String> inputText = new ObservableField<String>("");
 }
 ```
+
+Because we want the view to update the value of this `ObservableField`, [Two Way Binding](https://medium.com/google-developers/android-data-binding-lets-flip-this-thing-dc17792d6c24#.eee8cuo08) is used.
+```xml
+<EditText ...
+  android:text="@={vm.inputText}" />
+```
+> The `@=` enables two way binding
+
+
+### Input Events
+EventListeners can be implemented simply as methods in ViewModel
+```java
+public class EventViewModel {
+  MessageHelper messageHelper; // This is an external dependency
+
+  public void onClick() {
+    messageHelper.show("Something got clicked");
+  }  
+}
+```
+```xml
+<Button
+  android:onClick="@{(v) -> vm.onClick()}"/>
+```
+
+#### Event Listeners using `Runnable`
+Another approach is to implement listeners as `Runnable` fields inside ViewModel.
+
+```java
+public class EventViewModel {
+  MessageHelper messageHelper; // This is an external dependency
+
+  public final Runnable onClick = () -> {
+    messageHelper.show("Something got clicked");    
+  };
+}
+```
+
 ```xml
 <Button
   android:onClick="@{vm.onClick}"/>
 ```
 
-It is important to keep the ViewModel unaware about concrete implementations of platform dependent functionalities (Showing a message in this case). The activity can choose to `Show a message` using `Toast` or any other mechanism. Keeping these implementations outside allows sharing them. For example, `MessageHelper` can be implemented in a BaseActivity.
+For this to work, a `BindingConversion` between `View.OnClickListener` and `Runnable` needs to be defined.
+```java
+@BindingConversion
+public static View.OnClickListener toOnClickListener(final Runnable runnable) {
+    if (runnable != null) {
+        return () -> runnable.call();
+    } else {
+        return null;
+    }
+}
+```
+This static function can be placed anywhere in your code.
 
-In a deep hierarchy, fulfilling dependencies can result in a lot of boilerplate.
-In that case, it is recommended to use dependency injection libraries to keep things clean.
-Complete dependency injection is outside the scope of this project. A minimal example using [Dagger2](http://google.github.io/dagger/) is available on [extras/dagger](https://github.com/manas-chaudhari/android-mvvm/tree/extras/dagger) branch.
+#### Event Listeners using `rx.PublishSubject`
 
-> This is merely for demo and not an ideal implementation.
-
-#### Removing View argument
-
-As having a `View` instance inside ViewModel violates MVVM principles, its cleaner to write custom BindingAdapter to allow event handlers without arguments. Another approach is to write handlers as instances of `Action0` with a `BindingConversion` to `OnClickListener`
-See [ItemViewModel.java](sample/src/main/java/com/manaschaudhari/android_mvvm/sample/ItemViewModel.java) for examples
-
-If it is not required to perform any action on click of a view inside the ViewModel, it could be useful to expose click event through a `PublishSubject`.
+Using a `BindingAdapter`/`BindingConversion`, click event can be bound through a `PublishSubject`.
 ```java
 class ItemViewModel {
   public final PublishSubject<ItemViewModel> onSelect;
 }
 
 // When working with a list of view models, its easy to merge events.
-Observable<Item> onAnyItemSelect = itemViewModels.map { vm -> vm.onSubmit }.merge().map { vm -> vm.item }
+Observable<Item> onAnyItemSelect = itemViewModels.map { vm -> vm.onSubmit }.merge().map { vm -> vm.item };
 ```
 
 > There are various ways to define Event handlers. There are no compelling points to stick to a fixed way. Use the approach which suits you the best
 
+## ViewModel is unaware about the View
+
+This is the core principle behind MVVM. Naturally, ViewModel cannot have a reference to `View` or any subclass. In addition to these, ViewModel cannot know about any platform-specific implementation details. Thus, Android classes such as `Activity`, `Fragment`, `Context` cannot be referenced.
+
+> This also means that the ViewModel logic is same across different platforms such as iOS or web
+
+Any platform-dependent functionality is abstracted into an `interface` and then provided to ViewModel. In the above example, `MessageHelper` is an `interface` for displaying a message to user. The activity can choose to implement it using `Toast` or any other mechanism. Keeping these implementations outside allows sharing them. For example, `MessageHelper` can be implemented in a `BaseActivity`, which could be a base class for all activities.
+
+In a deep hierarchy, fulfilling such dependencies can result in a lot of boilerplate. In that case, it is recommended to use dependency injection libraries to keep things clean. A minimal example using [Dagger2](http://google.github.io/dagger/) is available on [extras/dagger](https://github.com/manas-chaudhari/android-mvvm/tree/extras/dagger) branch.
+
+### Testability
+
+As ViewModels do not reference Android classes, testing them is straight forward. Tests are written as plain Unit Tests. As all dependencies are interfaces, they get easily mocked.
+
+```java
+@Test
+public void detailsPage_isOpened_onClick() throws Exception {
+    Item item = new Item("Item 1", null);
+    Navigator mockNavigator = mock(Navigator.class);
+    ItemViewModel viewModel = new ItemViewModel(item, mockNavigator);
+
+    viewModel.itemClicked.call();
+
+    verify(mockNavigator).openDetailsPage(item);
+}
+```
+> This example uses [Mockito](https://github.com/mockito/mockito) framework for mocking
+
+
+## Using RxJava
+
+RxJava provides a great bunch of operators for handling changes. For example, if a dynamic field of a model needs to be formatted before displaying, its convenient to store it as an `rx.Observable<TYPE>`. The `map` operator can be used to format the values.
+
+`FieldUtils` class provides methods for converting between RxJava's `Observable` and Data Binding's `ObservableField` types. This allows the use of RxJava's operators to manipulate the data.
+
+### Rx -> DataBinding
+
+Example: `Cart` has a `getTotalAmount()` method that returns an `Observable<Float>`. Amount needs to be formatted before displaying. This can be implemented as follows:
+
+```java
+public final ReadOnlyField<String> totalAmountText;
+public CartViewModel(Cart cart) {
+  totalAmountText = FieldUtils.toField(cart.getTotalAmount().map(a -> a + " Rs"));
+}
+```
+
+The `toField` method returns an instance of `ReadOnlyField` which extends `ObservableField`. Note that `set` method in `ReadOnlyField` does nothing. See [Observables And Setters](Documentation/ObservablesAndSetters.md) for the rationale behind this.
+
+
+### DataBinding -> Rx
+
+Example: Error needs to be shown if input text is empty.
+
+```java
+static import FieldUtils.toObservable;
+static import FieldUtils.toField;
+
+public final ObservableField<String> inputText = new ObservableField<>("");
+public final ReadOnlyField<Boolean> errorVisible = toField(toObservable(inputText).map(text -> text.isEmpty()));
+```
+
+```xml
+<EditText
+  android:text="@={vm.inputText}"/>
+<ErrorView
+  android:visibility="@{vm.errorVisible}"/>
+```
+
+A binding adapter would be required to use boolean for `visibility` attribute.
+```java
+@BindingAdapter("android:visibility")
+public static void bindVisibility(@NonNull View view, @Nullable Boolean visible) {
+    int visibility = (visible != null && visible) ? View.VISIBLE : View.GONE;
+    view.setVisibility(visibility);
+}
+```
+
+See [SearchViewModel.java](sample/src/main/java/com/manaschaudhari/android_mvvm/sample/two_way_binding/SearchViewModel.java) and the corresponding [activity_search.xml](sample/src/main/res/layout/activity_search.xml) for another example in which the search results get updated as user updates the query.
+
+
 ## Composing ViewModels
+
+> TODO:
+> For generic adapters in XML, keep data binding as the primary way.
+> Examples page
+
+
 Lets say a page requires to combine 3 functionalities. There can be 1 ViewModel to represent each functionality. Similar to how layout hierarchy is created using `<include>`, a parent ViewModel can be created per combination containing child ViewModels as properties. Data Binding allows binding included layout's variables.
 
 ```xml
@@ -129,6 +258,26 @@ Lets say a page requires to combine 3 functionalities. There can be 1 ViewModel 
 ```
 
 ### Composing a dynamic list of functionalities
+
+
+## Setting up complex views
+
+Having a common setup mechanism allows writing abstract adapters, which can be reused for displaying any type of views. This reduces a lot of boilerplate. For example, a RecyclerView can be setup with these two inputs:
+- `Observable<List<ViewModel>>`: A list of ViewModels. The adapter notifies itself when the list updates
+- `ViewProvider`: An interface which decides which View should be used for a ViewModel
+
+Using Data Binding, we can create attributes so that these inputs can be provided in XML:
+
+```xml
+<android.support.v7.widget.RecyclerView
+    bind:items="@{vm.itemVms}"
+    bind:view_provider="@{@layout/row_item_without_image}" />
+```
+
+This provides a declarative API to setup views like RecyclerView/ViewPager. This idea can be applied to any widget which requires any custom setup. The setup code gets moved to one or more BindingAdapters, and the data inputs are provided in XML.
+
+
+
 Android provides several widgets for displaying a dynamic list of views, for eg: `RecyclerView`, `ViewPager`. All adapters can be constructed from item list, ViewProvider and ViewModelBinder. Android may or may not expose view attached events to adapters, hence lifecycle of some adapters needs to be managed.
 
 | Adapters provided in this library | Lifecycle |
@@ -158,6 +307,9 @@ RecyclerViewAdapter adapter = new RecyclerViewAdapter(items, new ViewProvider() 
           }
         }, defaultBinder);
 ```
+
+> It is often required to reuse same mapping of ViewModel -> View. One way to provide these is using a static class like [ViewProviders.java](sample/src/main/java/com/manaschaudhari/android_mvvm/sample/ViewProviders.java)
+
 
 ## Data Binding to reduce boilerplate
 See yourself creating RecyclerViewAdapter in every Activity? Well, there is no need to. By using custom `BindingAdapter`s, one can remove all the code from your activities, and provide minimal arguments from XML.
