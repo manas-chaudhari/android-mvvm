@@ -241,14 +241,24 @@ public static void bindVisibility(@NonNull View view, @Nullable Boolean visible)
 See [SearchViewModel.java](sample/src/main/java/com/manaschaudhari/android_mvvm/sample/two_way_binding/SearchViewModel.java) and the corresponding [activity_search.xml](sample/src/main/res/layout/activity_search.xml) for another example in which the search results get updated as user updates the query.
 
 
-## Composing ViewModels
+## Code-less View Setup
 
-> TODO:
-> For generic adapters in XML, keep data binding as the primary way.
-> Examples page
+**Views are setup using XML ONLY**. This is the core idea behind this pattern. `BindingAdapter`s are used to create a declarative API with essential arguments.
+
+Thus, whenever it is required to write code for setting up a view, create a `BindingAdapter` instead and use XML attributes.
+
+This also applies to complex views such as `RecyclerView`/`ViewPager` which need setting up adapters. These views are containers which display (multiple) child views. This particular operation of nesting views is termed as `View Composition`. As the choice of pattern (MVVM/MVP) greatly affects how `View Composition` is done, this library provides [tools](#view-composition) to deal with this aspect. However, there are other scenarios where code is required to setup views. Such code gets moved to a `BindingAdapter` and the view is setup using XML attributes.
+
+The [BindingUtils](android-mvvm/src/main/java/com/manaschaudhari/android_mvvm/utils/BindingUtils.java) file contains `BindingAdapter`s provided by this library. These are good examples to learn about this approach.
+
+> If this is not doable in some case, it implies that you need a functionality that's not provided by existing views. Create a custom View in that case.
 
 
-Lets say a page requires to combine 3 functionalities. There can be 1 ViewModel to represent each functionality. Similar to how layout hierarchy is created using `<include>`, a parent ViewModel can be created per combination containing child ViewModels as properties. Data Binding allows binding included layout's variables.
+## View Composition
+
+Just like code, UI also needs to be reused at multiple pages. Just like classes are split into smaller classes, views are split into smaller views to make them reusable.
+
+Lets say a page requires to combine 3 functionalities. There can be 1 ViewModel to represent each functionality. Similar to how layout hierarchy is created using `<include>`, a parent ViewModel is created that contains child ViewModels as fields. Data Binding allows binding included layout's variables.
 
 ```xml
 <ParentLayout>
@@ -257,12 +267,13 @@ Lets say a page requires to combine 3 functionalities. There can be 1 ViewModel 
 </ParentLayout/>
 ```
 
+Thus, with a simple `<include>`, this layout gets added on the page. The only Java code required is to add the `childVm` field in the outer ViewModel.
+
 ### Composing a dynamic list of functionalities
 
+It is very common to display a dynamic number of views in a RecyclerView or a ViewPager. The type of each child view could also vary based on some data. Writing a new adapter to support different view types results in duplicate code.
 
-## Setting up complex views
-
-Having a common setup mechanism allows writing abstract adapters, which can be reused for displaying any type of views. This reduces a lot of boilerplate. For example, a RecyclerView can be setup with these two inputs:
+With MVVM, as we have a consistent mechanism to setup any view, it is now possible to write abstract adapters, which can be used for displaying any type of views. This reduces a lot of boilerplate. For example, a RecyclerView can be setup with these two inputs:
 - `Observable<List<ViewModel>>`: A list of ViewModels. The adapter notifies itself when the list updates
 - `ViewProvider`: An interface which decides which View should be used for a ViewModel
 
@@ -274,47 +285,30 @@ Using Data Binding, we can create attributes so that these inputs can be provide
     bind:view_provider="@{@layout/row_item_without_image}" />
 ```
 
-This provides a declarative API to setup views like RecyclerView/ViewPager. This idea can be applied to any widget which requires any custom setup. The setup code gets moved to one or more BindingAdapters, and the data inputs are provided in XML.
-
-
-
-Android provides several widgets for displaying a dynamic list of views, for eg: `RecyclerView`, `ViewPager`. All adapters can be constructed from item list, ViewProvider and ViewModelBinder. Android may or may not expose view attached events to adapters, hence lifecycle of some adapters needs to be managed.
-
-| Adapters provided in this library | Lifecycle |
-| --- | --- |
-|[RecyclerViewAdapter](android-mvvm/src/main/java/com/manaschaudhari/android_mvvm/adapters/RecyclerViewAdapter.java) | Auto |
-|[ViewPagerAdapter](android-mvvm/src/main/java/com/manaschaudhari/android_mvvm/adapters/ViewPagerAdapter.java) | Manual |
-
-> Do raise an issue to request for more
-
-#### Manual lifecycle
-These adapters require extra setup and cleanup because Android does not provide events when attaching/removing from their view. These adapters implement `Connectable` interface. Whenever an adapter is set, it is required that `connect()` method should be invoked. When adapter is reset, the `Subscription` returned by `connect` should be unsubscribed.
-
-To prevent additional boiler plate code, a [BindingUtils.java](android-mvvm/src/main/java/com/manaschaudhari/android_mvvm/utils/BindingUtils.java) provides wrappers for binding adapters which also take care of connecting and unsubscribing adapters.
+This creates a nice declarative API to setup views like RecyclerView/ViewPager.
 
 #### Using different views
+
+Static methods are defined which return custom instances of `ViewProvider`.
 ```java
-Observable<List<ViewModel>> items = // Perhaps get these from an API OR database
-RecyclerViewAdapter adapter = new RecyclerViewAdapter(items, new ViewProvider() {
-          @Override
-          public int getView(ViewModel vm) {
-            if (vm instanceof ItemViewModel) {
-              return ((ItemViewModel) vm).hasImage() ? R.layout.row_item_with_image : R.layout.row_item_without_image;
-            } else if (vm instanceof SomeOtherViewModel) {
-              return R.layout.some_other_view;
-            }
-            return 0;
-          }
-        }, defaultBinder);
+public class ViewProviders {
+  public static ViewProvider getItemListing() {
+    return new ViewProvider() {
+              @Override
+              public int getView(ViewModel vm) {
+                if (vm instanceof ItemViewModel) {
+                  return ((ItemViewModel) vm).hasImage() ? R.layout.row_item_with_image : R.layout.row_item_without_image;
+                } else if (vm instanceof SomeOtherViewModel) {
+                  return R.layout.some_other_view;
+                }
+                return 0;
+              }
+            };
+  }
+}
 ```
 
-> It is often required to reuse same mapping of ViewModel -> View. One way to provide these is using a static class like [ViewProviders.java](sample/src/main/java/com/manaschaudhari/android_mvvm/sample/ViewProviders.java)
-
-
-## Data Binding to reduce boilerplate
-See yourself creating RecyclerViewAdapter in every Activity? Well, there is no need to. By using custom `BindingAdapter`s, one can remove all the code from your activities, and provide minimal arguments from XML.
-For example, one can write these binding adapters for a recycler view:
-
+This method is referenced in XML when setting up view.
 ```xml
 <import type="ViewProviders" />
 
@@ -323,56 +317,43 @@ For example, one can write these binding adapters for a recycler view:
     bind:items="@{vm.itemVms}"
     bind:layout_vertical="@{true}"
     bind:view_provider="@{ViewProviders.itemListing}" />
-
-<!--Example With Static Views-->
-<android.support.v7.widget.RecyclerView
-    bind:items="@{vm.itemVms}"
-    bind:layout_vertical="@{true}"
-    bind:view_provider="@{@layout/row_item_without_image}" />
-
-<!--Same arguments for ViewPager-->
-<android.support.v4.widget.ViewPager
-    bind:items="@{vm.itemVms}"
-    bind:view_provider="@{ViewProviders.itemListing}" />
-
 ```
 
-### Adapters provided in library
-BindingAdapters to work with `RecyclerViewAdapter` and `ViewPagerAdapter` have been provided with the library in [BindingUtils.java](android-mvvm/src/main/java/com/manaschaudhari/android_mvvm/utils/BindingUtils.java).
-The above examples will work out of the box provided you have set the defaultBinder. For example:
+
+### Supported Attributes
+
+Following attributes are provided with this library.
+
 ```java
-BindingUtils.setDefaultBinder(new ViewModelBinder() {
-    @Override
-    public void bind(ViewDataBinding viewDataBinding, ViewModel viewModel) {
-        viewDataBinding.setVariable(com.manaschaudhari.android_mvvm.sample.BR.vm, viewModel);
-    }
-});
+@BindingAdapter({"items", "view_provider"})
+public static void bindAdapterWithDefaultBinder(@NonNull RecyclerView recyclerView, @Nullable Observable<List<ViewModel>> items, @Nullable ViewProvider viewProvider);
+
+@BindingAdapter({"items", "view_provider"})
+public static void bindAdapterWithDefaultBinder(@NonNull ViewPager viewPager, @Nullable Observable<List<ViewModel>> items, @Nullable ViewProvider viewProvider);
+
+@BindingConversion
+public static ViewProvider getViewProviderForStaticLayout(@LayoutRes final int layoutId);
+
+@BindingConversion
+public static <T extends ViewModel> Observable<List<ViewModel>> toListObservable(@Nullable List<T> specificList);
+
+@BindingAdapter("layout_vertical")
+public static void bindLayoutManager(@NonNull RecyclerView recyclerView, boolean vertical);
 ```
-This library will provide BindingAdapters related to the components it provides.
-Hence, it is important to write your own adapters to reduce other boilerplate code.
 
-> Although BindingAdapters can be overriden, it hasn't been specified how databinding resolves the conflicts. Based on experiments, adapters in client project are preferred over adapters from library. However, having identical adapters in a same module will result in undeterministic results.
+Check the source ([BindingUtils.java](android-mvvm/src/main/java/com/manaschaudhari/android_mvvm/utils/BindingUtils.java)) to know how these work.
 
-> The sample project overrides these BindingAdapters to check memory leaks
+#### What if I need to use some other View?
 
-## Preventing Memory Leaks
+Every application has different requirements. It may not be feasible to create a generic API that works well for all usecases. This project aims to provide a pattern so you can build your own custom XML attributes that fulfills your usecase. You can use [BindingUtils.java](android-mvvm/src/main/java/com/manaschaudhari/android_mvvm/utils/BindingUtils.java) as a reference to roll out your own attributes.
 
-Guidelines to prevent memory leaks:
+#### What if I want to customize these adapters?
+Although BindingAdapters can be overridden, it hasn't been specified how databinding resolves the conflicts. Based on experiments, adapters in client project are preferred over adapters from library. However, having identical adapters in a same module will result in undeterministic results.
 
-- Use `BindingUtils` for binding adapters
-- Make sure ViewModel is set to `null` when Activity is destroyed
-
-  ```java
-  binding.setVm(null);
-  binding.executePendingBindings();
-  ```
-- Never subscribe to any field inside a ViewModel. Derive the action based on some other observable
-- Stay as [Functional](#functional-viewmodels) as possible
-
-The sample project uses LeakCanary to ensure that there are no leaks. This is only for demonstration purposes as the adapters have been tested against leaks. However, they provide a good example for testing leaks in binding adapters. See [BindingAdapters.java](sample/src/main/java/com/manaschaudhari/android_mvvm/sample/BindingAdapters.java)
+The sample project overrides these BindingAdapters to check memory leaks.
 
 
-## Reuse Scenarios
+### Composition Strategy
 
 Here are some scenarios, and the way in which this pattern resolves them:
 
@@ -381,6 +362,7 @@ A common view model that can bind to all views.
 
 ### Two layouts, which share some common functionality
 There are many ways depending on the situation.
+- Extract common functionality into one child ViewModel. Both view models keep a reference of child ViewModel
 - Two view models, one extending the other
 - Two view models which extend from a common base
 - Single view model with all functionality
@@ -412,6 +394,12 @@ void load() {
 By keeping loadedData as an `Observable`, we can derive progressVisibility by making use of the [Using](http://reactivex.io/documentation/operators/using.html) operator. From `progressVisibility` and `loadedData`, `errorVisibility` can be derived. Thus, there are no mutable states, only mapping from one Observable to other. Also, note that there is no need for subscriptions inside ViewModel as View will subscribe to the data after binding.
 
 See [DataLoadingViewModel.java](sample/src/main/java/com/manaschaudhari/android_mvvm/sample/functional/DataLoadingViewModel.java) for this example.
+
+### Lifecycle
+
+ViewModels are unaware about lifecycle of View. This means that ViewModel code comes into action only when View invokes it. ViewModel simply defines the logic of transforming inputs to outputs. This is similar to `pure functions` from functional programming, which provide output based on its inputs only.
+
+There are scenarios where ViewModel needs to know about lifecycle of the View. This feature is in the roadmap. Do contribute!
 
 ## More Information
 [Wiki](https://github.com/manas-chaudhari/android-mvvm/wiki) contains links to more content around this topic.
