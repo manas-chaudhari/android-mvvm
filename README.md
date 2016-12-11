@@ -46,7 +46,7 @@ This code can be placed in your `onCreate` method of Application/Activity.
 
 
 ## Creating a View Model
-A view model is a POJO formed by fields for storing data (for input/output) and event listeners. In MVVM, interaction between ViewModel and View happens via changes in data OR method calls. These interactions can be categorized based on direction of data flow:
+A view model is a POJO formed by fields for storing data (for input/output) and event listeners. In MVVM, interaction between ViewModel and View happens via changes in data OR method calls. These interactions can be categorized based on direction & type of data flow:
 
 1. **Output Data (ViewModel -> View)** ViewModel changes its data, View listens for changes & updates itself
     Example: ViewModel is running a timer, and updating its `timeText` variable. View is listening for changes and updating itself whenever it gets a callback.
@@ -192,7 +192,7 @@ public void detailsPage_isOpened_onClick() throws Exception {
 
 ## Using RxJava
 
-RxJava provides a great bunch of operators for handling changes. For example, if a dynamic field of a model needs to be formatted before displaying, its convenient to store it as an `rx.Observable<TYPE>`. The `map` operator can be used to format the values.
+RxJava provides a great bunch of operators for handling changes. For example, if a dynamic field of a model needs to be formatted before displaying, it is convenient to store it as an `rx.Observable<TYPE>`. The `map` operator can be used to format the values.
 
 `FieldUtils` class provides methods for converting between RxJava's `Observable` and Data Binding's `ObservableField` types. This allows the use of RxJava's operators to manipulate the data.
 
@@ -308,7 +308,7 @@ public class ViewProviders {
 }
 ```
 
-This method is referenced in XML when setting up view.
+This method is referenced in XML when setting up the view.
 ```xml
 <import type="ViewProviders" />
 
@@ -326,26 +326,26 @@ Following attributes are provided with this library.
 
 ```java
 @BindingAdapter({"items", "view_provider"})
-public static void bindAdapterWithDefaultBinder(@NonNull RecyclerView recyclerView, @Nullable Observable<List<ViewModel>> items, @Nullable ViewProvider viewProvider);
+public static void bindAdapterWithDefaultBinder(RecyclerView recyclerView, Observable<List<ViewModel>> items, ViewProvider viewProvider);
 
 @BindingAdapter({"items", "view_provider"})
-public static void bindAdapterWithDefaultBinder(@NonNull ViewPager viewPager, @Nullable Observable<List<ViewModel>> items, @Nullable ViewProvider viewProvider);
+public static void bindAdapterWithDefaultBinder(ViewPager viewPager, Observable<List<ViewModel>> items, ViewProvider viewProvider);
 
 @BindingConversion
 public static ViewProvider getViewProviderForStaticLayout(@LayoutRes final int layoutId);
 
 @BindingConversion
-public static <T extends ViewModel> Observable<List<ViewModel>> toListObservable(@Nullable List<T> specificList);
+public static <T extends ViewModel> Observable<List<ViewModel>> toListObservable List<T> specificList);
 
 @BindingAdapter("layout_vertical")
-public static void bindLayoutManager(@NonNull RecyclerView recyclerView, boolean vertical);
+public static void bindLayoutManager(RecyclerView recyclerView, boolean vertical);
 ```
 
 Check the source ([BindingUtils.java](android-mvvm/src/main/java/com/manaschaudhari/android_mvvm/utils/BindingUtils.java)) to know how these work.
 
 #### What if I need to use some other View?
 
-Every application has different requirements. It may not be feasible to create a generic API that works well for all usecases. This project aims to provide a pattern so you can build your own custom XML attributes that fulfills your usecase. You can use [BindingUtils.java](android-mvvm/src/main/java/com/manaschaudhari/android_mvvm/utils/BindingUtils.java) as a reference to roll out your own attributes.
+Every application has different requirements. It may not be feasible to create a generic API that works well for all usecases. This project aims to provide a pattern so you can build your own custom XML attributes that fulfill your usecase. You can use [BindingUtils.java](android-mvvm/src/main/java/com/manaschaudhari/android_mvvm/utils/BindingUtils.java) as a reference to roll out your own attributes.
 
 #### What if I want to customize these adapters?
 Although BindingAdapters can be overridden, it hasn't been specified how databinding resolves the conflicts. Based on experiments, adapters in client project are preferred over adapters from library. However, having identical adapters in a same module will result in undeterministic results.
