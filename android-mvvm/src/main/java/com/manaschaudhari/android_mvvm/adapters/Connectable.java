@@ -18,6 +18,12 @@ package com.manaschaudhari.android_mvvm.adapters;
 
 import rx.Subscription;
 
+/**
+ * A {@link com.manaschaudhari.android_mvvm.ViewModel} can implement this
+ * interface to return a Subscription which will eventually be
+ * unsubscribed from when the ViewModel's View is detached from the
+ * view hierarchy.
+ */
 public interface Connectable {
     Subscription connect();
 }

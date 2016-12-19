@@ -21,7 +21,11 @@ import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.manaschaudhari.android_mvvm.adapters.ViewModelBinder;
 import com.manaschaudhari.android_mvvm.utils.BindingUtils;
@@ -31,31 +35,35 @@ import com.manaschaudhari.android_mvvm.utils.Preconditions;
  * Inflates the provided view and binds the provided ViewModel based on default
  * binder provided to the library
  */
-public abstract class MvvmActivity extends AppCompatActivity {
+public abstract class MvvmFragment extends Fragment {
     private ViewDataBinding binding;
     private ViewModel vm;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getLayoutId() != 0) {
-            binding = DataBindingUtil.setContentView(this, getLayoutId());
-            getDefaultBinder().bind(binding, vm = createViewModel());
-
-            if (vm != null)
-                vm.onCreate();
-        }
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        binding = DataBindingUtil.inflate(inflater, getLayoutId(), container, false);
+        getDefaultBinder().bind(binding, vm = createViewModel());
+        return binding.getRoot();
     }
 
     @Override
-    protected void onStop() {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (vm != null)
+            vm.onCreate();
+    }
+
+    @Override
+    public void onStop() {
         if (vm != null)
             vm.onStop();
         super.onStop();
     }
 
     @Override
-    protected void onStart() {
+    public void onStart() {
         if (vm != null)
             vm.onStart();
         super.onStart();
@@ -69,7 +77,7 @@ public abstract class MvvmActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         if (vm != null)
             vm.onResume();
         super.onResume();
@@ -83,15 +91,12 @@ public abstract class MvvmActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         if (vm != null)
             vm.onDestroy();
 
-        if (binding != null) {
-            getDefaultBinder().bind(binding, null);
-            binding.executePendingBindings();
-        }
-
+        getDefaultBinder().bind(binding, null);
+        binding.executePendingBindings();
         super.onDestroy();
     }
 

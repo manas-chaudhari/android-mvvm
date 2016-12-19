@@ -18,13 +18,17 @@ package com.manaschaudhari.android_mvvm.utils;
 
 import android.databinding.BindingAdapter;
 import android.databinding.BindingConversion;
+import android.databinding.adapters.ListenerUtil;
+import android.os.Build;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.manaschaudhari.android_mvvm.R;
 import com.manaschaudhari.android_mvvm.ViewModel;
@@ -127,7 +131,7 @@ public class BindingUtils {
     @Nullable
     public static <T extends ViewModel> Observable<List<ViewModel>> toListObservable(@Nullable List<T> specificList) {
         return specificList == null ? null :
-                Observable.just((List<ViewModel>)new ArrayList<ViewModel>(specificList));
+                Observable.just((List<ViewModel>) new ArrayList<ViewModel>(specificList));
     }
 
     // Extra Utilities
@@ -136,5 +140,36 @@ public class BindingUtils {
     public static void bindLayoutManager(@NonNull RecyclerView recyclerView, boolean vertical) {
         int orientation = vertical ? RecyclerView.VERTICAL : RecyclerView.HORIZONTAL;
         recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext(), orientation, false));
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB_MR1)
+    @BindingAdapter("lifecycle")
+    public static void bindLifecycle(View view, final Connectable connectable) {
+        View.OnAttachStateChangeListener newListener = null;
+
+        if (connectable != null) {
+            newListener = new View.OnAttachStateChangeListener() {
+                private Subscription subscription;
+
+                @Override
+                public void onViewAttachedToWindow(View v) {
+                    subscription = connectable.connect();
+                }
+
+                @Override
+                public void onViewDetachedFromWindow(View v) {
+                    subscription.unsubscribe();
+                }
+            };
+
+            View.OnAttachStateChangeListener oldValue = ListenerUtil.trackListener(view, newListener, R.id.onAttachStateChangeListener);
+            if (oldValue != null) {
+                view.removeOnAttachStateChangeListener(oldValue);
+            }
+        }
+
+        if (newListener != null) {
+            view.addOnAttachStateChangeListener(newListener);
+        }
     }
 }
