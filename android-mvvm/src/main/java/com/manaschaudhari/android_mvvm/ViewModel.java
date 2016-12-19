@@ -16,5 +16,18 @@
 
 package com.manaschaudhari.android_mvvm;
 
-public interface ViewModel {
+public abstract class ViewModel {
+    protected void onCreate(){};
+
+    protected void onStop(){};
+
+    protected void onStart(){};
+
+    protected void onPause(){};
+
+    protected void onResume(){};
+
+    protected void onDestroy(){};
+
+    protected void onLowMemory(){};
 }

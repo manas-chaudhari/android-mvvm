@@ -17,7 +17,12 @@
 package com.manaschaudhari.android_mvvm;
 
 import android.databinding.Observable.OnPropertyChangedCallback;
+import android.databinding.ObservableBoolean;
+import android.databinding.ObservableDouble;
 import android.databinding.ObservableField;
+import android.databinding.ObservableFloat;
+import android.databinding.ObservableInt;
+import android.databinding.ObservableLong;
 import android.support.annotation.NonNull;
 
 import rx.Observable;
@@ -49,8 +54,124 @@ public class FieldUtils {
         });
     }
 
+    @NonNull
+    public static Observable<Integer> toObservable(@NonNull final ObservableInt field) {
+        return Observable.create(new Observable.OnSubscribe<Integer>() {
+            @Override
+            public void call(final Subscriber<? super Integer> subscriber) {
+                subscriber.onNext(field.get());
+                final OnPropertyChangedCallback callback = new OnPropertyChangedCallback() {
+                    @Override
+                    public void onPropertyChanged(android.databinding.Observable observable, int i) {
+                        subscriber.onNext(field.get());
+                    }
+                };
+                field.addOnPropertyChangedCallback(callback);
+                subscriber.add(Subscriptions.create(new Action0() {
+                    @Override
+                    public void call() {
+                        field.removeOnPropertyChangedCallback(callback);
+                    }
+                }));
+            }
+        });
+    }
+
+    @NonNull
+    public static Observable<Boolean> toObservable(@NonNull final ObservableBoolean field) {
+        return Observable.create(new Observable.OnSubscribe<Boolean>() {
+            @Override
+            public void call(final Subscriber<? super Boolean> subscriber) {
+                subscriber.onNext(field.get());
+                final OnPropertyChangedCallback callback = new OnPropertyChangedCallback() {
+                    @Override
+                    public void onPropertyChanged(android.databinding.Observable observable, int i) {
+                        subscriber.onNext(field.get());
+                    }
+                };
+                field.addOnPropertyChangedCallback(callback);
+                subscriber.add(Subscriptions.create(new Action0() {
+                    @Override
+                    public void call() {
+                        field.removeOnPropertyChangedCallback(callback);
+                    }
+                }));
+            }
+        });
+    }
+
+    @NonNull
+    public static Observable<Float> toObservable(@NonNull final ObservableFloat field) {
+        return Observable.create(new Observable.OnSubscribe<Float>() {
+            @Override
+            public void call(final Subscriber<? super Float> subscriber) {
+                subscriber.onNext(field.get());
+                final OnPropertyChangedCallback callback = new OnPropertyChangedCallback() {
+                    @Override
+                    public void onPropertyChanged(android.databinding.Observable observable, int i) {
+                        subscriber.onNext(field.get());
+                    }
+                };
+                field.addOnPropertyChangedCallback(callback);
+                subscriber.add(Subscriptions.create(new Action0() {
+                    @Override
+                    public void call() {
+                        field.removeOnPropertyChangedCallback(callback);
+                    }
+                }));
+            }
+        });
+    }
+
+    @NonNull
+    public static Observable<Double> toObservable(@NonNull final ObservableDouble field) {
+        return Observable.create(new Observable.OnSubscribe<Double>() {
+            @Override
+            public void call(final Subscriber<? super Double> subscriber) {
+                subscriber.onNext(field.get());
+                final OnPropertyChangedCallback callback = new OnPropertyChangedCallback() {
+                    @Override
+                    public void onPropertyChanged(android.databinding.Observable observable, int i) {
+                        subscriber.onNext(field.get());
+                    }
+                };
+                field.addOnPropertyChangedCallback(callback);
+                subscriber.add(Subscriptions.create(new Action0() {
+                    @Override
+                    public void call() {
+                        field.removeOnPropertyChangedCallback(callback);
+                    }
+                }));
+            }
+        });
+    }
+
+    @NonNull
+    public static Observable<Long> toObservable(@NonNull final ObservableLong field) {
+        return Observable.create(new Observable.OnSubscribe<Long>() {
+            @Override
+            public void call(final Subscriber<? super Long> subscriber) {
+                subscriber.onNext(field.get());
+                final OnPropertyChangedCallback callback = new OnPropertyChangedCallback() {
+                    @Override
+                    public void onPropertyChanged(android.databinding.Observable observable, int i) {
+                        subscriber.onNext(field.get());
+                    }
+                };
+                field.addOnPropertyChangedCallback(callback);
+                subscriber.add(Subscriptions.create(new Action0() {
+                    @Override
+                    public void call() {
+                        field.removeOnPropertyChangedCallback(callback);
+                    }
+                }));
+            }
+        });
+    }
+
     /**
      * A convenient wrapper for {@code ReadOnlyField#create(Observable)}
+     *
      * @return DataBinding field created from the specified Observable
      */
     @NonNull
