@@ -21,7 +21,7 @@ import com.manaschaudhari.android_mvvm.adapters.ViewProvider;
 
 import java.util.List;
 
-import rx.Observable;
+import io.reactivex.Observable;
 
 public class BindingTestViewModel implements ViewModel {
     public List<TestViewModel> subclassList;

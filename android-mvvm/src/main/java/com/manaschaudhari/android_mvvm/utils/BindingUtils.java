@@ -37,9 +37,9 @@ import com.manaschaudhari.android_mvvm.adapters.ViewProvider;
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.Observable;
-import rx.Subscription;
-import rx.functions.Func1;
+import io.reactivex.Observable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
 
 @SuppressWarnings("unused")
 public class BindingUtils {
@@ -62,9 +62,9 @@ public class BindingUtils {
 
         // Disconnect previous adapter if its Connectable
         if (oldAdapter != null && oldAdapter instanceof Connectable) {
-            Subscription subscription = (Subscription) viewPager.getTag(R.integer.tag_subscription);
-            if (subscription != null && !subscription.isUnsubscribed()) {
-                subscription.unsubscribe();
+            Disposable subscription = (Disposable) viewPager.getTag(R.integer.tag_subscription);
+            if (subscription != null && !subscription.isDisposed()) {
+                subscription.dispose();
             }
             viewPager.setTag(R.integer.tag_subscription, null);
         }
@@ -115,9 +115,9 @@ public class BindingUtils {
     @BindingConversion
     @Nullable
     public static <T extends ViewModel> Observable<List<ViewModel>> toGenericList(@Nullable Observable<List<T>> specificList) {
-        return specificList == null ? null : specificList.map(new Func1<List<T>, List<ViewModel>>() {
+        return specificList == null ? null : specificList.map(new Function<List<T>, List<ViewModel>>() {
             @Override
-            public List<ViewModel> call(List<T> ts) {
+            public List<ViewModel> apply(List<T> ts) throws Exception {
                 return new ArrayList<ViewModel>(ts);
             }
         });

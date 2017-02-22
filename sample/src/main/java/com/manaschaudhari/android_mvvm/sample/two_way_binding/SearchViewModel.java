@@ -20,7 +20,6 @@ import android.databinding.ObservableField;
 import android.support.annotation.NonNull;
 
 import com.manaschaudhari.android_mvvm.FieldUtils;
-import com.manaschaudhari.android_mvvm.ReadOnlyField;
 import com.manaschaudhari.android_mvvm.ViewModel;
 import com.manaschaudhari.android_mvvm.sample.Item;
 import com.manaschaudhari.android_mvvm.sample.ItemViewModel;
@@ -31,20 +30,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import rx.Observable;
-import rx.functions.Action0;
-import rx.functions.Func1;
+import io.reactivex.Observable;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Function;
+
 
 public class SearchViewModel implements ViewModel {
     public final ObservableField<String> searchQuery = new ObservableField<>("");
     public final Observable<List<ViewModel>> results;
-    public final Action0 onRandomSearch;
+    public final Action onRandomSearch;
 
     public SearchViewModel(@NonNull final MessageHelper messageHelper, @NonNull final Navigator navigator) {
         results = FieldUtils.toObservable(searchQuery)
-                .map(new Func1<String, List<ViewModel>>() {
+                .map(new Function<String, List<ViewModel>>() {
                     @Override
-                    public List<ViewModel> call(String s) {
+                    public List<ViewModel> apply(String s) throws Exception {
                         List<ViewModel> results = new ArrayList<>();
                         if (s.length() > 0) {
                             String[] words = s.split(" ");
@@ -56,9 +56,9 @@ public class SearchViewModel implements ViewModel {
                     }
                 });
 
-        onRandomSearch = new Action0() {
+        onRandomSearch = new Action() {
             @Override
-            public void call() {
+            public void run() throws Exception {
                 String randomString = UUID.randomUUID().toString();
                 String randomQuery = randomString.substring(0, 3) + " " + randomString.substring(5, 8);
                 searchQuery.set(randomQuery);

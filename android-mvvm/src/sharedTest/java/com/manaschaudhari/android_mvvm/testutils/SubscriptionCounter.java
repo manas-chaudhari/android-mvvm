@@ -16,23 +16,28 @@
 
 package com.manaschaudhari.android_mvvm.testutils;
 
-import rx.Observable;
-import rx.functions.Action0;
 
-public class SubscriptionCounter<T> implements Observable.Transformer<T, T> {
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.ObservableTransformer;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
+
+public class SubscriptionCounter<T> implements ObservableTransformer<T, T> {
     public int subscriptions;
     public int unsubscriptions;
 
     @Override
-    public Observable<T> call(Observable<T> tObservable) {
-        return tObservable.doOnSubscribe(new Action0() {
+    public ObservableSource<T> apply(Observable<T> upstream) {
+        return upstream.doOnSubscribe(new Consumer<Disposable>() {
             @Override
-            public void call() {
+            public void accept(Disposable disposable) throws Exception {
                 subscriptions++;
             }
-        }).doOnUnsubscribe(new Action0() {
+        }).doOnDispose(new Action() {
             @Override
-            public void call() {
+            public void run() throws Exception {
                 unsubscriptions++;
             }
         });

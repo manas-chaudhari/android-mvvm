@@ -37,9 +37,9 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 
-import rx.Observable;
-import rx.Subscription;
-import rx.subjects.BehaviorSubject;
+import io.reactivex.Observable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.subjects.BehaviorSubject;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -57,11 +57,11 @@ public class ViewPagerAdapterTest {
     private SubscriptionCounter<List<ViewModel>> subscriptionCounter;
     private TestViewProvider testViewProvider;
     private TestViewModelBinder testBinder;
-    private Subscription connection;
+    private Disposable connection;
 
     @Before
     public void setUp() throws Exception {
-        viewModelsSource = BehaviorSubject.create(TestViewModel.dummyViewModels(INITIAL_COUNT));
+        viewModelsSource = BehaviorSubject.createDefault(TestViewModel.dummyViewModels(INITIAL_COUNT));
         testViewProvider = new TestViewProvider();
         testBinder = new TestViewModelBinder();
         subscriptionCounter = new SubscriptionCounter<>();
@@ -108,16 +108,9 @@ public class ViewPagerAdapterTest {
         assertEquals(1, subscriptionCounter.subscriptions);
         assertEquals(0, subscriptionCounter.unsubscriptions);
 
-        connection.unsubscribe();
+        connection.dispose();
 
         assertEquals(0, subscriptionCounter.subscriptions - subscriptionCounter.unsubscriptions);
-    }
-
-    @Test
-    public void nullListIsTreatedAsEmpty() throws Exception {
-        viewModelsSource.onNext(null);
-
-        assertEquals(0, sut.getCount());
     }
 
     @Test

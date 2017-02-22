@@ -21,8 +21,8 @@ import android.databinding.ObservableField;
 import com.manaschaudhari.android_mvvm.ReadOnlyField;
 import com.manaschaudhari.android_mvvm.ViewModel;
 
-import rx.Observable;
-import rx.functions.Func3;
+import io.reactivex.Observable;
+import io.reactivex.functions.Function3;
 
 import static com.manaschaudhari.android_mvvm.FieldUtils.toField;
 import static com.manaschaudhari.android_mvvm.FieldUtils.toObservable;
@@ -31,7 +31,7 @@ public class CalculatorViewModel implements ViewModel {
 
     public final ObservableField<String> number1 = new ObservableField<>("");
     public final ObservableField<String> number2 = new ObservableField<>("");
-    public final ObservableField<Calculator.Operation> operation = new ObservableField<>(null);
+    public final ObservableField<Calculator.Operation> operation = new ObservableField<>(Calculator.Operation.ADD);
 
     public final ReadOnlyField<String> result;
 
@@ -40,10 +40,9 @@ public class CalculatorViewModel implements ViewModel {
 
         Observable<String> result = Observable.combineLatest(
                 toObservable(number1), toObservable(number2), toObservable(operation),
-                new Func3<String, String, Calculator.Operation, String>() {
+                new Function3<String, String, Calculator.Operation, String>() {
                     @Override
-                    public String call(String s1, String s2, Calculator.Operation operation) {
-                        if (operation == null) { return ""; }
+                    public String apply(String s1, String s2, Calculator.Operation operation) throws Exception {
                         try {
                             int n1 = Integer.parseInt(s1);
                             int n2 = Integer.parseInt(s2);

@@ -16,8 +16,8 @@
 
 package com.manaschaudhari.android_mvvm.adapters;
 
-import rx.Subscription;
+import io.reactivex.disposables.Disposable;
 
 public interface Connectable {
-    Subscription connect();
+    Disposable connect();
 }

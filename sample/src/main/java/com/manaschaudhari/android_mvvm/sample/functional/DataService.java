@@ -18,25 +18,27 @@ package com.manaschaudhari.android_mvvm.sample.functional;
 
 import java.util.Random;
 
-import rx.Single;
-import rx.SingleSubscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.Single;
+import io.reactivex.SingleEmitter;
+import io.reactivex.SingleOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+
 
 public class DataService {
     public Single<String> loadData() {
-        return Single.create(new Single.OnSubscribe<String>() {
+        return Single.create(new SingleOnSubscribe<String>() {
             @Override
-            public void call(SingleSubscriber<? super String> singleSubscriber) {
+            public void subscribe(SingleEmitter<String> e) throws Exception {
                 try {
                     Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
                 }
                 if (new Random().nextBoolean()) {
-                    singleSubscriber.onSuccess("Result from data service");
+                    e.onSuccess("Result from data service");
                 } else {
-                    singleSubscriber.onError(new Throwable("Fake error"));
+                    e.onError(new Throwable("Fake error"));
                 }
             }
         }).subscribeOn(Schedulers.computation()).observeOn(AndroidSchedulers.mainThread());

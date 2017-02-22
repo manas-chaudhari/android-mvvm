@@ -23,7 +23,7 @@ import android.support.annotation.Nullable;
 import com.manaschaudhari.android_mvvm.ViewModel;
 import com.manaschaudhari.android_mvvm.sample.adapters.MessageHelper;
 
-import rx.functions.Action0;
+import io.reactivex.functions.Action;
 
 public class ItemViewModel implements ViewModel {
     @NonNull
@@ -38,23 +38,23 @@ public class ItemViewModel implements ViewModel {
     public ItemViewModel(@NonNull final Item item, @NonNull final MessageHelper messageHelper, @NonNull final Navigator navigator) {
         this.imageRes = item.name.contains("2") ? R.drawable.some_image : 0;
         this.name = item.name.toUpperCase();
-        this.onClicked = new Action0() {
+        this.onClicked = new Action() {
             @Override
-            public void call() {
+            public void run() throws Exception {
                 messageHelper.show("Selected " + item.name);
             }
         };
-        this.onDetailsClicked = new Action0() {
+        this.onDetailsClicked = new Action() {
             @Override
-            public void call() {
+            public void run() throws Exception {
                 navigator.openDetailsPage(item);
             }
         };
     }
 
     @Nullable
-    public final Action0 onClicked;
+    public final Action onClicked;
 
     @Nullable
-    public final Action0 onDetailsClicked;
+    public final Action onDetailsClicked;
 }

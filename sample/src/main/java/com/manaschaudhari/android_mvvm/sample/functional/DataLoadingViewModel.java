@@ -23,10 +23,11 @@ import com.manaschaudhari.android_mvvm.ReadOnlyField;
 import com.manaschaudhari.android_mvvm.ViewModel;
 import com.manaschaudhari.android_mvvm.sample.utils.RxUtils;
 
-import rx.Observable;
-import rx.Single;
-import rx.functions.Func1;
-import rx.functions.Func2;
+
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.functions.BiFunction;
+import io.reactivex.functions.Function;
 
 import static com.manaschaudhari.android_mvvm.FieldUtils.toField;
 
@@ -43,10 +44,10 @@ public class DataLoadingViewModel implements ViewModel {
 
     public DataLoadingViewModel(@NonNull DataService service) {
         Single<String> data = service.loadData(); // Try service.loadData_Fail(); for error scenario
-        final Observable<String> cachedData = data.toObservable().onErrorReturn(new Func1<Throwable, String>() {
+        final Observable<String> cachedData = data.toObservable().onErrorReturn(new Function<Throwable, String>() {
             @Override
-            public String call(Throwable throwable) {
-                return null;
+            public String apply(Throwable throwable) throws Exception {
+                return "ERROR";
             }
         }).cache();
 
@@ -54,9 +55,9 @@ public class DataLoadingViewModel implements ViewModel {
 
         result = toField(tracker.first);
         this.progressVisible = toField(tracker.second);
-        this.errorVisible = toField(Observable.combineLatest(tracker.first, tracker.second, new Func2<String, Boolean, Boolean>() {
+        this.errorVisible = toField(Observable.combineLatest(tracker.first, tracker.second, new BiFunction<String, Boolean, Boolean>() {
             @Override
-            public Boolean call(String result, Boolean inProgress) {
+            public Boolean apply(String result, Boolean inProgress) throws Exception {
                 return !inProgress && result == null;
             }
         }));
