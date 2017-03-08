@@ -32,6 +32,7 @@ import io.reactivex.functions.Function;
 import static com.manaschaudhari.android_mvvm.FieldUtils.toField;
 
 public class DataLoadingViewModel implements ViewModel {
+    private static final String ERROR_VALUE = "__ERROR__";
 
     @NonNull
     public final ReadOnlyField<String> result;
@@ -42,12 +43,18 @@ public class DataLoadingViewModel implements ViewModel {
     @NonNull
     public final ReadOnlyField<Boolean> errorVisible;
 
+    @NonNull
+    public final ReadOnlyField<Boolean> resultVisible;
+
     public DataLoadingViewModel(@NonNull DataService service) {
-        Single<String> data = service.loadData(); // Try service.loadData_Fail(); for error scenario
+        Single<String> data = service.loadData();
+        /*
+         TODO: Cleanup. Retrofit RxJava2 adapter has a Result class which will make this cleaner
+         */
         final Observable<String> cachedData = data.toObservable().onErrorReturn(new Function<Throwable, String>() {
             @Override
             public String apply(Throwable throwable) throws Exception {
-                return "ERROR";
+                return ERROR_VALUE;
             }
         }).cache();
 
@@ -55,10 +62,17 @@ public class DataLoadingViewModel implements ViewModel {
 
         result = toField(tracker.first);
         this.progressVisible = toField(tracker.second);
-        this.errorVisible = toField(Observable.combineLatest(tracker.first, tracker.second, new BiFunction<String, Boolean, Boolean>() {
+        Observable<Boolean> success = Observable.combineLatest(tracker.first, tracker.second, new BiFunction<String, Boolean, Boolean>() {
             @Override
             public Boolean apply(String result, Boolean inProgress) throws Exception {
-                return !inProgress && result == null;
+                return !inProgress && !result.equals(ERROR_VALUE);
+            }
+        });
+        this.resultVisible = toField(success);
+        this.errorVisible = toField(Observable.combineLatest(tracker.second, success, new BiFunction<Boolean, Boolean, Boolean>() {
+            @Override
+            public Boolean apply(Boolean inProgress, Boolean successful) throws Exception {
+                return !inProgress && !successful;
             }
         }));
     }
