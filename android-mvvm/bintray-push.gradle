@@ -1,0 +1,7 @@
+
+ext {
+    artifact = 'android-mvvm'
+}
+
+apply from: rootProject.file('gradle/bintray/install.gradle')
+apply from: rootProject.file('gradle/bintray/bintray.gradle')

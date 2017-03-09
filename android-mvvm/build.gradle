@@ -69,4 +69,4 @@ dependencies {
     compile 'com.android.support:appcompat-v7:24.2.1'
 }
 
-apply from: rootProject.file('gradle/bintray-push.gradle')
+apply from: file('bintray-push.gradle')

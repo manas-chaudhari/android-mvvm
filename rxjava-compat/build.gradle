@@ -45,3 +45,4 @@ dependencies {
     compile project(':android-mvvm')
     testCompile 'junit:junit:4.12'
 }
+apply from: file('bintray-push.gradle')

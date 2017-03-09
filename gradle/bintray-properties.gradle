@@ -3,9 +3,8 @@ ext {
     bintrayRepo = 'maven'
     bintrayName = 'android-mvvm'
 
-    publishedGroupId = 'com.manaschaudhari'
+    publishedGroupId = 'com.manaschaudhari.android-mvvm'
     libraryName = 'Android MVVM'
-    artifact = 'android-mvvm'
 
     libraryDescription = 'Tools for implementing MVVM on Android'
 
@@ -22,6 +21,3 @@ ext {
     licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
     allLicenses = ["Apache-2.0"]
 }
-
-apply from: rootProject.file('gradle/bintray/install.gradle')
-apply from: rootProject.file('gradle/bintray/bintray.gradle')
