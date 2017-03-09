@@ -90,11 +90,6 @@ public class ReadOnlyFieldTests {
         assertEquals(INITIAL_VALUE, sut.get());
     }
 
-    @Test
-    public void nullIsAcceptable() throws Exception {
-        sourceSubject.onNext(null);
-    }
-
     public class TestPropertyChangedCallback extends android.databinding.Observable.OnPropertyChangedCallback {
         public int callCount;
 
