@@ -22,35 +22,32 @@ import android.util.Log;
 
 import java.util.HashMap;
 
-import rx.Observable;
-import rx.Subscription;
-import rx.functions.Action1;
+import io.reactivex.Observable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+
 
 public class ReadOnlyField<T> extends ObservableField<T> {
-    final Observable<T> source;
-    final HashMap<OnPropertyChangedCallback, Subscription> subscriptions = new HashMap<>();
+    private final Observable<T> source;
+    private final HashMap<OnPropertyChangedCallback, Disposable> subscriptions = new HashMap<>();
 
     public static <U> ReadOnlyField<U> create(@NonNull Observable<U> source) {
         return new ReadOnlyField<>(source);
     }
 
-    protected ReadOnlyField(@NonNull Observable<T> source) {
+    private ReadOnlyField(@NonNull Observable<T> source) {
         super();
-        this.source = source
-                .doOnNext(new Action1<T>() {
-                    @Override
-                    public void call(T t) {
-                        ReadOnlyField.super.set(t);
-                    }
-                })
-                .doOnError(new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        Log.e("ReadOnlyField", "onError in source observable", throwable);
-                    }
-                })
-                .onErrorResumeNext(Observable.<T>empty())
-                .share();
+        this.source = source.doOnNext(new Consumer<T>() {
+            @Override
+            public void accept(T t) throws Exception {
+                ReadOnlyField.super.set(t);
+            }
+        }).doOnError(new Consumer<Throwable>() {
+            @Override
+            public void accept(Throwable throwable) throws Exception {
+                Log.e("ReadOnlyField", "onError in source observable", throwable);
+            }
+        }).onErrorResumeNext(Observable.<T>empty()).share();
     }
 
     /**
@@ -59,7 +56,8 @@ public class ReadOnlyField<T> extends ObservableField<T> {
      */
     @Deprecated
     @Override
-    public void set(T value) {}
+    public void set(T value) {
+    }
 
     @Override
     public synchronized void addOnPropertyChangedCallback(OnPropertyChangedCallback callback) {
@@ -70,9 +68,9 @@ public class ReadOnlyField<T> extends ObservableField<T> {
     @Override
     public synchronized void removeOnPropertyChangedCallback(OnPropertyChangedCallback callback) {
         super.removeOnPropertyChangedCallback(callback);
-        Subscription subscription = subscriptions.remove(callback);
-        if (subscription != null && !subscription.isUnsubscribed()) {
-            subscription.unsubscribe();
+        Disposable subscription = subscriptions.remove(callback);
+        if (subscription != null && !subscription.isDisposed()) {
+            subscription.dispose();
         }
     }
 }

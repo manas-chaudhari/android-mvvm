@@ -21,8 +21,9 @@ import com.manaschaudhari.android_mvvm.testutils.SubscriptionCounter;
 import org.junit.Before;
 import org.junit.Test;
 
-import rx.Observable;
-import rx.subjects.BehaviorSubject;
+
+import io.reactivex.Observable;
+import io.reactivex.subjects.BehaviorSubject;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
@@ -38,7 +39,7 @@ public class ReadOnlyFieldTests {
 
     @Before
     public void setUp() throws Exception {
-        sourceSubject = BehaviorSubject.create(INITIAL_VALUE);
+        sourceSubject = BehaviorSubject.createDefault(INITIAL_VALUE);
         subscriptionCounter = new SubscriptionCounter<>();
         Observable<Integer> source = sourceSubject.compose(subscriptionCounter);
         sut = ReadOnlyField.create(source);
@@ -87,11 +88,6 @@ public class ReadOnlyFieldTests {
         sourceSubject.onError(new Throwable());
 
         assertEquals(INITIAL_VALUE, sut.get());
-    }
-
-    @Test
-    public void nullIsAcceptable() throws Exception {
-        sourceSubject.onNext(null);
     }
 
     public class TestPropertyChangedCallback extends android.databinding.Observable.OnPropertyChangedCallback {

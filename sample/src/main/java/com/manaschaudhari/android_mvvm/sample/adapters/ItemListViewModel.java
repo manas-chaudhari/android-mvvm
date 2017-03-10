@@ -26,9 +26,9 @@ import com.manaschaudhari.android_mvvm.sample.Navigator;
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.Observable;
-import rx.functions.Func1;
-import rx.subjects.BehaviorSubject;
+import io.reactivex.Observable;
+import io.reactivex.functions.Function;
+import io.reactivex.subjects.BehaviorSubject;
 
 public class ItemListViewModel implements ViewModel {
     public final Observable<List<ItemViewModel>> itemVms;
@@ -44,13 +44,13 @@ public class ItemListViewModel implements ViewModel {
         items.add(new Item("item 1"));
         items.add(new Item("item 2"));
         items.add(new Item("item 3"));
-        itemsSource = BehaviorSubject.create(items);
+        itemsSource = BehaviorSubject.createDefault(items);
     }
 
     public ItemListViewModel(@NonNull final MessageHelper messageHelper, @NonNull final Navigator navigator) {
-        this.itemVms = itemsSource.map(new Func1<List<Item>, List<ItemViewModel>>() {
+        this.itemVms = itemsSource.map(new Function<List<Item>, List<ItemViewModel>>() {
             @Override
-            public List<ItemViewModel> call(List<Item> items) {
+            public List<ItemViewModel> apply(List<Item> items) throws Exception {
                 List<ItemViewModel> vms = new ArrayList<>();
                 for (Item item : items) {
                     vms.add(new ItemViewModel(item, messageHelper, navigator));

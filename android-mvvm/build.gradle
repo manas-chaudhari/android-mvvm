@@ -1,9 +1,5 @@
 apply plugin: 'com.android.library'
 
-def isCi() {
-    return "true".equals(System.getenv('CI'))
-}
-
 android {
     compileSdkVersion 24
     buildToolsVersion "24.0.0"
@@ -30,10 +26,6 @@ android {
         enabled = true
     }
 
-    dexOptions {
-        preDexLibraries = !isCi()
-    }
-
     lintOptions {
         textOutput 'stdout'
         textReport true
@@ -47,26 +39,14 @@ android {
     }
 }
 
-if (isCi()) {
-    println 'Running on CI. Adding task to start emulator.'
-
-    task startEmulator << {
-        "$rootDir/gradle/start-emulator.sh".execute().waitFor()
-    }
-
-    android.testVariants.all { variant ->
-        variant.connectedInstrumentTest.dependsOn startEmulator
-    }
-}
-
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     androidTestCompile 'com.android.support.test:runner:0.5'
     androidTestCompile 'com.android.support.test:rules:0.5'
-    compile 'io.reactivex:rxjava:1.1.7'
+    compile "io.reactivex.rxjava2:rxjava:2.0.7"
     compile 'com.android.support:recyclerview-v7:24.2.1'
     compile 'com.android.support:appcompat-v7:24.2.1'
 }
 
-apply from: rootProject.file('gradle/bintray-push.gradle')
+apply from: file('bintray-push.gradle')

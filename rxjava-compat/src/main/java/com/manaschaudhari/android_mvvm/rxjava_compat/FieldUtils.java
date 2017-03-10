@@ -14,23 +14,29 @@
  * limitations under the License.
  */
 
-package com.manaschaudhari.android_mvvm;
+package com.manaschaudhari.android_mvvm.rxjava_compat;
 
 import android.databinding.Observable.OnPropertyChangedCallback;
 import android.databinding.ObservableField;
 import android.support.annotation.NonNull;
 
+import com.manaschaudhari.android_mvvm.ReadOnlyField;
+
+import hu.akarnokd.rxjava.interop.RxJavaInterop;
+import io.reactivex.BackpressureStrategy;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.functions.Cancellable;
 
-
+/**
+ * Utilities for conversion between rx.Observable and databinding.ObservableField
+ */
 public class FieldUtils {
     @NonNull
-    public static <T> Observable<T> toObservable(@NonNull final ObservableField<T> field) {
+    public static <T> rx.Observable<T> toObservable(@NonNull final ObservableField<T> field) {
 
-        return Observable.create(new ObservableOnSubscribe<T>() {
+        return RxJavaInterop.toV1Observable(Observable.create(new ObservableOnSubscribe<T>() {
             @Override
             public void subscribe(final ObservableEmitter<T> e) throws Exception {
                 e.onNext(field.get());
@@ -48,7 +54,7 @@ public class FieldUtils {
                     }
                 });
             }
-        });
+        }), BackpressureStrategy.LATEST);
     }
 
     /**
@@ -56,7 +62,7 @@ public class FieldUtils {
      * @return DataBinding field created from the specified Observable
      */
     @NonNull
-    public static <T> ReadOnlyField<T> toField(@NonNull final Observable<T> observable) {
-        return ReadOnlyField.create(observable);
+    public static <T> ReadOnlyField<T> toField(@NonNull final rx.Observable<T> observable) {
+        return ReadOnlyField.create(RxJavaInterop.toV2Observable(observable));
     }
 }

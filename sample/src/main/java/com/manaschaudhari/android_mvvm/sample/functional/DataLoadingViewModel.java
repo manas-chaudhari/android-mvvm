@@ -17,21 +17,17 @@
 package com.manaschaudhari.android_mvvm.sample.functional;
 
 import android.support.annotation.NonNull;
-import android.support.v4.util.Pair;
 
 import com.manaschaudhari.android_mvvm.ReadOnlyField;
 import com.manaschaudhari.android_mvvm.ViewModel;
-import com.manaschaudhari.android_mvvm.sample.utils.RxUtils;
 
-import rx.Observable;
-import rx.Single;
-import rx.functions.Func1;
-import rx.functions.Func2;
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.functions.Function;
 
 import static com.manaschaudhari.android_mvvm.FieldUtils.toField;
 
 public class DataLoadingViewModel implements ViewModel {
-
     @NonNull
     public final ReadOnlyField<String> result;
 
@@ -41,23 +37,35 @@ public class DataLoadingViewModel implements ViewModel {
     @NonNull
     public final ReadOnlyField<Boolean> errorVisible;
 
+    @NonNull
+    public final ReadOnlyField<Boolean> resultVisible;
+
     public DataLoadingViewModel(@NonNull DataService service) {
-        Single<String> data = service.loadData(); // Try service.loadData_Fail(); for error scenario
-        final Observable<String> cachedData = data.toObservable().onErrorReturn(new Func1<Throwable, String>() {
+        Single<Result<String>> data = service.loadData();
+        final Observable<Result<String>> cachedData = data.toObservable().startWith(Result.<String>empty()).cache();
+
+        result = toField(cachedData.map(new Function<Result<String>, String>() {
             @Override
-            public String call(Throwable throwable) {
-                return null;
+            public String apply(@io.reactivex.annotations.NonNull Result<String> stringResult) throws Exception {
+                return stringResult.isSuccess() ? stringResult.value : "";
             }
-        }).cache();
-
-        Pair<Observable<String>, Observable<Boolean>> tracker = RxUtils.trackActivity(cachedData);
-
-        result = toField(tracker.first);
-        this.progressVisible = toField(tracker.second);
-        this.errorVisible = toField(Observable.combineLatest(tracker.first, tracker.second, new Func2<String, Boolean, Boolean>() {
+        }));
+        this.progressVisible = toField(cachedData.map(new Function<Result<String>, Boolean>() {
             @Override
-            public Boolean call(String result, Boolean inProgress) {
-                return !inProgress && result == null;
+            public Boolean apply(@io.reactivex.annotations.NonNull Result<String> stringResult) throws Exception {
+                return stringResult.isEmpty();
+            }
+        }));
+        this.resultVisible = toField(cachedData.map(new Function<Result<String>, Boolean>() {
+            @Override
+            public Boolean apply(@io.reactivex.annotations.NonNull Result<String> stringResult) throws Exception {
+                return stringResult.isSuccess();
+            }
+        }));
+        this.errorVisible = toField(cachedData.map(new Function<Result<String>, Boolean>() {
+            @Override
+            public Boolean apply(@io.reactivex.annotations.NonNull Result<String> stringResult) throws Exception {
+                return stringResult.isError();
             }
         }));
     }

@@ -19,37 +19,39 @@ package com.manaschaudhari.android_mvvm.sample.utils;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 
-import rx.Observable;
-import rx.functions.Action1;
-import rx.functions.Func0;
-import rx.functions.Func1;
-import rx.subjects.BehaviorSubject;
+import java.util.concurrent.Callable;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.subjects.BehaviorSubject;
 
 public class RxUtils {
     @NonNull
     public static <T> Pair<Observable<T>, Observable<Boolean>> trackActivity(@NonNull final Observable<T> source) {
-        final BehaviorSubject<Integer> count = BehaviorSubject.create(0);
+        final BehaviorSubject<Integer> count = BehaviorSubject.createDefault(0);
         return new Pair<>(
-                Observable.using(new Func0<Integer>() {
+                Observable.using(new Callable<Integer>() {
                     @Override
-                    public Integer call() {
+                    public Integer call() throws Exception {
                         count.onNext(count.getValue() + 1);
                         return null;
                     }
-                }, new Func1<Integer, Observable<? extends T>>() {
+                }, new Function<Integer, ObservableSource<? extends T>>() {
                     @Override
-                    public Observable<? extends T> call(Integer integer) {
+                    public ObservableSource<? extends T> apply(Integer integer) throws Exception {
                         return source;
                     }
-                }, new Action1<Integer>() {
+                }, new Consumer<Integer>() {
                     @Override
-                    public void call(Integer integer) {
+                    public void accept(Integer integer) throws Exception {
                         count.onNext(count.getValue() - 1);
                     }
                 }),
-                count.map(new Func1<Integer, Boolean>() {
+                count.map(new Function<Integer, Boolean>() {
                     @Override
-                    public Boolean call(Integer integer) {
+                    public Boolean apply(Integer integer) throws Exception {
                         return integer > 0;
                     }
                 }));

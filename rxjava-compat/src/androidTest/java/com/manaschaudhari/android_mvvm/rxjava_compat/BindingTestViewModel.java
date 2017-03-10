@@ -14,20 +14,24 @@
  * limitations under the License.
  */
 
-package com.manaschaudhari.android_mvvm;
+package com.manaschaudhari.android_mvvm.rxjava_compat;
 
-import com.manaschaudhari.android_mvvm.adapters.TestViewModel;
+import com.manaschaudhari.android_mvvm.ViewModel;
 import com.manaschaudhari.android_mvvm.adapters.ViewProvider;
 
 import java.util.List;
 
-import io.reactivex.Observable;
+import rx.Observable;
 
 public class BindingTestViewModel implements ViewModel {
-    public List<TestViewModel> subclassList;
+    public List<EmptyViewModel> subclassList;
     public List<ViewModel> mixedList;
     public Observable<List<ViewModel>> observableMixedList;
-    public Observable<List<TestViewModel>> observableSubclassMixedList;
+    public Observable<List<EmptyViewModel>> observableSubclassMixedList;
 
     public ViewProvider viewProvider;
+
+    public static class EmptyViewModel implements ViewModel {
+
+    }
 }

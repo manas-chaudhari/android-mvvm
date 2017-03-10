@@ -23,3 +23,27 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+ext.isCi = "true" == System.getenv("CI")
+
+if (isCi) {
+    println 'Running on CI. Adding task to start emulator.'
+
+    task startEmulator << {
+        "$rootDir/gradle/start-emulator.sh".execute().waitFor()
+    }
+
+    subprojects {
+        afterEvaluate { Project project ->
+            project.android.testVariants.all { variant ->
+                variant.connectedInstrumentTest.dependsOn startEmulator
+            }
+
+            project.android.dexOptions {
+                preDexLibraries = false
+            }
+        }
+    }
+}
+
+apply from: file("gradle/bintray-properties.gradle")
