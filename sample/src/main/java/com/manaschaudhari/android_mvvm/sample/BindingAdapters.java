@@ -34,6 +34,7 @@ import com.manaschaudhari.android_mvvm.utils.BindingUtils;
 import java.util.List;
 
 import io.reactivex.functions.Action;
+import rx.functions.Action0;
 
 @SuppressWarnings("unused")
 public class BindingAdapters {
@@ -90,6 +91,20 @@ public class BindingAdapters {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                }
+            };
+        } else {
+            return null;
+        }
+    }
+
+    @BindingConversion
+    public static View.OnClickListener toOnClickListener(final Action0 listener) {
+        if (listener != null) {
+            return new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.call();
                 }
             };
         } else {
