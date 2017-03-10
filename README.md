@@ -192,7 +192,7 @@ public void detailsPage_isOpened_onClick() throws Exception {
 
 ## Using RxJava
 
-RxJava provides a great bunch of operators for handling changes. For example, if a dynamic field of a model needs to be formatted before displaying, it is convenient to store it as an `rx.Observable<TYPE>`. The `map` operator can be used to format the values.
+RxJava provides a great bunch of operators for handling changes. For example, if a dynamic field of a model needs to be formatted before displaying, it is convenient to store it as an `io.reactivex.Observable<TYPE>`. The `map` operator can be used to format the values.
 
 `FieldUtils` class provides methods for converting between RxJava's `Observable` and Data Binding's `ObservableField` types. This allows the use of RxJava's operators to manipulate the data.
 
@@ -239,6 +239,26 @@ public static void bindVisibility(@NonNull View view, @Nullable Boolean visible)
 ```
 
 See [SearchViewModel.java](sample/src/main/java/com/manaschaudhari/android_mvvm/sample/two_way_binding/SearchViewModel.java) and the corresponding [activity_search.xml](sample/src/main/res/layout/activity_search.xml) for another example in which the search results get updated as user updates the query.
+
+### RxJava versions
+
+Both RxJava 1.x and 2.x are supported. For RxJava 1.x support, an additional dependency needs to be added:
+```
+compile 'com.manaschaudhari.android-mvvm:rxjava-compat:x.y.z'
+
+// Under android config
+android {
+    packagingOptions {
+        exclude 'META-INF/rxjava.properties'
+    }
+}
+```
+> Note that rxjava-compat internally depends on both RxJava2 and RxJava
+
+This adds equivalent [BindingAdapters](#supported-attributes) for `rx.Observable`. This also includes `rxjava_compat.FieldUtils` class for conversions between `rx.Observable` and `databinding.ObservableField`.
+Thus, the syntax is same except for the imports.
+
+See [SearchViewModel.java(rxjava-compat)](sample/src/main/java/com/manaschaudhari/android_mvvm/sample/two_way_binding/rxjava/SearchViewModel.java) for an example implemented using `rxjava-compat`.
 
 
 ## Code-less View Setup
