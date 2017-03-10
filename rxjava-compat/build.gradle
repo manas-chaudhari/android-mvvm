@@ -41,6 +41,7 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile "com.github.akarnokd:rxjava2-interop:0.9.3"
+    compile 'io.reactivex:rxjava:1.2.7'
     compile project(':android-mvvm')
     testCompile 'junit:junit:4.12'
 }
