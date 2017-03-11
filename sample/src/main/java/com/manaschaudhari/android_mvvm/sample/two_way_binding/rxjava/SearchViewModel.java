@@ -20,7 +20,7 @@ import android.databinding.ObservableField;
 import android.support.annotation.NonNull;
 
 import com.manaschaudhari.android_mvvm.ViewModel;
-import com.manaschaudhari.android_mvvm.rxjava_compat.FieldUtils;
+import com.manaschaudhari.android_mvvm.rxjava.FieldUtils;
 import com.manaschaudhari.android_mvvm.sample.Item;
 import com.manaschaudhari.android_mvvm.sample.ItemViewModel;
 import com.manaschaudhari.android_mvvm.sample.Navigator;

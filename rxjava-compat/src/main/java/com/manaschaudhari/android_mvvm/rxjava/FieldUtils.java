@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.manaschaudhari.android_mvvm.rxjava_compat;
+package com.manaschaudhari.android_mvvm.rxjava;
 
 import android.databinding.Observable.OnPropertyChangedCallback;
 import android.databinding.ObservableField;

@@ -3,7 +3,7 @@
     <data>
         <variable
             name="vm"
-            type="com.manaschaudhari.android_mvvm.rxjava_compat.BindingTestViewModel.EmptyViewModel" />
+            type="com.manaschaudhari.android_mvvm.rxjava.BindingTestViewModel.EmptyViewModel" />
     </data>
     <TextView
         android:layout_width="wrap_content"

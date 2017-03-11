@@ -255,7 +255,7 @@ android {
 ```
 > Note that rxjava-compat internally depends on both RxJava2 and RxJava
 
-This adds equivalent [BindingAdapters](#supported-attributes) for `rx.Observable`. This also includes `rxjava_compat.FieldUtils` class for conversions between `rx.Observable` and `databinding.ObservableField`.
+This adds equivalent [BindingAdapters](#supported-attributes) for `rx.Observable`. This also includes `rxjava.FieldUtils` class for conversions between `rx.Observable` and `databinding.ObservableField`.
 Thus, the syntax is same except for the imports.
 
 See [SearchViewModel.java(rxjava-compat)](sample/src/main/java/com/manaschaudhari/android_mvvm/sample/two_way_binding/rxjava/SearchViewModel.java) for an example implemented using `rxjava-compat`.

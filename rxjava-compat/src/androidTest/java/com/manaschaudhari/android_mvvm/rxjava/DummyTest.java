@@ -1,4 +1,4 @@
-package com.manaschaudhari.android_mvvm.rxjava_compat;
+package com.manaschaudhari.android_mvvm.rxjava;
 
 import android.support.test.runner.AndroidJUnit4;
 

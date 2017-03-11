@@ -4,7 +4,7 @@
     <data>
         <variable
             name="vm"
-            type="com.manaschaudhari.android_mvvm.rxjava_compat.BindingTestViewModel" />
+            type="com.manaschaudhari.android_mvvm.rxjava.BindingTestViewModel" />
     </data>
     <LinearLayout
         android:layout_width="wrap_content"
