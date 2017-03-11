@@ -1,6 +1,6 @@
 
 ext {
-    artifact = 'android-mvvm-rxjava'
+    artifact = 'rxjava-compat'
 }
 
 apply from: rootProject.file('gradle/bintray/install.gradle')
