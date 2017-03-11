@@ -6,12 +6,12 @@ ext {
     publishedGroupId = 'com.manaschaudhari.android-mvvm'
     libraryName = 'Android MVVM'
 
-    libraryDescription = 'Tools for implementing MVVM on Android'
+    libraryDescription = 'MVVM on Android using RxJava and Data Binding'
 
     siteUrl = 'https://github.com/manas-chaudhari/android-mvvm'
     gitUrl = 'https://github.com/manas-chaudhari/android-mvvm.git'
 
-    libraryVersion = '0.1.2'
+    libraryVersion = '0.2.0'
 
     developerId = 'manas-chaudhari'
     developerName = 'Manas Chaudhari'

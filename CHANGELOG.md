@@ -1,6 +1,14 @@
 Changelog
 =========
 
+v0.2.0 (2017-03-11)
+-------------------
+
+- New: Support for RxJava2
+- New: RxJava1 support has been moved to rxjava-compat module
+- New: Maven co-ordinates changed to com.manaschaudhari.android-mvvm:android-mvvm
+
+
 v0.1.2 (2016-09-12)
 -------------------
 
