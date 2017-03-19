@@ -19,7 +19,6 @@ package com.manaschaudhari.android_mvvm.adapters;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,7 +40,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private final @NonNull ViewProvider viewProvider;
     private final @NonNull ViewModelBinder binder;
     private final @NonNull Observable<List<ViewModel>> source;
-    private final @NonNull HashMap<RecyclerView.AdapterDataObserver, Disposable> subscriptions = new HashMap<>();
+    private final @NonNull HashMap<RecyclerView.AdapterDataObserver, Disposable> disposables = new HashMap<>();
 
     public RecyclerViewAdapter(@NonNull Observable<List<ViewModel>> viewModels,
                                @NonNull ViewProvider viewProvider,
@@ -86,6 +85,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onViewRecycled(DataBindingViewHolder holder) {
         binder.bind(holder.viewBinding, null);
+        holder.viewBinding.executePendingBindings();
     }
 
     @Override
@@ -95,16 +95,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void registerAdapterDataObserver(RecyclerView.AdapterDataObserver observer) {
-        subscriptions.put(observer, source.subscribe());
+        disposables.put(observer, source.subscribe());
         super.registerAdapterDataObserver(observer);
     }
 
     @Override
     public void unregisterAdapterDataObserver(RecyclerView.AdapterDataObserver observer) {
         super.unregisterAdapterDataObserver(observer);
-        Disposable subscription = subscriptions.remove(observer);
-        if (subscription != null && !subscription.isDisposed()) {
-            subscription.dispose();
+        Disposable disposable = disposables.remove(observer);
+        if (disposable != null && !disposable.isDisposed()) {
+            disposable.dispose();
         }
     }
 

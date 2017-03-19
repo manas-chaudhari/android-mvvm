@@ -87,6 +87,7 @@ public class ViewPagerAdapter extends PagerAdapter implements Connectable {
     public void destroyItem(ViewGroup container, int position, Object object) {
         ViewDataBinding binding = (ViewDataBinding) object;
         binder.bind(binding, null);
+        binding.executePendingBindings();
         container.removeView(binding.getRoot());
     }
 
