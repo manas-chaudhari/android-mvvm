@@ -40,7 +40,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private final @NonNull ViewProvider viewProvider;
     private final @NonNull ViewModelBinder binder;
     private final @NonNull Observable<List<ViewModel>> source;
-    private final @NonNull HashMap<RecyclerView.AdapterDataObserver, Disposable> disposables = new HashMap<>();
+    private final @NonNull HashMap<RecyclerView.AdapterDataObserver, Disposable> subscriptions = new HashMap<>();
 
     public RecyclerViewAdapter(@NonNull Observable<List<ViewModel>> viewModels,
                                @NonNull ViewProvider viewProvider,
@@ -95,16 +95,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void registerAdapterDataObserver(RecyclerView.AdapterDataObserver observer) {
-        disposables.put(observer, source.subscribe());
+        subscriptions.put(observer, source.subscribe());
         super.registerAdapterDataObserver(observer);
     }
 
     @Override
     public void unregisterAdapterDataObserver(RecyclerView.AdapterDataObserver observer) {
         super.unregisterAdapterDataObserver(observer);
-        Disposable disposable = disposables.remove(observer);
-        if (disposable != null && !disposable.isDisposed()) {
-            disposable.dispose();
+        Disposable subscription = subscriptions.remove(observer);
+        if (subscription != null && !subscription.isDisposed()) {
+            subscription.dispose();
         }
     }
 
