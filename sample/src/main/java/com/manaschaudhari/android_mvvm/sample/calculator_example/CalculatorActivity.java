@@ -18,20 +18,21 @@ package com.manaschaudhari.android_mvvm.sample.calculator_example;
 
 import android.support.annotation.NonNull;
 
-import com.manaschaudhari.android_mvvm.MvvmActivity;
 import com.manaschaudhari.android_mvvm.ViewModel;
+import com.manaschaudhari.android_mvvm.sample.BaseActivity;
 import com.manaschaudhari.android_mvvm.sample.R;
+import com.manaschaudhari.android_mvvm.sample.databinding.ActivityCalculatorBinding;
 
-public class CalculatorActivity extends MvvmActivity {
-
+public class CalculatorActivity extends BaseActivity<ActivityCalculatorBinding> {
+    
     @NonNull
     @Override
-    protected ViewModel createViewModel() {
+    public ViewModel createViewModel() {
         return new CalculatorViewModel();
     }
-
+    
     @Override
-    protected int getLayoutId() {
+    public int getLayoutId() {
         return R.layout.activity_calculator;
     }
 }

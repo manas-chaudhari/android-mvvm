@@ -21,17 +21,18 @@ import android.support.annotation.NonNull;
 import com.manaschaudhari.android_mvvm.ViewModel;
 import com.manaschaudhari.android_mvvm.sample.BaseActivity;
 import com.manaschaudhari.android_mvvm.sample.R;
+import com.manaschaudhari.android_mvvm.sample.databinding.ActivitySearchBinding;
 
-public class SearchActivity extends BaseActivity {
+public class SearchActivity extends BaseActivity<ActivitySearchBinding> {
 
     @NonNull
     @Override
-    protected ViewModel createViewModel() {
+    public ViewModel createViewModel() {
         return new SearchViewModel(getMessageHelper(), getNavigator());
     }
 
     @Override
-    protected int getLayoutId() {
+    public int getLayoutId() {
         return R.layout.activity_search;
     }
 }
