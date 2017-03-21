@@ -19,7 +19,6 @@ package com.manaschaudhari.android_mvvm.adapters;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -86,6 +85,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onViewRecycled(DataBindingViewHolder holder) {
         binder.bind(holder.viewBinding, null);
+        holder.viewBinding.executePendingBindings();
     }
 
     @Override
