@@ -4,19 +4,19 @@
 Contents:
 
 1. Sample project to demonstrate a coding pattern based on MVVM with focus on
-  1. Easy composition of views
-  1. Minimising boilerplate of setting up views
-  1. Reuse of presentation logic
+    1. Easy composition of views
+    1. Minimising boilerplate of setting up views
+    1. Reuse of presentation logic
 1. A library with essential tools for the pattern
 
 ## Prerequisites
 
 1. [Android Data Binding](https://developer.android.com/topic/libraries/data-binding/index.html)
 1. [RxJava](https://github.com/ReactiveX/RxJava)
-  - [2-minute intro to Rx](https://medium.com/@andrestaltz/2-minute-introduction-to-rx-24c8ca793877#.dh92eypp8)
-  - [Grokking RxJava](http://blog.danlew.net/2014/09/15/grokking-rxjava-part-1/)
-  - [Intro to Reactive Programming by André Staltz](https://gist.github.com/staltz/868e7e9bc2a7b8c1f754)
-  - [Comprehensive list](http://reactivex.io/tutorials.html)
+    - [2-minute intro to Rx](https://medium.com/@andrestaltz/2-minute-introduction-to-rx-24c8ca793877#.dh92eypp8)
+    - [Grokking RxJava](http://blog.danlew.net/2014/09/15/grokking-rxjava-part-1/)
+    - [Intro to Reactive Programming by André Staltz](https://gist.github.com/staltz/868e7e9bc2a7b8c1f754)
+    - [Comprehensive list](http://reactivex.io/tutorials.html)
 1. [Introduction to this pattern @DroidconIN](https://www.youtube.com/watch?v=JaB8SXCSbgg&t=1s)
 
 ## Quick Tutorial
