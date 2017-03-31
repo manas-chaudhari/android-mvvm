@@ -36,25 +36,9 @@ public class FieldUtils {
     @NonNull
     public static <T> rx.Observable<T> toObservable(@NonNull final ObservableField<T> field) {
 
-        return RxJavaInterop.toV1Observable(Observable.create(new ObservableOnSubscribe<T>() {
-            @Override
-            public void subscribe(final ObservableEmitter<T> e) throws Exception {
-                e.onNext(field.get());
-                final OnPropertyChangedCallback callback = new OnPropertyChangedCallback() {
-                    @Override
-                    public void onPropertyChanged(android.databinding.Observable observable, int i) {
-                        e.onNext(field.get());
-                    }
-                };
-                field.addOnPropertyChangedCallback(callback);
-                e.setCancellable(new Cancellable() {
-                    @Override
-                    public void cancel() throws Exception {
-                        field.removeOnPropertyChangedCallback(callback);
-                    }
-                });
-            }
-        }), BackpressureStrategy.LATEST);
+        return RxJavaInterop.toV1Observable(
+                com.manaschaudhari.android_mvvm.FieldUtils.toObservable(field),
+                BackpressureStrategy.LATEST);
     }
 
     /**
@@ -63,6 +47,7 @@ public class FieldUtils {
      */
     @NonNull
     public static <T> ReadOnlyField<T> toField(@NonNull final rx.Observable<T> observable) {
-        return ReadOnlyField.create(RxJavaInterop.toV2Observable(observable));
+        return com.manaschaudhari.android_mvvm.FieldUtils
+                .toField(RxJavaInterop.toV2Observable(observable));
     }
 }

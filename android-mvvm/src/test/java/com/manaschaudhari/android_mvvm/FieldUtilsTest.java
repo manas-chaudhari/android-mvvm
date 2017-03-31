@@ -28,7 +28,7 @@ import static com.manaschaudhari.android_mvvm.FieldUtils.toObservable;
 
 public class FieldUtilsTest {
 
-    public static final int INITIAL_VALUE = 4;
+    private static final int INITIAL_VALUE = 4;
     private Observable<Integer> sut;
     private ObservableField<Integer> observableField;
     private TestObserver<Integer> testObserver;
@@ -45,6 +45,14 @@ public class FieldUtilsTest {
         sut.subscribe(testObserver);
 
         testObserver.assertValues(INITIAL_VALUE);
+    }
+
+    @Test
+    public void doesNotEmitInitialNull() throws Exception {
+        testObserver = toObservable(new ObservableField<Integer>(null)).test();
+
+        testObserver.assertNoValues()
+                .assertNoErrors();
     }
 
     @Test
