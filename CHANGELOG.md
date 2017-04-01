@@ -1,5 +1,10 @@
 Changelog
 =========
+v0.2.1 (2017-04-01)
+-------------------
+- Fix: NullPointerException when converting ObservableField with null value to Observable
+- Update: Errors are not caught silently in adapters anymore. Thus, adapters now expect error-free observables
+- New: Adapters now notify updates on main thread
 
 v0.2.0 (2017-03-11)
 -------------------
