@@ -27,13 +27,21 @@ import io.reactivex.functions.Cancellable;
 
 
 public class FieldUtils {
+    /**
+     * Converts an ObservableField to an Observable. Note that setting null value inside
+     * ObservableField (except for initial value) throws a NullPointerException.
+     * @return Observable that contains the latest value in the ObservableField
+     */
     @NonNull
     public static <T> Observable<T> toObservable(@NonNull final ObservableField<T> field) {
 
         return Observable.create(new ObservableOnSubscribe<T>() {
             @Override
             public void subscribe(final ObservableEmitter<T> e) throws Exception {
-                e.onNext(field.get());
+                T initialValue = field.get();
+                if (initialValue != null) {
+                    e.onNext(initialValue);
+                }
                 final OnPropertyChangedCallback callback = new OnPropertyChangedCallback() {
                     @Override
                     public void onPropertyChanged(android.databinding.Observable observable, int i) {
