@@ -20,7 +20,6 @@ import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -31,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 
@@ -48,6 +48,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         this.viewProvider = viewProvider;
         this.binder = viewModelBinder;
         source = viewModels
+                .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(new Consumer<List<ViewModel>>() {
                     @Override
                     public void accept(List<ViewModel> viewModels) throws Exception {
@@ -55,13 +56,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                         notifyDataSetChanged();
                     }
                 })
-                .doOnError(new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        Log.e("RecyclerViewAdapter", "onError in source observable", throwable);
-                    }
-                })
-                .onErrorResumeNext(Observable.<List<ViewModel>>empty())
                 .share();
     }
 

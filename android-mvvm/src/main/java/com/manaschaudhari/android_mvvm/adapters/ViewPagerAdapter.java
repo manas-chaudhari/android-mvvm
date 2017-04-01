@@ -20,7 +20,6 @@ import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 
@@ -50,6 +50,7 @@ public class ViewPagerAdapter extends PagerAdapter implements Connectable {
 
     public ViewPagerAdapter(@NonNull Observable<List<ViewModel>> viewModels, @NonNull ViewProvider viewProvider, @NonNull ViewModelBinder binder) {
         source = viewModels
+                .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(new Consumer<List<ViewModel>>() {
                     @Override
                     public void accept(List<ViewModel> viewModels) throws Exception {
@@ -57,13 +58,6 @@ public class ViewPagerAdapter extends PagerAdapter implements Connectable {
                         notifyDataSetChanged();
                     }
                 })
-                .doOnError(new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        Log.e("ViewPagerAdapter", "Error in source observable", throwable);
-                    }
-                })
-                .onErrorResumeNext(Observable.<List<ViewModel>>empty())
                 .share();
         this.viewProvider = viewProvider;
         this.binder = binder;
