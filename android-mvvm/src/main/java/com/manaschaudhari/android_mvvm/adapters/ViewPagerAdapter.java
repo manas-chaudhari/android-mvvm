@@ -20,7 +20,6 @@ import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,13 +58,6 @@ public class ViewPagerAdapter extends PagerAdapter implements Connectable {
                         notifyDataSetChanged();
                     }
                 })
-                .doOnError(new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        Log.e("ViewPagerAdapter", "Error in source observable", throwable);
-                    }
-                })
-                .onErrorResumeNext(Observable.<List<ViewModel>>empty())
                 .share();
         this.viewProvider = viewProvider;
         this.binder = binder;

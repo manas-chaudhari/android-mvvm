@@ -144,13 +144,6 @@ public class RecyclerViewAdapterTest {
     }
 
     @Test
-    public void errorIsHandled() throws Exception {
-        viewModelsSource.onError(new Throwable());
-
-        assertEquals(INITIAL_COUNT, sut.getItemCount());
-    }
-
-    @Test
     public void itemTypeIsBasedOnViewProvider() throws Exception {
         List<ViewModel> vms = TestViewModel.dummyViewModels(4);
         vms.remove(1);

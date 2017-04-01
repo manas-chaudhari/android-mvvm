@@ -20,7 +20,6 @@ import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -57,13 +56,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                         notifyDataSetChanged();
                     }
                 })
-                .doOnError(new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        Log.e("RecyclerViewAdapter", "onError in source observable", throwable);
-                    }
-                })
-                .onErrorResumeNext(Observable.<List<ViewModel>>empty())
                 .share();
     }
 

@@ -136,13 +136,6 @@ public class ViewPagerAdapterTest {
     }
 
     @Test
-    public void errorIsHandled() throws Exception {
-        viewModelsSource.onError(new Throwable());
-
-        assertEquals(INITIAL_COUNT, sut.getCount());
-    }
-
-    @Test
     @UiThreadTest
     public void instantiateItemAddsBindedView() throws Exception {
         ViewGroup container = new LinearLayout(InstrumentationRegistry.getContext());
