@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 
@@ -50,6 +51,7 @@ public class ViewPagerAdapter extends PagerAdapter implements Connectable {
 
     public ViewPagerAdapter(@NonNull Observable<List<ViewModel>> viewModels, @NonNull ViewProvider viewProvider, @NonNull ViewModelBinder binder) {
         source = viewModels
+                .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(new Consumer<List<ViewModel>>() {
                     @Override
                     public void accept(List<ViewModel> viewModels) throws Exception {

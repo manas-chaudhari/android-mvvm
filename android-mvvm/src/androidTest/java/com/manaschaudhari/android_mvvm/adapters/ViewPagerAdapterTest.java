@@ -30,7 +30,9 @@ import com.manaschaudhari.android_mvvm.ViewModel;
 import com.manaschaudhari.android_mvvm.test.R;
 import com.manaschaudhari.android_mvvm.testutils.SubscriptionCounter;
 
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,7 +40,12 @@ import org.junit.runner.RunWith;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.Scheduler;
+import io.reactivex.android.plugins.RxAndroidPlugins;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.BehaviorSubject;
 
 import static org.junit.Assert.assertEquals;
@@ -58,6 +65,21 @@ public class ViewPagerAdapterTest {
     private TestViewProvider testViewProvider;
     private TestViewModelBinder testBinder;
     private Disposable connection;
+
+    @BeforeClass
+    public static void setup() {
+        RxAndroidPlugins.setMainThreadSchedulerHandler(new Function<Scheduler, Scheduler>() {
+            @Override
+            public Scheduler apply(@NonNull Scheduler scheduler) throws Exception {
+                return Schedulers.trampoline();
+            }
+        });
+    }
+
+    @AfterClass
+    public static void tearDown() {
+        RxAndroidPlugins.reset();
+    }
 
     @Before
     public void setUp() throws Exception {

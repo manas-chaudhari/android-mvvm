@@ -29,18 +29,28 @@ import android.widget.LinearLayout;
 import com.manaschaudhari.android_mvvm.ViewModel;
 import com.manaschaudhari.android_mvvm.testutils.SubscriptionCounter;
 
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.List;
 
-
 import io.reactivex.Observable;
+import io.reactivex.Scheduler;
+import io.reactivex.android.plugins.RxAndroidPlugins;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.BehaviorSubject;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
 public class RecyclerViewAdapterTest {
@@ -56,6 +66,21 @@ public class RecyclerViewAdapterTest {
     private ViewProvider testViewProvider;
     private SubscriptionCounter<List<ViewModel>> subscriptionCounter;
     private RecyclerView.AdapterDataObserver defaultObserver;
+
+    @BeforeClass
+    public static void setup() {
+        RxAndroidPlugins.setMainThreadSchedulerHandler(new Function<Scheduler, Scheduler>() {
+            @Override
+            public Scheduler apply(@NonNull Scheduler scheduler) throws Exception {
+                return Schedulers.trampoline();
+            }
+        });
+    }
+
+    @AfterClass
+    public static void tearDown() {
+        RxAndroidPlugins.reset();
+    }
 
     @Before
     public void setUp() throws Exception {
