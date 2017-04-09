@@ -50,7 +50,7 @@ import com.manaschaudhari.android_mvvm.ViewModel;
 class ItemViewModel implements ViewModel {
   final String name;
 
-  public ItemViewModel(String name) { this.name = name }
+  public ItemViewModel(String name) { this.name = name; }
 }
 ```
 
