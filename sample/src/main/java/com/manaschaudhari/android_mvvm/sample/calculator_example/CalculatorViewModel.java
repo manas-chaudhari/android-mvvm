@@ -27,7 +27,7 @@ import rx.functions.Func3;
 import static com.manaschaudhari.android_mvvm.FieldUtils.toField;
 import static com.manaschaudhari.android_mvvm.FieldUtils.toObservable;
 
-public class CalculatorViewModel implements ViewModel {
+public class CalculatorViewModel extends ViewModel {
 
     public final ObservableField<String> number1 = new ObservableField<>("");
     public final ObservableField<String> number2 = new ObservableField<>("");

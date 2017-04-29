@@ -14,16 +14,8 @@
  * limitations under the License.
  */
 
-package com.manaschaudhari.android_mvvm.adapters;
+package com.manaschaudhari.android_mvvm;
 
-import io.reactivex.disposables.Disposable;
-
-/**
- * A {@link com.manaschaudhari.android_mvvm.ViewModel} can implement this
- * interface to return a Subscription which will eventually be
- * unsubscribed from when the ViewModel's View is detached from the
- * view hierarchy.
- */
-public interface Connectable {
-    Disposable connect();
+interface ViewModelFactory<T extends ViewModel> {
+    T createViewModel();
 }

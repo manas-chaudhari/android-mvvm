@@ -25,6 +25,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -36,14 +37,16 @@ import com.manaschaudhari.android_mvvm.adapters.Connectable;
 import com.manaschaudhari.android_mvvm.adapters.RecyclerViewAdapter;
 import com.manaschaudhari.android_mvvm.adapters.ViewModelBinder;
 import com.manaschaudhari.android_mvvm.adapters.ViewPagerAdapter;
+import com.manaschaudhari.android_mvvm.adapters.ViewPagerViewProvider;
 import com.manaschaudhari.android_mvvm.adapters.ViewProvider;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.Observable;
-import rx.Subscription;
-import rx.functions.Func1;
+import io.reactivex.Observable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
+import io.reactivex.subjects.PublishSubject;
 
 @SuppressWarnings("unused")
 public class BindingUtils {
@@ -66,9 +69,9 @@ public class BindingUtils {
 
         // Disconnect previous adapter if its Connectable
         if (oldAdapter != null && oldAdapter instanceof Connectable) {
-            Subscription subscription = (Subscription) viewPager.getTag(R.integer.tag_subscription);
-            if (subscription != null && !subscription.isUnsubscribed()) {
-                subscription.unsubscribe();
+            Disposable subscription = (Disposable) viewPager.getTag(R.integer.tag_subscription);
+            if (subscription != null && !subscription.isDisposed()) {
+                subscription.dispose();
             }
             viewPager.setTag(R.integer.tag_subscription, null);
         }
@@ -96,7 +99,7 @@ public class BindingUtils {
     }
 
     @BindingAdapter({"items", "view_provider"})
-    public static void bindAdapterWithDefaultBinder(@NonNull ViewPager viewPager, @Nullable Observable<List<ViewModel>> items, @Nullable ViewProvider viewProvider) {
+    public static void bindAdapterWithDefaultBinder(@NonNull ViewPager viewPager, @Nullable Observable<List<ViewModel>> items, @Nullable ViewPagerViewProvider viewProvider) {
         ViewPagerAdapter adapter = null;
         if (items != null && viewProvider != null) {
             Preconditions.checkNotNull(defaultBinder, "Default Binder");
@@ -119,9 +122,9 @@ public class BindingUtils {
     @BindingConversion
     @Nullable
     public static <T extends ViewModel> Observable<List<ViewModel>> toGenericList(@Nullable Observable<List<T>> specificList) {
-        return specificList == null ? null : specificList.map(new Func1<List<T>, List<ViewModel>>() {
+        return specificList == null ? null : specificList.map(new Function<List<T>, List<ViewModel>>() {
             @Override
-            public List<ViewModel> call(List<T> ts) {
+            public List<ViewModel> apply(List<T> ts) {
                 return new ArrayList<ViewModel>(ts);
             }
         });
@@ -149,7 +152,7 @@ public class BindingUtils {
 
         if (connectable != null) {
             newListener = new View.OnAttachStateChangeListener() {
-                private Subscription subscription;
+                private Disposable subscription;
 
                 @Override
                 public void onViewAttachedToWindow(View v) {
@@ -158,7 +161,7 @@ public class BindingUtils {
 
                 @Override
                 public void onViewDetachedFromWindow(View v) {
-                    subscription.unsubscribe();
+                    subscription.dispose();
                 }
             };
 
@@ -169,7 +172,42 @@ public class BindingUtils {
         }
 
         if (newListener != null) {
+            if (ViewCompat.isAttachedToWindow(view)) {
+                newListener.onViewAttachedToWindow(view);
+            }
+
             view.addOnAttachStateChangeListener(newListener);
+        }
+    }
+
+    private static final Object CLICK_OBJECT = new Object();
+
+    @BindingConversion
+    public static View.OnClickListener toOnClickListener(final PublishSubject<Object> click) {
+        if (click != null) {
+            return new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    click.onNext(CLICK_OBJECT);
+                }
+            };
+        } else {
+            return null;
+        }
+    }
+
+    @BindingConversion
+    public static View.OnLongClickListener toOnLongClickListener(final PublishSubject<Object> click) {
+        if (click != null) {
+            return new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    click.onNext(CLICK_OBJECT);
+                    return true;
+                }
+            };
+        } else {
+            return null;
         }
     }
 }

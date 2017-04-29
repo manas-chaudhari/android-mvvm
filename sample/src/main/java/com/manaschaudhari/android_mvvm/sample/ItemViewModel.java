@@ -25,7 +25,7 @@ import com.manaschaudhari.android_mvvm.sample.adapters.MessageHelper;
 
 import rx.functions.Action0;
 
-public class ItemViewModel implements ViewModel {
+public class ItemViewModel extends ViewModel {
     @NonNull
     public final String name;
 

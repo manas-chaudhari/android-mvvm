@@ -20,7 +20,6 @@ import android.databinding.ObservableField;
 import android.support.annotation.NonNull;
 
 import com.manaschaudhari.android_mvvm.FieldUtils;
-import com.manaschaudhari.android_mvvm.ReadOnlyField;
 import com.manaschaudhari.android_mvvm.ViewModel;
 import com.manaschaudhari.android_mvvm.sample.Item;
 import com.manaschaudhari.android_mvvm.sample.ItemViewModel;
@@ -35,7 +34,7 @@ import rx.Observable;
 import rx.functions.Action0;
 import rx.functions.Func1;
 
-public class SearchViewModel implements ViewModel {
+public class SearchViewModel extends ViewModel {
     public final ObservableField<String> searchQuery = new ObservableField<>("");
     public final Observable<List<ViewModel>> results;
     public final Action0 onRandomSearch;

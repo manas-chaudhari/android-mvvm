@@ -16,18 +16,25 @@
 
 package com.manaschaudhari.android_mvvm;
 
-public abstract class ViewModel {
-    protected void onCreate(){};
+public interface ViewModel {
+    /**
+     * Called when the {@link ViewModel} gets attached to the View.
+     * Here the {@link ViewModel} can allocate resources for itself, that
+     * are tied to the lifecycle of the View.
+     **/
+    void onViewAttached();
 
-    protected void onStop(){};
+    /**
+     * Called wheo the {@link ViewModel} gets detached from the View.
+     * The ViewModel should free any resources that has been allocated
+     * in {@link #onViewAttached()}.
+     */
+    void onViewDetached();
 
-    protected void onStart(){};
-
-    protected void onPause(){};
-
-    protected void onResume(){};
-
-    protected void onDestroy(){};
-
-    protected void onLowMemory(){};
+    /**
+     * Called when the View is completely destroyed and the {@link ViewModel}
+     * should also be destroyed. Here the {@link ViewModel} should free up
+     * resources that has been allocated in the constructor.
+     */
+    void onDestroyed();
 }

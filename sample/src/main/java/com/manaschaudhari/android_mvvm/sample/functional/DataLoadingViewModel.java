@@ -30,7 +30,7 @@ import rx.functions.Func2;
 
 import static com.manaschaudhari.android_mvvm.FieldUtils.toField;
 
-public class DataLoadingViewModel implements ViewModel {
+public class DataLoadingViewModel extends ViewModel {
 
     @NonNull
     public final ReadOnlyField<String> result;

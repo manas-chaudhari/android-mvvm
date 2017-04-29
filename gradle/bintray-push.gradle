@@ -3,7 +3,7 @@ ext {
     bintrayRepo = 'maven'
     bintrayName = 'android-mvvm'
 
-    publishedGroupId = 'com.manaschaudhari'
+    publishedGroupId = 'com.apptive'
     libraryName = 'Android MVVM'
     artifact = 'android-mvvm'
 
@@ -12,7 +12,7 @@ ext {
     siteUrl = 'https://github.com/manas-chaudhari/android-mvvm'
     gitUrl = 'https://github.com/manas-chaudhari/android-mvvm.git'
 
-    libraryVersion = '0.1.2'
+    libraryVersion = '0.3.19'
 
     developerId = 'manas-chaudhari'
     developerName = 'Manas Chaudhari'

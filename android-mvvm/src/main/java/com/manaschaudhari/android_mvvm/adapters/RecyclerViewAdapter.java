@@ -31,16 +31,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import rx.Observable;
-import rx.Subscription;
-import rx.functions.Action1;
+import io.reactivex.Observable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.DataBindingViewHolder> {
     private @NonNull List<ViewModel> latestViewModels = new ArrayList<>();
     private final @NonNull ViewProvider viewProvider;
     private final @NonNull ViewModelBinder binder;
     private final @NonNull Observable<List<ViewModel>> source;
-    private final @NonNull HashMap<RecyclerView.AdapterDataObserver, Subscription> subscriptions = new HashMap<>();
+    private final @NonNull HashMap<RecyclerView.AdapterDataObserver, Disposable> subscriptions = new HashMap<>();
 
     public RecyclerViewAdapter(@NonNull Observable<List<ViewModel>> viewModels,
                                @NonNull ViewProvider viewProvider,
@@ -48,16 +49,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         this.viewProvider = viewProvider;
         this.binder = viewModelBinder;
         source = viewModels
-                .doOnNext(new Action1<List<ViewModel>>() {
+                .doOnNext(new Consumer<List<ViewModel>>() {
                     @Override
-                    public void call(@Nullable List<ViewModel> viewModels) {
+                    public void accept(@Nullable List<ViewModel> viewModels) {
                         latestViewModels = viewModels != null ? viewModels : new ArrayList<ViewModel>();
                         notifyDataSetChanged();
                     }
                 })
-                .doOnError(new Action1<Throwable>() {
+                .doOnError(new Consumer<Throwable>() {
                     @Override
-                    public void call(Throwable throwable) {
+                    public void accept(Throwable throwable) {
                         Log.e("RecyclerViewAdapter", "onError in source observable", throwable);
                     }
                 })
@@ -101,9 +102,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void unregisterAdapterDataObserver(RecyclerView.AdapterDataObserver observer) {
         super.unregisterAdapterDataObserver(observer);
-        Subscription subscription = subscriptions.remove(observer);
-        if (subscription != null && !subscription.isUnsubscribed()) {
-            subscription.unsubscribe();
+        Disposable subscription = subscriptions.remove(observer);
+        if (subscription != null && !subscription.isDisposed()) {
+            subscription.dispose();
         }
     }
 

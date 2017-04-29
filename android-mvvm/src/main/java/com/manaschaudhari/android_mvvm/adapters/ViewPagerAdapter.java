@@ -31,9 +31,9 @@ import com.manaschaudhari.android_mvvm.ViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.Observable;
-import rx.Subscription;
-import rx.functions.Action1;
+import io.reactivex.Observable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 
 public class ViewPagerAdapter extends PagerAdapter implements Connectable {
 
@@ -44,23 +44,23 @@ public class ViewPagerAdapter extends PagerAdapter implements Connectable {
     private final Observable<List<ViewModel>> source;
 
     @NonNull
-    private final ViewProvider viewProvider;
+    private final ViewPagerViewProvider viewProvider;
 
     @NonNull
     private final ViewModelBinder binder;
 
-    public ViewPagerAdapter(@NonNull Observable<List<ViewModel>> viewModels, @NonNull ViewProvider viewProvider, @NonNull ViewModelBinder binder) {
+    public ViewPagerAdapter(@NonNull Observable<List<ViewModel>> viewModels, @NonNull ViewPagerViewProvider viewProvider, @NonNull ViewModelBinder binder) {
         source = viewModels
-                .doOnNext(new Action1<List<ViewModel>>() {
+                .doOnNext(new Consumer<List<ViewModel>>() {
                     @Override
-                    public void call(@Nullable List<ViewModel> viewModels) {
+                    public void accept(@Nullable List<ViewModel> viewModels) {
                         latestViewModels = (viewModels != null) ? viewModels : new ArrayList<ViewModel>();
                         notifyDataSetChanged();
                     }
                 })
-                .doOnError(new Action1<Throwable>() {
+                .doOnError(new Consumer<Throwable>() {
                     @Override
-                    public void call(Throwable throwable) {
+                    public void accept(Throwable throwable) {
                         Log.e("ViewPagerAdapter", "Error in source observable", throwable);
                     }
                 })
@@ -103,11 +103,17 @@ public class ViewPagerAdapter extends PagerAdapter implements Connectable {
 
     @Override
     public boolean isViewFromObject(View view, Object object) {
-        return ((ViewDataBinding)object).getRoot() == view;
+        return ((ViewDataBinding) object).getRoot() == view;
     }
 
     @Override
-    public Subscription connect() {
+    public CharSequence getPageTitle(int position) {
+        ViewModel vm = latestViewModels.get(position);
+        return viewProvider.getTitle(vm);
+    }
+
+    @Override
+    public Disposable connect() {
         return source.subscribe();
     }
 }

@@ -43,7 +43,7 @@ public class BindingAdapters {
     public static final ViewModelBinder defaultBinder = new ViewModelBinder() {
         @Override
         public void bind(ViewDataBinding viewDataBinding, ViewModel viewModel) {
-            viewDataBinding.setVariable(BR.vm, viewModel);
+            viewDataBinding.setVariable(com.manaschaudhari.android_mvvm.sample.BR.vm, viewModel);
         }
     };
 

@@ -21,8 +21,10 @@ import android.databinding.ObservableField;
 import org.junit.Before;
 import org.junit.Test;
 
-import rx.Observable;
-import rx.observers.TestSubscriber;
+import io.reactivex.Observable;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
+import io.reactivex.subscribers.TestSubscriber;
 
 import static com.manaschaudhari.android_mvvm.FieldUtils.toObservable;
 
@@ -42,14 +44,23 @@ public class FieldUtilsTest {
 
     @Test
     public void emitsInitialValue() throws Exception {
-        sut.subscribe(testSubscriber);
-
+        sut.subscribe(new Consumer<Integer>() {
+            @Override
+            public void accept(@NonNull Integer integer) throws Exception {
+               testSubscriber.onNext(integer);
+            }
+        });
         testSubscriber.assertValues(INITIAL_VALUE);
     }
 
     @Test
     public void emitsUpdates() throws Exception {
-        sut.subscribe(testSubscriber);
+        sut.subscribe(new Consumer<Integer>() {
+            @Override
+            public void accept(@NonNull Integer integer) throws Exception {
+                testSubscriber.onNext(integer);
+            }
+        });
         observableField.set(3);
 
         testSubscriber.assertValues(INITIAL_VALUE, 3);

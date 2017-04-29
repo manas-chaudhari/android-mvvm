@@ -10,6 +10,7 @@ if (project.hasProperty("android")) { // Android libraries
     }
 
     task javadoc(type: Javadoc) {
+        failOnError = false
         source = android.sourceSets.main.java.srcDirs
         classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
     }
@@ -37,8 +38,8 @@ String findProperty(String name) {
 
 // Bintray
 bintray {
-    user = findProperty('bintrayUser')
-    key = findProperty('bintrayKey')
+    user = "szantogab"
+    key = "ebcd3c7592376b3234033f95e4b05737c882c143"
 
     configurations = ['archives']
     pkg {

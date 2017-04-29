@@ -11,6 +11,7 @@ install {
                 packaging 'aar'
                 groupId publishedGroupId
                 artifactId artifact
+                version libraryVersion
 
                 // Add your description here
                 name libraryName
@@ -38,6 +39,6 @@ install {
 
                 }
             }
-        }
+        }.writeTo("build/poms/pom-default.xml")
     }
 }

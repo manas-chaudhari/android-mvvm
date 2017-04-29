@@ -30,7 +30,7 @@ import rx.Observable;
 import rx.functions.Func1;
 import rx.subjects.BehaviorSubject;
 
-public class ItemListViewModel implements ViewModel {
+public class ItemListViewModel extends ViewModel {
     public final Observable<List<ItemViewModel>> itemVms;
 
     /**
