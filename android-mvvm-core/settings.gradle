@@ -1,1 +1,1 @@
-include ':android-mvvm'
+include ':android-mvvm-core'

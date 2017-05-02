@@ -16,18 +16,14 @@
 
 package com.manaschaudhari.android_mvvm;
 
-import com.manaschaudhari.android_mvvm.adapters.TestViewModel;
-import com.manaschaudhari.android_mvvm.adapters.ViewProvider;
+import android.app.Application;
+import android.test.ApplicationTestCase;
 
-import java.util.List;
-
-import io.reactivex.Observable;
-
-public class BindingTestViewModel implements ViewModel {
-    public List<TestViewModel> subclassList;
-    public List<ViewModel> mixedList;
-    public Observable<List<ViewModel>> observableMixedList;
-    public Observable<List<TestViewModel>> observableSubclassMixedList;
-
-    public ViewProvider viewProvider;
+/**
+ * <a href="http://d.android.com/tools/testing/testing_android.html">Testing Fundamentals</a>
+ */
+public class ApplicationTest extends ApplicationTestCase<Application> {
+    public ApplicationTest() {
+        super(Application.class);
+    }
 }

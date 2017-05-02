@@ -1,2 +1,2 @@
-include ':android-mvvm'
+include ':android-mvvm-core', ':android-mvvm-conductor', ':android-mvvm-kotlin'
 rootProject.name = 'android-mvvm-root'

@@ -10,7 +10,7 @@ install {
             project {
                 packaging 'aar'
                 groupId publishedGroupId
-                artifactId artifact
+                artifactId "$bintrayName-$moduleArtifact"
                 version libraryVersion
 
                 // Add your description here

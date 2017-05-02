@@ -46,6 +46,7 @@ import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
+import io.reactivex.processors.PublishProcessor;
 import io.reactivex.subjects.PublishSubject;
 
 @SuppressWarnings("unused")
@@ -198,6 +199,21 @@ public class BindingUtils {
 
     @BindingConversion
     public static View.OnLongClickListener toOnLongClickListener(final PublishSubject<Object> click) {
+        if (click != null) {
+            return new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    click.onNext(CLICK_OBJECT);
+                    return true;
+                }
+            };
+        } else {
+            return null;
+        }
+    }
+
+    @BindingConversion
+    public static View.OnLongClickListener toOnLongClickListener(final PublishProcessor<Object> click) {
         if (click != null) {
             return new View.OnLongClickListener() {
                 @Override

@@ -16,18 +16,16 @@
 
 package com.manaschaudhari.android_mvvm;
 
-import com.manaschaudhari.android_mvvm.adapters.TestViewModel;
-import com.manaschaudhari.android_mvvm.adapters.ViewProvider;
+import org.junit.Test;
 
-import java.util.List;
+import static org.junit.Assert.*;
 
-import io.reactivex.Observable;
-
-public class BindingTestViewModel implements ViewModel {
-    public List<TestViewModel> subclassList;
-    public List<ViewModel> mixedList;
-    public Observable<List<ViewModel>> observableMixedList;
-    public Observable<List<TestViewModel>> observableSubclassMixedList;
-
-    public ViewProvider viewProvider;
+/**
+ * To work on unit tests, switch the Test Artifact in the Build Variants view.
+ */
+public class ExampleUnitTest {
+    @Test
+    public void addition_isCorrect() throws Exception {
+        assertEquals(4, 2 + 2);
+    }
 }

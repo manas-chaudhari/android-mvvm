@@ -43,7 +43,7 @@ public class ReadOnlyList<T extends List<U>, U> extends ObservableArrayList<U> {
     }
 
     /**
-     * @deprecated Setter of ReadOnlyField does nothing. Merge with the source Observable instead.
+     * @deprecated Setter of ReadOnlyList does nothing. Merge with the source Observable instead.
      * See <a href="https://github.com/manas-chaudhari/android-mvvm/tree/master/Documentation/ObservablesAndSetters.md">Documentation/ObservablesAndSetters.md</a>
      */
     @Override

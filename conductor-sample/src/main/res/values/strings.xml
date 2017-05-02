@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">android-mvvm</string>
+    <string name="details">Details</string>
+    <string name="title_functional">Functional ViewModel</string>
+    <string name="title_adapters">Adapters</string>
+    <string name="error">ERROR!</string>
+    <string name="hint_search">Search Something</string>
+    <string name="title_two_way_binding">Two Way Binding</string>
+    <string name="title_calculator">Calculator Example</string>
+</resources>

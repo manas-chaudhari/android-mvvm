@@ -4,7 +4,7 @@ buildscript {
     ext.moduleArtifact = 'core'
 }
 
-def isCi() {
+static def isCi() {
     return "true".equals(System.getenv('CI'))
 }
 
@@ -65,16 +65,18 @@ if (isCi()) {
 
 dependencies {
     testCompile 'junit:junit:4.12'
-    androidTestCompile 'com.android.support.test:runner:0.5'
-    androidTestCompile 'com.android.support.test:rules:0.5'
-    provided "io.reactivex.rxjava2:rxjava:$rx_version"
+    compile "io.reactivex.rxjava2:rxjava:$rx_version"
 
     compile "com.android.support:recyclerview-v7:$support_library_version"
-    compile "com.android.support:appcompat-v7:$support_library_version"
     compile "com.android.support:support-v4:$support_library_version"
+
+    androidTestCompile 'com.android.support.test:runner:0.5'
+    androidTestCompile 'com.android.support.test:rules:0.5'
+    androidTestCompile "com.android.support:recyclerview-v7:$support_library_version"
 }
 
 apply from: rootProject.file('gradle/bintray-push.gradle')
 repositories {
     mavenCentral()
+    jcenter()
 }

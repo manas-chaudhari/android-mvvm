@@ -1,18 +1,16 @@
-
 ext {
     bintrayRepo = 'maven'
     bintrayName = 'android-mvvm'
 
-    publishedGroupId = 'com.apptive'
     libraryName = 'Android MVVM'
-    artifact = 'android-mvvm'
+    publishedGroupId = 'com.apptive'
 
     libraryDescription = 'Tools for implementing MVVM on Android'
 
     siteUrl = 'https://github.com/manas-chaudhari/android-mvvm'
     gitUrl = 'https://github.com/manas-chaudhari/android-mvvm.git'
 
-    libraryVersion = '0.3.19'
+    libraryVersion = '0.5.3'
 
     developerId = 'manas-chaudhari'
     developerName = 'Manas Chaudhari'

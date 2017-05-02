@@ -2,9 +2,7 @@ package com.manaschaudhari.android_mvvm
 
 import android.databinding.*
 import android.support.annotation.CheckResult
-import io.reactivex.BackpressureStrategy
 import io.reactivex.Observable
-import io.reactivex.Single
 import io.reactivex.annotations.CheckReturnValue
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
@@ -36,16 +34,6 @@ fun <T> Observable<T>.asField(): ObservableField<T> = FieldUtils.toField(this)
 @CheckResult
 @CheckReturnValue
 fun <T> Observable<T>.bindTo(field: ObservableField<T>): Disposable = FieldUtils.bindTo(this, field)
-
-fun <T> Observable<T>.flatMapFirst(obs: Single<T>): Observable<T> = this
-        .toFlowable(io.reactivex.BackpressureStrategy.DROP)
-        .flatMap({ obs.toFlowable() }, 1)
-        .toObservable()
-
-fun <T> Observable<T>.flatMapFirst(obs: Observable<T>): Observable<T> = this
-        .toFlowable(io.reactivex.BackpressureStrategy.DROP)
-        .flatMap({ obs.toFlowable(BackpressureStrategy.DROP) }, 1)
-        .toObservable()
 
 /**
  * Helper method for creating an Observable<Boolean> that emits true when the specified Observables emit something.

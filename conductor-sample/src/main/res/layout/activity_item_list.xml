@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="com.manaschaudhari.android_mvvm.sample.adapters.ItemListViewModel" />
+
+        <import type="com.manaschaudhari.android_mvvm.sample.ViewProviders" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        tools:context=".adapters.ItemListActivity"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="RecyclerView with dynamic views" />
+
+        <!--Example with dynamic views-->
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            bind:items="@{vm.itemVms}"
+            bind:layout_vertical="@{true}"
+            bind:view_provider="@{ViewProviders.itemListing}" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="RecyclerView with static views" />
+
+        <!--Example With Static Views-->
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            bind:items="@{vm.itemVms}"
+            bind:layout_vertical="@{true}"
+            bind:view_provider="@{@layout/row_item_without_image}" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ViewPager with dynamic views" />
+
+        <!--ViewPager with Dynamic views-->
+        <android.support.v4.view.ViewPager
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            bind:items="@{vm.itemVms}"
+            bind:view_provider="@{ViewProviders.itemListing}" />
+
+    </LinearLayout>
+</layout>
