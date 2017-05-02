@@ -16,6 +16,5 @@
 
 package com.manaschaudhari.android_mvvm;
 
-interface ViewModelFactory<T extends ViewModel> {
-    T createViewModel();
+public interface ViewModel {
 }

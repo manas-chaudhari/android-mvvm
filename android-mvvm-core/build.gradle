@@ -1,5 +1,8 @@
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
+
+buildscript {
+    ext.moduleArtifact = 'core'
+}
 
 def isCi() {
     return "true".equals(System.getenv('CI'))
@@ -7,10 +10,10 @@ def isCi() {
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion "25.0.3"
 
     defaultConfig {
-        minSdkVersion 14
+        minSdkVersion 16
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -61,18 +64,14 @@ if (isCi()) {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     androidTestCompile 'com.android.support.test:runner:0.5'
     androidTestCompile 'com.android.support.test:rules:0.5'
-    provided "io.reactivex.rxjava2:rxjava:2.0.7"
-    provided group: 'javax.inject', name: 'javax.inject', version: '1'
+    provided "io.reactivex.rxjava2:rxjava:$rx_version"
 
-    compile 'com.android.support:recyclerview-v7:25.3.1'
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.trello:navi:1.0'
-    provided "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-    provided 'com.bluelinelabs:conductor:2.1.2'
+    compile "com.android.support:recyclerview-v7:$support_library_version"
+    compile "com.android.support:appcompat-v7:$support_library_version"
+    compile "com.android.support:support-v4:$support_library_version"
 }
 
 apply from: rootProject.file('gradle/bintray-push.gradle')
