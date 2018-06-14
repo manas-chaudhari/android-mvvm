@@ -53,6 +53,7 @@ public class BindingAdapters {
         }
     }
 
+    @BindingConversion
     public static Calculator.Operation toOperation(int layoutId) {
         switch (layoutId) {
             case R.id.radio_add:
