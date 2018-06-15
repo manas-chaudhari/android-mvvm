@@ -9,7 +9,7 @@ android:
 jdk:
   - oraclejdk8
 
-before_script:
+before_install:
   # Install SDK license so Android Gradle plugin can install deps.
   - mkdir "$ANDROID_HOME/licenses" || true
   - echo "d56f5187479451eabf01fb78af6dfcb131a6481e" > "$ANDROID_HOME/licenses/android-sdk-license"
@@ -20,21 +20,19 @@ before_script:
   # Start Emulator
   - echo no | avdmanager create avd --force -n test -k "system-images;android-19;default;armeabi-v7a"
   - $ANDROID_HOME/emulator/emulator -avd test -no-audio -no-window &
+
+install: ./gradlew clean assemble assembleAndroidTest --stacktrace
+
+before_script:
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
 
-script:
-  ./gradlew build test connectedCheck
+script: ./gradlew check connectedCheck --stacktrace
 
 branches:
   except:
     - gh-pages
 
-before_cache:
-  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 cache:
   directories:
-    - $HOME/.gradle/caches/
-    - $HOME/.gradle/wrapper/
-    - $HOME/.android/build-cache
+    - $HOME/.gradle
