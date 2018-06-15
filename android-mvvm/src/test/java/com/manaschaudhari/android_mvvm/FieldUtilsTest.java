@@ -49,7 +49,7 @@ public class FieldUtilsTest {
 
     @Test
     public void doesNotEmitInitialNull() throws Exception {
-        testObserver = toObservable(new ObservableField<Integer>(null)).test();
+        testObserver = toObservable(new ObservableField<>((Integer) null)).test();
 
         testObserver.assertNoValues()
                 .assertNoErrors();
