@@ -31,8 +31,10 @@ ext.isCi = "true" == System.getenv("CI")
 if (isCi) {
     println 'Running on CI. Adding task to start emulator.'
 
-    task startEmulator << {
-        "$rootDir/gradle/start-emulator.sh".execute().waitFor()
+    task startEmulator {
+        doLast {
+            "$rootDir/gradle/start-emulator.sh".execute().waitFor()
+        }
     }
 
     subprojects {
