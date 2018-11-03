@@ -21,17 +21,18 @@ import android.support.annotation.NonNull;
 import com.manaschaudhari.android_mvvm.ViewModel;
 import com.manaschaudhari.android_mvvm.sample.BaseActivity;
 import com.manaschaudhari.android_mvvm.sample.R;
+import com.manaschaudhari.android_mvvm.sample.databinding.ActivityDataLoadingBinding;
 
-public class DataLoadingActivity extends BaseActivity {
+public class DataLoadingActivity extends BaseActivity<ActivityDataLoadingBinding> {
 
     @NonNull
     @Override
-    protected ViewModel createViewModel() {
+    public ViewModel createViewModel() {
         return new DataLoadingViewModel(new DataService());
     }
 
     @Override
-    protected int getLayoutId() {
+    public int getLayoutId() {
         return R.layout.activity_data_loading;
     }
 }
